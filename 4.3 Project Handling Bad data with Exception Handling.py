@@ -18,7 +18,7 @@ def csvreader_example(filename):
                     row[5] = float(row[5])
                     row[6] = float(row[6])
                     row[7] = datetime.datetime.strptime(row[7], '%Y-%m-%d')
-                except ValueError as err: # Exception is the top level exception to catch all
+                except ValueError as err: # Exception is the top level exception to catch all (dangerous)
                     print('Row:', rowno, 'Bad row:', row)
                     print('Row:', rowno, 'Reason:', err)
                     continue    # skip to the next line
