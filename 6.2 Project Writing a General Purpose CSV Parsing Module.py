@@ -1,5 +1,8 @@
 import reader
 
+# explicit put directory locaiton
+#from . import reader
+
 airports = reader.read_csv('airports.csv', [str,str,str,str,str,float,float,str])
 
 
