@@ -7,7 +7,7 @@ import pathlib
 import hashlib
 
 def main():
-    rootdir='C:\\Oracle\\Scripts'
+    rootdir='E:\\ALL_Photos'
     for root, dirs, files in os.walk(rootdir,topdown=True):
         for name in files:
             # print(path.join(root,name))
@@ -16,11 +16,13 @@ def main():
 def ListFile(fullpath):
     if(path.isfile(fullpath)):
         filedir,filename = path.split(path.realpath(fullpath))
-        t = datetime.datetime.fromtimestamp(path.getmtime(fullpath)).strftime('%Y-%m-%d %H:%M:%S')
+        filemtime = datetime.datetime.fromtimestamp(path.getmtime(fullpath)).strftime('%Y-%m-%d %H:%M:%S')
         filesize =path.getsize(fullpath)
-        md5 = hashlib.md5(pathlib.Path(fullpath).read_bytes()).hexdigest()
-        print(','.join(('"'+filedir+'"','"'+filename+'"',t,str(filesize),md5)))
+        try:
+            md5 = hashlib.md5(pathlib.Path(fullpath).read_bytes()).hexdigest()
+        except MemoryError:
+            md5 = '0'
+        print(','.join(('"'+filedir+'"','"'+filename+'"',filemtime,str(filesize),md5)).encode("utf-8"))
         
 if __name__ == '__main__':
     main()
-
