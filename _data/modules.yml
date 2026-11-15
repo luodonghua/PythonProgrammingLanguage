@@ -1,19 +1,20 @@
 # status: ready = pages exist, soon = planned
+# Part 1 (basics): 01-25.  Part 2 (advanced): 26-39.
 - slug: 01-getting-started
   title: "Getting started"
   status: ready
   summary: "Install Python with uv, use the terminal, run your first script and read an error."
 - slug: 02-variables-types-numbers
   title: "Variables, types and numbers"
-  status: soon
-  summary: "Names, int, float, bool, None, and arithmetic."
+  status: ready
+  summary: "Names, int, float, bool, None and arithmetic."
 - slug: 03-strings
   title: "Strings and formatting"
-  status: soon
+  status: ready
   summary: "Slicing, methods, f-strings and t-strings."
 - slug: 04-input-and-arguments
   title: "Input and command-line arguments"
-  status: soon
+  status: ready
   summary: "input(), sys.argv and argparse."
 - slug: 05-conditions-and-match
   title: "Conditions and match"
@@ -21,81 +22,137 @@
   summary: "if/elif/else, truthiness, boolean logic and structural pattern matching."
 - slug: 06-loops
   title: "Loops"
-  status: soon
+  status: ready
   summary: "for, while, break, continue, range and enumerate."
 - slug: 07-lists-and-tuples
   title: "Lists and tuples"
-  status: soon
+  status: ready
   summary: "Sequences, slicing, comprehensions and unpacking."
 - slug: 08-dicts-and-sets
   title: "Dictionaries and sets"
-  status: soon
+  status: ready
   summary: "Key-value data, membership, counting and grouping."
 - slug: 09-functions
   title: "Functions"
-  status: soon
-  summary: "Parameters, return values, scope and lambdas."
+  status: ready
+  summary: "Parameters, return values, scope and defaults."
 - slug: 10-files-and-paths
   title: "Files and paths"
-  status: soon
+  status: ready
   summary: "open(), pathlib and context managers."
 - slug: 11-errors-and-exceptions
   title: "Errors and exceptions"
-  status: soon
+  status: ready
   summary: "try/except, raising errors and custom exceptions."
 - slug: 12-modules-and-packages
   title: "Modules and packages"
-  status: soon
+  status: ready
   summary: "import, the standard library and your own packages."
 - slug: 13-classes-and-objects
   title: "Classes and objects"
-  status: soon
+  status: ready
   summary: "Attributes, methods, dataclasses and special methods."
 - slug: 14-inheritance-vs-composition
   title: "Inheritance vs composition"
-  status: soon
+  status: ready
   summary: "Is-a versus has-a and how to choose."
 - slug: 15-type-hints-and-docs
   title: "Type hints and documentation"
-  status: soon
+  status: ready
   summary: "Annotations, docstrings and type checkers."
 - slug: 16-testing
   title: "Testing with pytest"
-  status: soon
+  status: ready
   summary: "Writing tests, fixtures and parametrization."
 - slug: 17-debugging
   title: "Debugging"
-  status: soon
+  status: ready
   summary: "Tracebacks, pdb, logging and a debugging routine."
 - slug: 18-text-data
-  title: "Text data: CSV, JSON, regex"
-  status: soon
+  title: "Text data: CSV, JSON and regex"
+  status: ready
   summary: "Parsing and producing common text formats."
 - slug: 19-dates-and-times
   title: "Dates and times"
-  status: soon
+  status: ready
   summary: "datetime, time zones and formatting."
 - slug: 20-concurrency
-  title: "Concurrency"
-  status: soon
-  summary: "Threads, processes and asyncio."
+  title: "Concurrency: threads and processes"
+  status: ready
+  summary: "Threads, processes, concurrent.futures and a first look at asyncio."
 - slug: 21-sqlite
-  title: "Persistence - SQLite"
-  status: soon
+  title: "Persistence: SQLite"
+  status: ready
   summary: "Storing data with the built-in sqlite3 module."
 - slug: 22-postgresql
-  title: "Persistence - PostgreSQL"
-  status: soon
+  title: "Persistence: PostgreSQL"
+  status: ready
   summary: "Connecting to PostgreSQL with psycopg, queries and transactions."
 - slug: 23-http-and-web
   title: "HTTP and the web"
-  status: soon
-  summary: "Requests, JSON APIs and a small web app."
+  status: ready
+  summary: "Requests, responses, JSON APIs and a tiny web server."
 - slug: 24-data-science
   title: "Data science basics"
-  status: soon
+  status: ready
   summary: "Tables with pandas and charts with matplotlib."
 - slug: 25-capstone
-  title: "Capstone project"
-  status: soon
-  summary: "Combine everything in one small application."
+  title: "Basic capstone: expense tracker"
+  status: ready
+  summary: "Combine files, classes, SQLite and tests in one small CLI."
+- slug: 26-lambda-closures-partial
+  title: "Lambda, closures and partial"
+  status: ready
+  summary: "Small functions, captured variables and pre-filled arguments."
+- slug: 27-decorators-functools
+  title: "Decorators and functools"
+  status: ready
+  summary: "Registries, retry, caching and functools helpers."
+- slug: 28-iterators-generators
+  title: "Iterators and generators"
+  status: ready
+  summary: "Lazy sequences with yield and generator pipelines."
+- slug: 29-context-managers-contextvars
+  title: "Context managers and contextvars"
+  status: ready
+  summary: "with, contextlib and per-task context values."
+- slug: 30-dataclasses-pydantic
+  title: "Dataclasses and Pydantic"
+  status: ready
+  summary: "Structured data and validation."
+- slug: 31-inspect-and-json-schema
+  title: "inspect, runtime type hints and JSON Schema"
+  status: ready
+  summary: "Read function signatures and generate schemas."
+- slug: 32-asyncio-basics
+  title: "asyncio basics"
+  status: ready
+  summary: "async/await, the event loop, tasks and gather."
+- slug: 33-taskgroup-timeouts-cancellation
+  title: "TaskGroup, timeouts and cancellation"
+  status: ready
+  summary: "Structured concurrency and except*."
+- slug: 34-async-generators-streaming
+  title: "Async generators and streaming"
+  status: ready
+  summary: "async for, async yield and incremental output."
+- slug: 35-async-http-httpx
+  title: "Async HTTP with httpx"
+  status: ready
+  summary: "Clients, retries, rate limits and testing without a network."
+- slug: 36-config-secrets-logging
+  title: "Config, secrets and logging"
+  status: ready
+  summary: "Environment variables, safe secrets and structured logs."
+- slug: 37-testing-async-fakes
+  title: "Testing async code with fakes"
+  status: ready
+  summary: "pytest-asyncio, fakes, stubs and monkeypatching."
+- slug: 38-tool-calling-agent
+  title: "Applying it: a tool-calling agent"
+  status: ready
+  summary: "Build an agent loop with tools and a fake model."
+- slug: 39-advanced-capstone
+  title: "Advanced capstone: multi-agent research runner"
+  status: ready
+  summary: "Fan-out, validation, streaming and tracing in one project."

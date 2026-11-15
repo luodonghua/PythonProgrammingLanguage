@@ -1,0 +1,7 @@
+- {term: Agent loop, meaning: "The cycle of asking the model, running the tools it requests, adding the results to the conversation and asking again, until the model gives a final answer."}
+- {term: Tool, meaning: "A Python function that an agent may call. The model sees its name, description and parameters, not its code."}
+- {term: Tool call, meaning: "A request from the model to run a named tool with arguments, given as JSON text. It has an id so the result can be matched to it."}
+- {term: Tool schema, meaning: "A JSON Schema description of a tool's parameters, built from the function signature and type hints."}
+- {term: Fake model, meaning: "A scripted stand-in for a language model that returns prepared replies, so agent tests are deterministic and free."}
+- {term: Step limit, meaning: "A maximum number of model calls in one agent run. It stops a model that never gives a final answer."}
+- {term: Prompt injection, meaning: "Text in a user message or a fetched page that tries to steer the model into unwanted actions. Treat model output and tool arguments as untrusted."}

@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-add-hints
+    title: Add type hints
+    goal: Annotate six working functions with the exact types listed in the task. Practises `list[...]`, `dict[...]`, `X | None`, `Callable`, `Literal` and `-> None`.
+    solution_note: |
+      The bodies do not change. The tests read the annotations with `typing.get_type_hints`, which is the same data a type checker or editor uses. Use `collections.abc.Callable` for functions.
+  - dir: a2-doctests
+    title: Docstrings with doctest examples
+    goal: Add working `>>>` examples to three docstrings, including one that shows an exception.
+    solution_note: |
+      Each example is a real call with its real output. For an exception, doctest compares the `Traceback` header and the last line, so the middle may be written as `...`. Run `python -m doctest -v solution.py` to see each example run.
+  - dir: a3-generics
+    title: Generic functions and a generic class
+    goal: Use the Python 3.12 type-parameter syntax to write `first`, `last`, `pairs` and a `Box[T]` class with a generic `map` method.
+    solution_note: |
+      `def first[T](...)` and `class Box[T]` create type parameters without importing `TypeVar`. The method `map[U]` has its own parameter `U`, so `Box[int].map(str)` is a `Box[str]` for a type checker. At run time nothing about `T` is checked.
+  - dir: a4-typeddict-validator
+    title: TypedDict record validator
+    goal: Write a validator that checks a dict against the hints of a `TypedDict`, because Python does not do it for you.
+    solution_note: |
+      `get_type_hints(schema)` returns the field names and types in order. `get_origin` and `get_args` take `list[str]` apart. A `bool` is a subclass of `int`, so the code excludes it with an explicit check.

@@ -1,0 +1,25 @@
+intro: |
+  Four tasks on the plumbing every real program needs: read settings, keep secrets safe, and write logs that people and tools can use. Everything runs offline, and nothing reads your real environment or files.
+setup: |
+  No extra libraries are needed. You use `logging`, `dataclasses`, `contextvars` and `json` from the standard library. The tests never read your real `os.environ`. They pass dictionaries.
+assignments:
+  - dir: a1-dotenv
+    title: Parse a .env file
+    goal: Turn the text of a `.env` file into a dict. Handle comments, an `export` prefix, quotes, inline comments and bad lines (with line numbers). Practises string methods and clear error messages.
+    solution_note: |
+      `partition("=")` splits at the first `=` only, so values may contain `=`. A quoted value is taken as it is. Only an unquoted value loses its inline comment, which the regular expression `(?:^|\s)#` finds (a `#` at the start or after whitespace, so `color#fff` is safe).
+  - dir: a2-load-config
+    title: Load and validate config
+    goal: Build a frozen `Config` from an environment mapping, convert types, apply defaults and report all problems in one `ConfigError`. The API key must stay out of `repr`.
+    solution_note: |
+      Each variable is checked in its own `try` block. A problem is added to a list, and the function raises once at the end. `field(repr=False)` keeps the secret out of the printed form, and `not timeout > 0` also rejects `nan`.
+  - dir: a3-json-logs
+    title: A JSON log formatter
+    goal: Write a `logging.Formatter` that outputs one JSON object per line with time, level, logger, message, extra fields and the traceback. Add a helper that builds a ready logger.
+    solution_note: |
+      Extra fields are the record attributes that a plain `LogRecord` does not have, so the formatter compares `vars(record)` with a set of standard names. `json.dumps(..., default=str)` handles values JSON cannot encode. The helper removes old handlers first, so repeated setup does not duplicate output.
+  - dir: a4-redact-trace
+    title: Redact secrets and add a trace id
+    goal: Write `mask_secret`, a filter that replaces secrets in log messages, and a filter that adds the current `ContextVar` trace id to each record. Practises filters and `contextvars` with asyncio tasks.
+    solution_note: |
+      The redacting filter uses `record.getMessage()`, so secrets that were passed as `%s` arguments are removed too, and it then clears `record.args`. Longer secrets are replaced first. The trace filter reads the `ContextVar` when the record is created, so each asyncio task sees its own id.

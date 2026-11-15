@@ -1,0 +1,6 @@
+- {term: Traceback, meaning: "The report Python prints for an uncaught exception: the chain of calls, oldest first, then the error type and message."}
+- {term: Breakpoint, meaning: "A place where the program stops so you can inspect it. In Python, call breakpoint() to open the pdb debugger."}
+- {term: pdb, meaning: "Python's built-in debugger. Commands include n (next), s (step), c (continue), p (print), l (list), w (where) and q (quit)."}
+- {term: Log level, meaning: "The importance of a log message: DEBUG, INFO, WARNING, ERROR or CRITICAL. A logger shows messages at or above its level."}
+- {term: Bisect, meaning: "Finding a bug by repeatedly halving the input or the list of changes and keeping the half that still fails."}
+- {term: Shadowing, meaning: "Using a name that hides another one, for example a variable called list that hides the built-in list."}

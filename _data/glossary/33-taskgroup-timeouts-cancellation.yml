@@ -1,0 +1,7 @@
+- {term: Structured concurrency, meaning: "A rule that tasks started in a block must finish before the block ends, so no task is left running in the background."}
+- {term: TaskGroup, meaning: "asyncio.TaskGroup() starts tasks that belong together. It waits for all of them and cancels the rest if one fails (Python 3.11+)."}
+- {term: ExceptionGroup, meaning: "An exception that holds several other exceptions at once. TaskGroup raises one when tasks fail."}
+- {term: except*, meaning: "Syntax that handles the members of an ExceptionGroup by type. Several except* clauses can run for one group."}
+- {term: CancelledError, meaning: "The exception a task receives at an await when it is cancelled. Do cleanup in finally and re-raise it."}
+- {term: Timeout, meaning: "asyncio.timeout(seconds) cancels the code in its block after the time limit, and the block raises TimeoutError."}
+- {term: Worker pool, meaning: "A fixed number of tasks that take items from an asyncio.Queue, so only that many jobs run at once."}

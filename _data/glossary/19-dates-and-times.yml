@@ -1,0 +1,7 @@
+- {term: timedelta, meaning: "A length of time, such as 1 day and 3 hours. Subtracting two dates or datetimes gives one."}
+- {term: Naive datetime, meaning: "A datetime with no time zone information. It does not say which moment it is."}
+- {term: Aware datetime, meaning: "A datetime with a time zone or UTC offset, so it names an exact moment."}
+- {term: UTC, meaning: "Coordinated Universal Time, the zone with no daylight saving. Use it to store and compare times."}
+- {term: IANA time zone, meaning: "A named zone such as Europe/Paris from the shared time zone database. The zoneinfo module reads it."}
+- {term: ISO 8601, meaning: "The standard text format for dates and times, such as 2025-03-14T09:30:00+00:00."}
+- {term: DST, meaning: "Daylight saving time. Clocks jump forward or back, so some local times are missing or happen twice."}

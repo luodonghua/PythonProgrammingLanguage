@@ -1,0 +1,8 @@
+2024-05-01 12:00:01 INFO server started
+2024-05-01 12:00:07 WARNING disk almost full
+
+malformed line
+2024-05-01 12:01:15 ERROR cannot open database
+2024-05-01 12:01:16 info retrying in 5 seconds
+2024-05-01 12:02:40 ERROR disk full
+2024-05-01 12:02:41 CRITICAL shutting down

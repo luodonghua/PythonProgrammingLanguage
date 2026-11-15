@@ -1,0 +1,7 @@
+- {term: SQLite, meaning: "A database engine that stores everything in one file (or in memory). Python includes it as the sqlite3 module."}
+- {term: Cursor, meaning: "An object that runs SQL and gives access to the result rows with fetchone, fetchall or iteration."}
+- {term: Placeholder, meaning: "A ? in SQL text that stands for a value passed separately. It prevents SQL injection."}
+- {term: Transaction, meaning: "A group of changes that are saved together with commit or undone together with rollback."}
+- {term: SQL injection, meaning: "An attack where user text pasted into SQL changes the meaning of the query."}
+- {term: Foreign key, meaning: "A column that must match the primary key of a row in another table."}
+- {term: Index, meaning: "An extra lookup structure that makes searches on a column faster and writes slightly slower."}

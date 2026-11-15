@@ -1,0 +1,137 @@
+- q: |
+    Which statement about iterables and iterators is correct?
+  options:
+    - "A list is an iterator, because you can call `next()` on it."
+    - "`iter(x)` always returns `x` itself."
+    - "A list is iterable but not an iterator. `iter(my_list)` returns a separate iterator that remembers its position."
+    - "An iterator can be restarted by calling `next()` with the argument `0`."
+  answer: C
+  why: |
+    A list has `__iter__` but no `__next__`, so `next(my_list)` raises `TypeError`. `iter(my_list)` creates a new iterator object. Only iterators return themselves from `iter()`.
+
+- q: |
+    What is the output?
+
+    ```python
+    def gen():
+        print("A")
+        yield 1
+
+    g = gen()
+    print("B")
+    next(g)
+    ```
+  options:
+    - "`B` then `A`"
+    - "`A` then `B`"
+    - "`A` only"
+    - "`B` only"
+  answer: A
+  why: |
+    Calling `gen()` only creates the generator. The body, including `print("A")`, runs when `next(g)` asks for the first value.
+
+- q: |
+    What is the output?
+
+    ```python
+    g = (n * n for n in range(3))
+    print(list(g))
+    print(list(g))
+    ```
+  options:
+    - "`[0, 1, 4]` then `[0, 1, 4]`"
+    - "`[0, 1, 4]` then `None`"
+    - "`[0, 1, 4]` then an error"
+    - "`[0, 1, 4]` then `[]`"
+  answer: D
+  why: |
+    A generator can be consumed only once. The first `list(g)` uses up every value, so the second one finds nothing and returns an empty list.
+
+- q: |
+    How does a `for` loop know that an iterator has no more values?
+  options:
+    - "It checks whether `len()` of the iterator is 0."
+    - "The iterator raises `StopIteration` from `__next__`, and the loop catches it quietly."
+    - "The iterator returns `None`."
+    - "The loop counts the items first."
+  answer: B
+  why: |
+    `StopIteration` is the signal for "finished". A `for` loop handles it for you. If an iterator returned `None`, that would be an ordinary value, and many iterators yield `None` legitimately.
+
+- q: |
+    What makes a function a **generator function**?
+  options:
+    - "It is defined with `def generate`."
+    - "It returns a list."
+    - "It is decorated with `@generator`."
+    - "Its body contains a `yield` statement."
+  answer: D
+  why: |
+    The presence of `yield` in the body is the only requirement. Calling such a function returns a generator object instead of running the body.
+
+- q: |
+    What is the output?
+
+    ```python
+    from itertools import groupby
+
+    print([(k, len(list(g))) for k, g in groupby("aabaa")])
+    ```
+  options:
+    - "`[('a', 4), ('b', 1)]`"
+    - "`[('a', 2), ('b', 1)]`"
+    - "`[('a', 2), ('b', 1), ('a', 2)]`"
+    - "`[('a', 2), ('a', 2), ('b', 1)]`"
+  answer: C
+  why: |
+    `groupby` only groups **neighbouring** equal keys. The letters `a a b a a` form three runs. Sort the data first if you want one group per key.
+
+- q: |
+    You have an endless generator `ticks()` and you want its first five values. What is the right tool?
+  options:
+    - "`list(itertools.islice(ticks(), 5))`"
+    - "`list(ticks())[:5]`"
+    - "`ticks()[:5]`"
+    - "`len(ticks()) == 5`"
+  answer: A
+  why: |
+    `islice` stops after five values. `list(ticks())` would never finish, and generators do not support slicing or `len()`.
+
+- q: |
+    Which code uses the least memory while computing the sum of squares of a million numbers?
+  options:
+    - "`sum([n * n for n in range(1_000_000)])`"
+    - "`sum(n * n for n in range(1_000_000))`"
+    - "`squares = list(map(lambda n: n * n, range(1_000_000)))` then `sum(squares)`"
+    - "All three use the same memory."
+  answer: B
+  why: |
+    The generator expression produces one square at a time and `sum` adds it at once. The other two build a list of a million numbers first.
+
+- q: |
+    What is the output?
+
+    ```python
+    import itertools
+
+    print(list(itertools.batched("abcde", 2)))
+    ```
+  options:
+    - "`[['a', 'b'], ['c', 'd'], ['e']]`"
+    - "`['ab', 'cd', 'e']`"
+    - "`[('a', 'b'), ('c', 'd'), ('e',)]`"
+    - "`[('a', 'b'), ('c', 'd')]`"
+  answer: C
+  why: |
+    `batched` (Python 3.12+) yields **tuples**. The last one is shorter when the data does not divide evenly.
+
+- q: |
+    Why is `for line in open(path):` often better than `open(path).readlines()` for a very large log file?
+  options:
+    - "The loop reads the file one line at a time, so memory use stays small."
+    - "`readlines()` cannot read text files."
+    - "The loop sorts the lines for you."
+    - "`readlines()` skips blank lines."
+  answer: A
+  why: |
+    A file object is an iterator over its lines. `readlines()` loads every line into one list at once, which can use gigabytes for a big file.

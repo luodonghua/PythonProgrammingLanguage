@@ -1,0 +1,17 @@
+<li class="{% if include.m.status != 'ready' %}soon{% endif %}">
+  <span class="num">{{ include.m.slug | slice: 0, 2 }}</span>
+  <div class="body">
+    <strong>{{ include.m.title }}</strong>
+    <small>{{ include.m.summary }}</small>
+    {% if include.m.status == 'ready' %}
+    <span class="links">
+      <a href="{{ '/modules/' | append: include.m.slug | append: '/' | relative_url }}">Learn</a>
+      <a href="{{ '/modules/' | append: include.m.slug | append: '/quiz/' | relative_url }}">Test</a>
+      <a href="{{ '/modules/' | append: include.m.slug | append: '/assignments/' | relative_url }}">Assignments</a>
+      <span class="badge" data-badge="{{ include.m.slug }}"></span>
+    </span>
+    {% else %}
+    <small>Coming soon</small>
+    {% endif %}
+  </div>
+</li>

@@ -1,0 +1,141 @@
+- q: |
+    Which call is safe when `name` comes from a user?
+  options:
+    - "`conn.execute(f\"SELECT * FROM users WHERE name = '{name}'\")`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = '\" + name + \"'\")`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = ?\", (name,))`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = '%s'\" % name)`"
+  answer: C
+  why: |
+    A `?` placeholder sends the value separately from the SQL text, so the database never treats it as SQL. The other three build the query from text, which allows SQL injection.
+
+- q: |
+    A table `sales(item TEXT, qty INTEGER)` holds these rows: `('pen', 2)`, `('ink', 1)`, `('pen', 5)`, `('ink', 4)`, `('cap', 3)`. What is the output?
+
+    ```python
+    rows = conn.execute(
+        "SELECT item, SUM(qty) FROM sales GROUP BY item ORDER BY item"
+    ).fetchall()
+    print(rows)
+    ```
+  options:
+    - "`[('cap', 3), ('ink', 5), ('pen', 7)]`"
+    - "`[('pen', 7), ('ink', 5), ('cap', 3)]`"
+    - "`[('cap', 3), ('ink', 1), ('ink', 4), ('pen', 2), ('pen', 5)]`"
+    - "`[(15,)]`"
+  answer: A
+  why: |
+    `GROUP BY item` makes one row per item and `SUM(qty)` adds the quantities in each group: pen 2+5=7, ink 1+4=5, cap 3. `ORDER BY item` sorts the names alphabetically, so cap comes first.
+
+- q: |
+    The `sales` table has 5 rows, and they are already committed. What is the output?
+
+    ```python
+    try:
+        with conn:
+            conn.execute("INSERT INTO sales VALUES ('x', 1)")
+            1 / 0
+    except ZeroDivisionError:
+        pass
+    print(conn.execute("SELECT COUNT(*) FROM sales").fetchone()[0])
+    ```
+  options:
+    - "`6`"
+    - "`0`"
+    - "`ZeroDivisionError`, because the error is not caught"
+    - "`5`"
+  answer: D
+  why: |
+    `with conn:` rolls back when the block raises an exception, so the new row is discarded and the count stays 5. Had the block ended without error, it would have committed and the count would be 6.
+
+- q: |
+    Using the same `sales` table with the rows `('pen', 2)`, `('ink', 1)`, `('pen', 5)`, `('ink', 4)`, `('cap', 3)`, what is the output?
+
+    ```python
+    cur = conn.execute("UPDATE sales SET qty = 0 WHERE item = ?", ("pen",))
+    print(cur.rowcount)
+    ```
+  options:
+    - "`1`"
+    - "`2`"
+    - "`7`"
+    - "`5`"
+  answer: B
+  why: |
+    `rowcount` is the number of rows the statement changed. Two rows have the item `pen`, so two rows were updated. The `WHERE` clause keeps the other three rows out.
+
+- q: |
+    You insert rows into a file database and the program ends without calling `commit()` or using `with conn:`. What happens to the rows?
+  options:
+    - "They are saved, because `execute` always saves."
+    - "They are saved in a temporary file."
+    - "They are lost, because the transaction was never committed."
+    - "SQLite raises an error when the program ends."
+  answer: C
+  why: |
+    `INSERT`, `UPDATE` and `DELETE` start a transaction. Until you commit it, the changes exist only on your connection. When the connection is closed without a commit, SQLite discards them.
+
+- q: |
+    What is the output?
+
+    ```python
+    conn.execute("CREATE TABLE t (n INTEGER)")
+    print(conn.execute("SELECT n FROM t").fetchone())
+    ```
+  options:
+    - "`[]`"
+    - "`()`"
+    - "`0`"
+    - "`None`"
+  answer: D
+  why: |
+    `fetchone()` returns `None` when the query has no rows. `fetchall()` would return an empty list `[]`. Test for `None` before you use the row.
+
+- q: |
+    What does `PRAGMA foreign_keys = ON` do, and when must you run it?
+  options:
+    - "It makes SQLite enforce `REFERENCES` constraints. Run it on every new connection."
+    - "It creates an index on every foreign key, once per database."
+    - "It turns on automatic commits."
+    - "It makes `JOIN` queries faster."
+  answer: A
+  why: |
+    SQLite ignores foreign key constraints unless you turn enforcement on, and the setting belongs to the connection. Without it you can insert a book whose `author_id` points to no author.
+
+- q: |
+    After this code, can you still run `conn.execute("SELECT 1")`?
+
+    ```python
+    with conn:
+        conn.execute("INSERT INTO sales VALUES ('y', 2)")
+    ```
+  options:
+    - "No. The `with` block closed the connection."
+    - "Yes. `with conn:` commits (or rolls back) but does not close."
+    - "No. The connection is locked until the program ends."
+    - "Yes, but only after you call `commit()` again."
+  answer: B
+  why: |
+    For `sqlite3`, the connection used as a context manager only manages the transaction. You must call `conn.close()` yourself, or wrap it in `contextlib.closing`.
+
+- q: |
+    Why does `conn.execute("SELECT * FROM users WHERE name = ?", ("ann"))` fail?
+  options:
+    - "Placeholders cannot be used with `SELECT`."
+    - "The parameters must be a list, never a tuple."
+    - "`name` is a reserved word."
+    - "`(\"ann\")` is a string, not a tuple. Write `(\"ann\",)`."
+  answer: D
+  why: |
+    Parentheses alone do not make a tuple. The comma does. A string is a sequence of characters, so SQLite counts three parameters and raises `ProgrammingError` ("Incorrect number of bindings supplied").
+
+- q: |
+    What is the main purpose of `CREATE INDEX idx_books_year ON books(year)`?
+  options:
+    - "It makes `year` unique."
+    - "It sorts the table on disk permanently."
+    - "It makes lookups and sorts on `year` faster, at a small cost for writes."
+    - "It blocks `NULL` values in `year`."
+  answer: C
+  why: |
+    An index is an extra structure the database keeps up to date so it can find rows by `year` without scanning the whole table. It does not enforce uniqueness (that needs `CREATE UNIQUE INDEX`) and does not reject `NULL`.

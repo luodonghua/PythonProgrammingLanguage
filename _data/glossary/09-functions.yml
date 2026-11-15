@@ -1,0 +1,7 @@
+- {term: Parameter, meaning: "A name in the def line that receives a value. The value you pass in a call is the argument."}
+- {term: Return value, meaning: "The result a function sends back with return. A function without return gives back None."}
+- {term: Default argument, meaning: "A value used when the caller leaves out an argument. It is evaluated once, when def runs."}
+- {term: "*args and **kwargs", meaning: "Parameters that collect extra positional arguments in a tuple and extra keyword arguments in a dict."}
+- {term: Scope, meaning: "The part of a program where a name is visible. Python looks in Local, Enclosing, Global and Built-in scopes, in that order (LEGB)."}
+- {term: Closure, meaning: "An inner function that keeps access to variables of the function that created it."}
+- {term: Recursion, meaning: "A function that calls itself on a smaller problem until it reaches a base case."}

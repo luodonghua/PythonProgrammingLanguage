@@ -1,0 +1,25 @@
+setup: |
+  Assignments 1 and 4 use data files that sit in their assignment folders (`sample.txt` and the `notes/` folder). The other tests create their files in temporary folders, so nothing outside the repository is touched.
+assignments:
+  - dir: a1-text-stats
+    title: Text file statistics
+    goal: Count the lines, words and characters of a file and find its longest line. Practises `with open(...)`, iterating over lines, `read_text` and UTF-8.
+    files_note: The data file `sample.txt` is in the same folder.
+    solution_note: |
+      Iterating over the file reads one line at a time, so `count_lines` works for huge files. `count_chars` counts **characters** of the decoded text, so `Café` is 4 even though it uses 5 bytes. `max(lines, key=len, default="")` returns the first longest line and handles an empty file.
+  - dir: a2-read-and-write
+    title: Read and write text files
+    goal: Read non-blank lines, write a formatted report, append to a log, copy a file in upper case and read the last lines. Practises the modes `"r"`, `"w"` and `"a"`.
+    solution_note: |
+      `"w"` replaces the file and `"a"` keeps the old content and adds to the end. `copy_uppercase` opens both files in a single `with` statement and processes one line at a time. `tail` slices the list of lines with `lines[-n:]`, after handling `n <= 0`, because `lines[-0:]` would return everything.
+  - dir: a3-folder-tools
+    title: Folder tools with pathlib
+    goal: Find files by suffix, count them, find the largest file, create a folder tree and rename suffixes. Practises `Path`, `rglob`, `iterdir`, `mkdir(parents=True, exist_ok=True)` and `stat().st_size`.
+    solution_note: |
+      `rglob("*")` walks all subfolders, and `is_file()` skips directories. `relative_to(folder).as_posix()` gives portable relative names. `mkdir(parents=True, exist_ok=True)` creates all missing parents without an error if the folder exists. `max` with a key on a name-sorted list picks the first name on ties.
+  - dir: a4-merge-and-search
+    title: Merge and search notes
+    goal: Merge several note files into one, search them for a word with line numbers, number the lines of a file and read a file safely. Practises `glob`, `enumerate(f, start=1)` and catching `FileNotFoundError`.
+    files_note: The `notes/` folder with small text files is in the same folder.
+    solution_note: |
+      `Path.glob("*.txt")` finds the notes and `sorted` gives a fixed order. `merge_notes` writes a header per note and makes sure each line ends with a newline. `search` uses `enumerate(f, start=1)` for line numbers. `safe_read` catches only `FileNotFoundError`, so other problems still show up.

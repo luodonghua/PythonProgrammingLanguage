@@ -1,0 +1,145 @@
+- q: |
+    What is the output?
+
+    ```python
+    import inspect
+
+    def f(a, /, b, *, c=1):
+        pass
+
+    print(inspect.signature(f))
+    ```
+  options:
+    - "`(a, b, c=1)`"
+    - "`(a, /, b, *, c=1)`"
+    - "`<Signature a, b, c>`"
+    - "`['a', 'b', 'c']`"
+  answer: B
+  why: |
+    A `Signature` prints like the parameter list of the `def` line, including the `/` and `*` markers. Option A drops those markers, which hide the parameter kinds.
+
+- q: |
+    What is the output?
+
+    ```python
+    import inspect
+
+    def g(a, b=2, *args, c, **kw):
+        pass
+
+    params = inspect.signature(g).parameters.values()
+    print([p.kind.name for p in params])
+    ```
+  options:
+    - "`['a', 'b', 'args', 'c', 'kw']`"
+    - "`['POSITIONAL', 'POSITIONAL', 'ARGS', 'KEYWORD', 'KWARGS']`"
+    - "`['POSITIONAL_OR_KEYWORD', 'POSITIONAL_OR_KEYWORD', 'VAR_POSITIONAL', 'VAR_KEYWORD', 'KEYWORD_ONLY']`"
+    - "`['POSITIONAL_OR_KEYWORD', 'POSITIONAL_OR_KEYWORD', 'VAR_POSITIONAL', 'KEYWORD_ONLY', 'VAR_KEYWORD']`"
+  answer: D
+  why: |
+    Parameters keep their order from the `def` line. `c` comes after `*args`, so it is keyword-only. `**kw` is last and has kind `VAR_KEYWORD`. Option C swaps the last two.
+
+- q: |
+    What is the output?
+
+    ```python
+    from typing import get_args, get_origin
+
+    print(get_origin(list[int]), get_args(list[int]))
+    ```
+  options:
+    - "`<class 'list'> (<class 'int'>,)`"
+    - "`list int`"
+    - "`None (<class 'int'>,)`"
+    - "`<class 'list'> ()`"
+  answer: A
+  why: |
+    `get_origin` returns the container class (`list`) and `get_args` returns a tuple of the type arguments. A plain class like `int` would give `None` and `()`.
+
+- q: |
+    How do you test that a parameter `p` has no default value?
+  options:
+    - "`p.default == None`"
+    - "`not p.default`"
+    - "`p.default is inspect.Parameter.empty`"
+    - "`p.default is None`"
+  answer: C
+  why: |
+    `inspect.Parameter.empty` is a special marker for "no default". A default of `None`, `0` or `""` is still a default, so options A, B and D give wrong answers for those parameters.
+
+- q: |
+    Why use `typing.get_type_hints(func)` instead of reading `func.__annotations__`?
+  options:
+    - "It checks that the arguments match the hints when you call the function."
+    - "It turns string annotations into real type objects."
+    - "It is the only way to read the hints of a function that has no parameters at all."
+    - "It makes the interpreter enforce the hints."
+  answer: B
+  why: |
+    Annotations can be strings (forward references, or `from __future__ import annotations`). `get_type_hints` evaluates them. It never checks values, and Python does not enforce hints at all.
+
+- q: |
+    What is the output?
+
+    ```python
+    def double(n: int):
+        return n * 2
+
+    print(double("ab"))
+    ```
+  options:
+    - "`abab`"
+    - "`TypeError`"
+    - "`ValueError`"
+    - "`None`"
+  answer: A
+  why: |
+    The hint `int` is not enforced. `"ab" * 2` is valid string repetition, so the call returns `abab`. To reject the string you must validate it, for example with pydantic.
+
+- q: |
+    In Python 3.14, what changed about annotations on functions?
+  options:
+    - "They are checked when the function is called."
+    - "They must now be written as strings, and the interpreter checks them on each call."
+    - "`typing.get_type_hints` was removed."
+    - "They are evaluated lazily, only when read, and `annotationlib` reads them."
+  answer: D
+  why: |
+    PEP 649 and PEP 749 made evaluation lazy. Type checking at call time never existed, and `get_type_hints` still works.
+
+- q: |
+    A model sends `{"count": 3}` as arguments for your function. Why validate it before the call?
+  options:
+    - "Python refuses to call a function with arguments that come from a dict, unless it was checked first."
+    - "Validation makes the function run faster."
+    - "The data is untrusted and hints are not enforced, so bad input could slip through."
+    - "`inspect.signature` raises an error for untyped calls."
+  answer: C
+  why: |
+    Input from outside is untrusted. Checking names and types at the boundary gives one clear error message instead of a confusing failure later.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(isinstance(True, int), isinstance(1, bool))
+    ```
+  options:
+    - "`True True`"
+    - "`True False`"
+    - "`False False`"
+    - "`False True`"
+  answer: B
+  why: |
+    `bool` is a subclass of `int`, so `True` counts as an int. A plain `1` is not a `bool`. That is why a validator for "integer" must reject booleans explicitly.
+
+- q: |
+    A function is `def f(a: int, b: str = "x")`. What does a schema builder put in `"required"`?
+  options:
+    - "`[\"a\", \"b\"]`"
+    - "`[\"a\"]`"
+    - "`[\"b\"]`"
+    - "`[]`"
+  answer: B
+  why: |
+    `required` lists the parameters the caller must supply, which are those without a default. `b` has a default, so a caller may leave it out.

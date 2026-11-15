@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-seconds-to-clock
+    title: Seconds to a clock
+    goal: Split a number of seconds into days, hours, minutes and seconds, and format it as H:MM:SS. Practises `divmod` and f-string padding.
+    solution_note: |
+      `divmod(total, 3600)` returns the whole hours and the rest in one step. Repeat with 60 for minutes and seconds. `:02d` pads a number to two digits.
+  - dir: a2-unit-converter
+    title: Unit converter
+    goal: Convert temperatures and distances, then parse text like "100 C". Practises float arithmetic, `round`, `float()` and `ValueError`.
+    solution_note: |
+      The text version splits the input, converts the number with `float()` (which raises `ValueError` for bad numbers) and picks a function by unit. `:.1f` formats the result with one decimal.
+  - dir: a3-bill-splitter
+    title: Bill splitter
+    goal: Add a tip and split a bill so the shares add up to the total to the cent. Practises `Decimal`, rounding and `divmod`.
+    solution_note: |
+      `Decimal` built from strings avoids float errors, and `quantize` with `ROUND_HALF_UP` rounds to cents. To split fairly, work in whole cents: `divmod(cents, people)` gives the base share and the number of people who get one extra cent.
+  - dir: a4-parse-number
+    title: Safe numbers and BMI
+    goal: Turn messy text into numbers without crashing, then compute and classify a BMI. Practises `int()`, `float()`, `try`/`except ValueError`, `None` and `if`/`elif`.
+    solution_note: |
+      `parse_number` tries `int` first so whole numbers stay `int`, then `float`. `math.isfinite` rejects `nan` and `inf`, which `float()` accepts. Returning `None` lets the caller decide what an invalid value means.

@@ -1,0 +1,171 @@
+- q: |
+    A progress runner has workers put results in an `asyncio.Queue`, and the generator takes them out until it sees the end marker `None`. What is printed?
+
+    ```python
+    import asyncio
+
+
+    async def main():
+        queue = asyncio.Queue()
+
+        async def producer():
+            for i in range(3):
+                await queue.put(i)
+            await queue.put(None)
+
+        task = asyncio.create_task(producer())
+        out = []
+        while (item := await queue.get()) is not None:
+            out.append(item * 10)
+        print(out)
+        await task
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`[0, 10, 20]`"
+    - "`[0, 10, 20, None]`"
+    - "`[0, 1, 2]`"
+    - "`[]`, because the loop ends before the producer starts"
+  answer: A
+  why: |
+    The loop stops when `queue.get()` returns `None`, and the marker itself is never appended. Each value is multiplied by 10 before it is stored. The producer runs whenever the consumer waits on the empty queue.
+
+- q: |
+    A worker gets `ConnectionError` from the model. Another time the model returns text that is not valid JSON. How should the worker treat them?
+  options:
+    - "Treat both the same: wait with backoff, then retry with the same prompt."
+    - "Give up at once in both cases."
+    - "Connection error: retry at once, with no wait. Invalid JSON: wait with backoff."
+    - "Connection error: wait and retry. Invalid JSON: retry at once, with the error in the prompt."
+  answer: D
+  why: |
+    A connection problem is temporary, so waiting helps. Invalid output is not a timing problem. Waiting does nothing, but telling the model what was wrong can fix the next reply.
+
+- q: |
+    What is the output?
+
+    ```python
+    from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+
+    class Finding(BaseModel):
+        model_config = ConfigDict(str_strip_whitespace=True)
+        task_id: str
+        answer: str = Field(min_length=1)
+        confidence: float = Field(ge=0, le=1)
+
+
+    try:
+        Finding(task_id="q1", answer="  ", confidence=1.5)
+    except ValidationError as exc:
+        for e in exc.errors():
+            print(e["loc"], e["type"])
+    ```
+  options:
+    - "One line: `('answer',) string_too_short`."
+    - "Two lines: `('answer',) string_too_short` and `('confidence',) less_than_equal`."
+    - "One line: `('confidence',) less_than_equal`."
+    - "Nothing, because `answer` has spaces and spaces count as characters."
+  answer: B
+  why: |
+    `str_strip_whitespace` turns `"  "` into `""` before the length check, so `answer` is too short. `confidence` 1.5 is above 1. pydantic reports all errors, not only the first.
+
+- q: |
+    With `asyncio.TaskGroup`, which statement is true when one task raises an exception that nobody catches?
+  options:
+    - "The other tasks keep running and the exception is lost."
+    - "The program exits at once, without running any `finally` blocks."
+    - "The group cancels the remaining tasks, waits for them, and raises an `ExceptionGroup`."
+    - "Only the failing task stops. The group raises nothing."
+  answer: C
+  why: |
+    A `TaskGroup` guarantees that no task outlives the block. It cancels the siblings (their `finally` blocks run) and raises an `ExceptionGroup` that you can handle with `except*`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+
+    async def fail(name):
+        await asyncio.sleep(0)
+        raise ValueError(name)
+
+
+    async def main():
+        try:
+            async with asyncio.TaskGroup() as group:
+                group.create_task(fail("a"))
+                group.create_task(fail("b"))
+        except* ValueError as eg:
+            print(sorted(str(e) for e in eg.exceptions))
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`['a']`"
+    - "`['a', 'b']`"
+    - "`[]`"
+    - "`ValueError: a`"
+  answer: B
+  why: |
+    Both tasks fail in the same loop iteration, before the group can cancel either one. Both exceptions are collected in one `ExceptionGroup`, and `except*` gives them as `eg.exceptions`.
+
+- q: |
+    A runner collects results from 5 concurrent workers. Which design gives a report whose order does not change between runs?
+  options:
+    - "Append each result to a list at the moment its worker finishes."
+    - "Sort the results by the time they arrived."
+    - "Store results by task id, then build the list in the original task order."
+    - "Run the workers one after the other."
+  answer: C
+  why: |
+    Finish order depends on timing, so it differs between runs. Building the list in task order is stable and still allows concurrency. Running one at a time is also stable, but it gives up the speed you wanted.
+
+- q: |
+    In the events generator, workers put events into an `asyncio.Queue` and the generator yields them. What must happen in its `finally` block when the consumer stops early?
+  options:
+    - "Cancel the background task and wait for it, so no worker keeps running."
+    - "Put more events into the queue."
+    - "Nothing. Python stops background tasks when a generator is closed."
+    - "Call `queue.join()` and wait for every worker to finish."
+  answer: A
+  why: |
+    A background task created with `create_task` is not stopped when the generator is closed. Without cancelling it, workers continue with nobody listening. Waiting for it lets their own `finally` cleanup run.
+
+- q: |
+    Why is the `trace_id` stored in a `ContextVar` before the workers are created?
+  options:
+    - "Because `ContextVar` values are always faster to read than function arguments."
+    - "Because a task copies the current context when it is created, so workers can read the id."
+    - "Because a `ContextVar` is shared by all tasks, so every worker sees the last value that was written."
+    - "Because `ContextVar` values are saved to disk."
+  answer: B
+  why: |
+    `asyncio` copies the context into each new task. A value set before `create_task` is visible in the task. A value set later in the parent is not. A `ContextVar` is not shared the way a global variable is.
+
+- q: |
+    A command-line program prints its report to stdout. Three of 10 questions failed. Which exit code is the most useful for scripts?
+  options:
+    - "0, because the program itself ran without crashing."
+    - "2, only when the file is missing, and 0 for everything else."
+    - "No code. Only `sys.exit(None)` is allowed."
+    - "A non-zero code (for example 1), because not all tasks succeeded."
+  answer: D
+  why: |
+    A script that calls your program checks the exit code to decide what to do next. 0 means complete success. A different code lets the caller notice a partial failure without parsing the text. Conventional meaning here: 1 is task failure, 2 is bad input.
+
+- q: |
+    A test of the worker uses `FakeLLM({"tides": [ConnectionError("offline"), good_json]})` and a recording `sleep`. What does the test check without waiting?
+  options:
+    - "That the model is correct about what causes the tides."
+    - "That the network is available."
+    - "That the worker retries after the error, asks the model twice and asks `sleep` for one delay."
+    - "That the fake `sleep` is faster than the real `asyncio.sleep`."
+  answer: C
+  why: |
+    The fake model raises on the first call and returns valid JSON on the second. The recorded `sleep` shows which delay the worker asked for, with no real waiting. The test checks the worker's logic, not the model.

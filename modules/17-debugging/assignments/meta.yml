@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-fix-the-bugs
+    title: Fix five bugs
+    goal: Five short functions each hide one classic bug. Read the failing tests, find the cause and fix it. Practises the bug families (mutable default, off-by-one, integer division, shared rows, shadowed built-in).
+    solution_note: |
+      The fixes are small: `cart=None` and create the list inside, `range(1, n + 1)`, `/` instead of `//`, a list comprehension that builds a new row each time, and a variable name that does not hide `max`. Also use `>` instead of `>=` so ties keep the first word.
+  - dir: a2-logging
+    title: Logging instead of print
+    goal: Configure a logger that writes to a stream, then make a function report what it does through the `logging` module. The tests read the log records with `caplog`.
+    solution_note: |
+      `configure_logger` removes old handlers before adding one, so calling it twice does not print every message twice. `process_orders` passes values as arguments (`"skipping order %s: bad quantity %s", order_id, qty`), which keeps the message template separate from the data. `logger.exception` inside `except` records the traceback at `ERROR` level.
+  - dir: a3-traceback-info
+    title: Facts from a traceback
+    goal: Use the `traceback` module to find the function, line number and source text where an exception was raised, and to build a small error report.
+    solution_note: |
+      `traceback.extract_tb(exc.__traceback__)` returns frames, oldest call first. The last frame is where the error was raised, and the length of the list is the depth. Catching `Exception` (not `BaseException`) lets Ctrl+C still stop the program.
+  - dir: a4-bisect
+    title: Bisect to the first bad version
+    goal: Write a binary search that finds the first bad version of a project with very few checks, and count the checks. This is the idea behind `git bisect`.
+    solution_note: |
+      Keep a range `low..high` that must contain the answer. Test the middle. If it is bad, the answer is at or before it (`high = middle`). If it is good, the answer is after it (`low = middle + 1`). Each check halves the range, so 1000 versions need about 10 checks.

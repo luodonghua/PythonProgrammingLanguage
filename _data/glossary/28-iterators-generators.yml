@@ -1,0 +1,7 @@
+- {term: Iterable, meaning: "An object you can loop over, such as a list, string or file. It gives you an iterator when you call iter() on it."}
+- {term: Iterator, meaning: "An object with __next__ that returns one value per call and raises StopIteration when finished. It can be used once."}
+- {term: Generator, meaning: "An iterator made by a function that contains yield, or by a generator expression. It computes values on demand."}
+- {term: yield, meaning: "Hands a value to the caller and pauses the function. The next request resumes it right after the yield."}
+- {term: Lazy evaluation, meaning: "Computing a value only when it is needed. Generators are lazy, so they can describe very large or endless streams."}
+- {term: Pipeline, meaning: "A chain of generators where each stage reads from the previous one and handles one item at a time."}
+- {term: StopIteration, meaning: "The exception an iterator raises to say there are no more values. A for loop catches it for you."}

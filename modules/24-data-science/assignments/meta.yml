@@ -1,0 +1,35 @@
+intro: |
+  Four tasks with small CSV files. You load, filter, summarise, clean and plot data with pandas and matplotlib. The tests check exact values, so read each docstring for the rules (rounding, sort order, index).
+setup: |
+  These tasks need two third-party libraries. Install them once in your project:
+
+  ```bash
+  uv add pandas matplotlib
+  ```
+
+  Data files sit next to each starter in the assignment folder and are loaded through `Path(__file__).parent`, so you can run the tests from any directory. The charts in assignment 4 are drawn with the `Agg` backend, so no window opens.
+assignments:
+  - dir: a1-top-movies
+    title: Top movies
+    goal: Load a CSV, return the top N rows by a column and list the titles that pass two filters. Practises `read_csv`, `sort_values`, `head` and boolean masks.
+    files_note: "Data file: `movies.csv`."
+    solution_note: |
+      `kind="stable"` keeps tied rows in their original order, so the result is the same on every run. The mask uses `&` with parentheses around each comparison.
+  - dir: a2-orders
+    title: Orders by category and customer
+    goal: Add a computed column and summarise orders with `groupby` and `agg`. Practises new columns, sorting with several keys, and returning plain Python values.
+    files_note: "Data file: `orders.csv`."
+    solution_note: |
+      `df.assign(...)` returns a new DataFrame, so the input stays unchanged. Named aggregation (`orders=("order_id", "count")`) gives clear column names. Sorting by `[total, name]` with `ascending=[False, True]` makes ties predictable.
+  - dir: a3-clean-sensors
+    title: Clean sensor data
+    goal: Report missing values, then clean a table by dropping bad rows, removing duplicates and filling gaps with group means and a median. Practises `isna`, `dropna`, `drop_duplicates`, `fillna` and `groupby().transform`.
+    files_note: "Data file: `sensors.csv`."
+    solution_note: |
+      The order of the steps matters, because the median and the station means are computed after the bad and duplicate rows are gone. `transform("mean")` returns one value per row, so it can be passed straight to `fillna`.
+  - dir: a4-scores-chart
+    title: Merge tables and draw a chart
+    goal: Join scores to students, compute class averages and each student's best subject, then save a bar chart as a PNG. Practises `merge`, `groupby`, `idxmax` and matplotlib with the `Agg` backend.
+    files_note: "Data files: `scores.csv` and `students.csv`."
+    solution_note: |
+      `idxmax` gives the index label of the highest score in each group, and `loc` turns those labels into rows. The chart function closes its figure with `plt.close(fig)`, so repeated calls do not pile up open figures.

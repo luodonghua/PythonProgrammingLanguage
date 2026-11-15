@@ -1,0 +1,23 @@
+setup: |
+  This topic uses `pydantic` in assignment 4. It is already included in the project's dev dependencies.
+assignments:
+  - dir: a1-describe-function
+    title: Describe a function
+    goal: Read a function's signature with `inspect` and report each parameter. Also read its docstring and list an object's public methods.
+    solution_note: |
+      `inspect.signature(func).parameters.values()` gives `Parameter` objects. The default is the marker `Parameter.empty` when there is none, so compare with `is`. `inspect.getmembers(obj, callable)` finds methods, and the signature of a bound method has no `self`.
+  - dir: a2-build-schema
+    title: Build a JSON Schema
+    goal: Turn type hints and a function signature into a JSON Schema tool description. Practises `get_type_hints`, `get_origin`, `get_args` and recursion.
+    solution_note: |
+      `type_to_schema` calls itself for `list[T]` and for each member of a union. `build_schema` joins the per-parameter schemas and puts parameters without a default in `required`. Comparing the union origin with both `typing.Union` and `types.UnionType` makes the code work on every Python version.
+  - dir: a3-call-with-json-args
+    title: Call with JSON arguments
+    goal: Check a dict of arguments against a function's signature and hints, collect every problem, and call the function only when there are none.
+    solution_note: |
+      Collect messages in a list instead of raising on the first problem, so the caller sees everything that is wrong at once. `matches` tests `bool` before `int`, because `True` is an instance of `int`.
+  - dir: a4-pydantic-schema
+    title: Schema and validation with pydantic
+    goal: Build a pydantic model from a function signature with `create_model`. Use it to get a JSON Schema and to validate and coerce arguments.
+    solution_note: |
+      Each parameter becomes a field `(type, default)`, with `...` meaning "required". `extra="forbid"` turns unknown keys into errors. `ValidationError.errors()` gives a list of dicts, which you reformat into short messages.

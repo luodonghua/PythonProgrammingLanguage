@@ -1,0 +1,144 @@
+- q: |
+    Which call is the correct way to search for a name that comes from a user?
+  options:
+    - "`conn.execute(f\"SELECT * FROM users WHERE name = '{name}'\")`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = %s\", (name,))`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = ?\", (name,))`"
+    - "`conn.execute(\"SELECT * FROM users WHERE name = \" + name)`"
+  answer: B
+  why: |
+    psycopg uses `%s` placeholders and sends the values separately from the SQL, which prevents SQL injection. The `?` style belongs to `sqlite3`. The f-string and the `+` version put user text into the SQL itself.
+
+- q: |
+    What is the output?
+
+    ```python
+    from psycopg.rows import dict_row
+
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute("SELECT 1 AS n, 'x' AS s")
+        print(cur.fetchone())
+    ```
+  options:
+    - "`(1, 'x')`"
+    - "`[1, 'x']`"
+    - "`{1: 'x'}`"
+    - "`{'n': 1, 's': 'x'}`"
+  answer: D
+  why: |
+    `dict_row` returns each row as a dict that maps column names (or aliases) to values. Without a row factory the same query gives the tuple `(1, 'x')`.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(conn.execute("SELECT 1.50::numeric(10, 2)").fetchone())
+    ```
+  options:
+    - "`(Decimal('1.50'),)`"
+    - "`(1.5,)`"
+    - "`('1.50',)`"
+    - "`(150,)`"
+  answer: A
+  why: |
+    PostgreSQL `NUMERIC` is an exact decimal type, and psycopg returns it as `decimal.Decimal`, with the two decimal places kept. A `float` would show `1.5`. This is why `NUMERIC` and `Decimal` suit money.
+
+- q: |
+    The table `t` has one committed row. What is the output?
+
+    ```python
+    try:
+        with conn.transaction():
+            conn.execute("INSERT INTO t VALUES (2, 'b')")
+            raise ValueError
+    except ValueError:
+        pass
+    print(conn.execute("SELECT count(*) FROM t").fetchone())
+    ```
+  options:
+    - "`(2,)`"
+    - "`(0,)`"
+    - "`(1,)`"
+    - "Nothing is printed, because the connection is closed."
+  answer: C
+  why: |
+    A `conn.transaction()` block commits when it ends normally and rolls back when an exception leaves it. The insert is undone, so only the original row is left. The connection stays open.
+
+- q: |
+    The table `t(n INTEGER UNIQUE, label TEXT)` contains the row `(1, 'a')`. What is the output?
+
+    ```python
+    cur = conn.execute(
+        "INSERT INTO t VALUES (1, 'z') "
+        "ON CONFLICT (n) DO UPDATE SET label = EXCLUDED.label "
+        "RETURNING n, label"
+    )
+    print(cur.fetchone())
+    ```
+  options:
+    - "It raises `UniqueViolation`."
+    - "`None`"
+    - "`(1, 'a')`"
+    - "`(1, 'z')`"
+  answer: D
+  why: |
+    The insert conflicts on `n = 1`, so `DO UPDATE` changes the existing row. `EXCLUDED.label` is the value you tried to insert (`'z'`). `RETURNING` reports the row after the update.
+
+- q: |
+    A statement fails inside a transaction (for example a `CHECK` violation) and you catch the exception. What happens when you run `conn.execute("SELECT 1")` next?
+  options:
+    - "It raises `InFailedSqlTransaction`. You must roll back first."
+    - "It works, because the failed statement was undone."
+    - "It silently returns `None`."
+    - "It reconnects and works."
+  answer: A
+  why: |
+    PostgreSQL marks the whole transaction as aborted after an error and refuses every statement until `ROLLBACK`. Call `conn.rollback()`, or run risky statements inside `conn.transaction()`, which rolls back for you.
+
+- q: |
+    What happens at the end of `with psycopg.connect(dsn) as conn:` when the block finishes without an error?
+  options:
+    - "Nothing. You must call `commit()` and `close()` yourself."
+    - "The transaction is rolled back and the connection stays open."
+    - "The transaction is committed and the connection is closed."
+    - "The transaction is committed and the connection stays open."
+  answer: C
+  why: |
+    In psycopg 3 the connection context manager commits on success (or rolls back on an exception) and then closes the connection. In `sqlite3`, `with conn:` does not close it.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(conn.execute("""SELECT '{"a": {"b": 5}}'::jsonb -> 'a' ->> 'b'""").fetchone())
+    ```
+  options:
+    - "`(5,)`"
+    - "`('5',)`"
+    - "`({'b': 5},)`"
+    - "`('a',)`"
+  answer: B
+  why: |
+    `->` returns JSON and `->>` returns text. The last step uses `->>`, so the value is the string `'5'`. With `->` at the end psycopg would give the Python number `5`.
+
+- q: |
+    What is the main difference between PostgreSQL and SQLite for your program?
+  options:
+    - "PostgreSQL is a separate server that many clients can use at the same time."
+    - "PostgreSQL cannot store JSON."
+    - "PostgreSQL has no transactions."
+    - "PostgreSQL uses a different language instead of SQL."
+  answer: A
+  why: |
+    SQLite is a library that opens a file inside your process. PostgreSQL runs as its own server, so you connect with a DSN, and several programs can read and write together. Both use SQL and support transactions, and PostgreSQL has a `JSONB` type.
+
+- q: |
+    Which column type is the best choice for a price such as `19.99`?
+  options:
+    - "`FLOAT`"
+    - "`TEXT`"
+    - "`NUMERIC(10, 2)`"
+    - "`TIMESTAMPTZ`"
+  answer: C
+  why: |
+    `NUMERIC` stores exact decimal values and psycopg maps it to `Decimal`. Binary floats cannot represent most decimal fractions exactly: `0.1 + 0.2` gives `0.30000000000000004` as a float.

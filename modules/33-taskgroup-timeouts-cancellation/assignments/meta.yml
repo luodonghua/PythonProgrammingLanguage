@@ -1,0 +1,23 @@
+setup: |
+  The tests are `async def` functions and run with pytest-asyncio in auto mode. They use `asyncio.sleep(0)` and events instead of real waiting. A few tests give a short timeout (0.01 s) to a job that can never finish, so the result does not depend on how fast your machine is.
+assignments:
+  - dir: a1-fan-out
+    title: Fan out with a TaskGroup
+    goal: Fetch many names at once with a TaskGroup and let failures reach the caller as an ExceptionGroup. Then write a version that keeps the successes and reports each failure.
+    solution_note: |
+      `TaskGroup` waits for every task and cancels the rest on the first failure. The partial version catches errors inside a small wrapper, so the group never sees them and all tasks run to the end.
+  - dir: a2-except-star
+    title: Handle several errors with except*
+    goal: Flatten nested exception groups, and sort the errors of a failed job by type with `except*`.
+    solution_note: |
+      `except* ValueError` gives you an `ExceptionGroup` with only the matching members. You cannot `return` inside the block, so the solution stores the messages in variables and returns after the `try`. Unmatched types still propagate.
+  - dir: a3-timeouts
+    title: Timeouts and cancel
+    goal: Return a default when a job is too slow, give each job its own limit, cancel a task safely, and write a job that always cleans up.
+    solution_note: |
+      `asyncio.timeout` cancels the job and raises `TimeoutError` at the end of the block. `finally` runs on success, error and cancellation, so "close" is always logged.
+  - dir: a4-worker-pool
+    title: A worker pool with a Queue
+    goal: Process items with a fixed number of workers fed by an `asyncio.Queue`, and keep results in input order.
+    solution_note: |
+      Workers loop forever on `queue.get()`. `queue.join()` returns when every item has called `task_done()`. Then the workers are cancelled so the TaskGroup can end. The number of workers is the concurrency limit.

@@ -1,0 +1,167 @@
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def boom():
+        raise ValueError("bad")
+
+    async def main():
+        try:
+            async with asyncio.TaskGroup() as tg:
+                tg.create_task(boom())
+        except* ValueError as eg:
+            print(type(eg).__name__, len(eg.exceptions), eg.exceptions[0])
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`ValueError 1 bad`"
+    - "`ExceptionGroup 1 bad`"
+    - "`ExceptionGroup 0 bad`"
+    - "The program crashes with an unhandled `ValueError`."
+  answer: B
+  why: |
+    Inside an `except*` clause the name is bound to an `ExceptionGroup` that holds only the matching errors. It holds one `ValueError`, and `str()` of it is `bad`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def boom(exc):
+        raise exc
+
+    async def main():
+        try:
+            async with asyncio.TaskGroup() as tg:
+                tg.create_task(boom(ValueError("v1")))
+                tg.create_task(boom(TypeError("t1")))
+                tg.create_task(boom(ValueError("v2")))
+        except* ValueError as eg:
+            print("values:", [str(e) for e in eg.exceptions])
+        except* TypeError as eg:
+            print("types:", [str(e) for e in eg.exceptions])
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`values: ['v1']` only, because the first matching clause stops the others"
+    - "`types: ['t1']` only"
+    - "Both lines, values first"
+    - "`values: ['v1', 'v2', 't1']`"
+  answer: C
+  why: |
+    Several `except*` clauses can run for one group, and each gets the members of its own type. Option B is what a normal `except` chain would suggest, where only the first match runs.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def work():
+        try:
+            print("working")
+            await asyncio.sleep(10)
+        finally:
+            print("cleanup")
+
+    async def main():
+        t = asyncio.create_task(work())
+        await asyncio.sleep(0)
+        t.cancel()
+        try:
+            await t
+        except asyncio.CancelledError:
+            print("cancelled:", t.cancelled())
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`working` then `cancelled: True`"
+    - "`working`, `cleanup`, `cancelled: False`"
+    - "`cleanup` then `cancelled: True`"
+    - "`working`, `cleanup`, `cancelled: True`"
+  answer: D
+  why: |
+    `sleep(0)` lets the task start, so it prints `working`. The cancel arrives at `await asyncio.sleep(10)`. The `finally` block runs, then the task ends as cancelled.
+
+- q: |
+    Which statement sets a 5-second limit on the code inside a block (Python 3.11+)?
+  options:
+    - "`async with asyncio.timeout(5):`"
+    - "`with asyncio.limit(5):`"
+    - "`await asyncio.timeout(5)`"
+    - "`async with asyncio.TaskGroup(timeout=5):`"
+  answer: A
+  why: |
+    `asyncio.timeout` is an async context manager. When time runs out it cancels the code inside the block, and the block raises `TimeoutError`.
+
+- q: |
+    A job inside `asyncio.timeout(1)` runs for too long. What does the code after the `async with` block see?
+  options:
+    - "`asyncio.CancelledError`"
+    - "`TimeoutError`"
+    - "Nothing. The block ends silently and the job's result is `None`."
+    - "`ExceptionGroup`"
+  answer: B
+  why: |
+    The job is cancelled inside the block. The context manager turns that cancellation into `TimeoutError` when the block exits. You catch it with `except TimeoutError`.
+
+- q: |
+    A task catches `asyncio.CancelledError` to do cleanup. What should it do next?
+  options:
+    - "Return `None`, so that the caller sees a normal result."
+    - "Start a new task to replace itself."
+    - "Call `asyncio.run` again."
+    - "Re-raise the error after cleanup."
+  answer: D
+  why: |
+    Timeouts and TaskGroups depend on the cancellation reaching the task's caller. If the task swallows it, the task looks like it finished normally and the timeout or shutdown does not work.
+
+- q: |
+    A task group has three tasks. One raises `RuntimeError` at once. The other two are waiting. What happens to the other two?
+  options:
+    - "They are cancelled, and the group raises an `ExceptionGroup`."
+    - "They finish normally, then the group raises the error."
+    - "They keep running in the background after the block exits."
+    - "They are paused until you resume them."
+  answer: A
+  why: |
+    This is the structured concurrency rule. The group cancels the siblings of a failed task and waits for them to stop, so none outlives the block.
+
+- q: |
+    Why does `except ValueError:` fail to catch an error raised by a failing task in a TaskGroup?
+  options:
+    - "TaskGroup removes every `ValueError` before it can reach your code."
+    - "It arrives inside an `ExceptionGroup`. Use `except*`."
+    - "`ValueError` cannot be raised inside a coroutine."
+    - "You must call `tg.catch()` first."
+  answer: B
+  why: |
+    A TaskGroup always raises an `ExceptionGroup`, even for one failure. `except*` looks inside the group and matches its members by type.
+
+- q: |
+    What does `asyncio.shield(task)` do when the awaiting code is cancelled or times out?
+  options:
+    - "It cancels the task twice to be sure."
+    - "It hides the `TimeoutError` from the caller."
+    - "The task keeps running. Only the wait is cancelled."
+    - "It restarts the task from the beginning."
+  answer: C
+  why: |
+    `shield` protects the inner task from the cancellation of the outer await. The caller can still get `TimeoutError`, but the work goes on and you can await the task later.
+
+- q: |
+    In a queue worker pool, a worker forgets to call `queue.task_done()` for some items. What is the effect?
+  options:
+    - "`queue.join()` never returns."
+    - "The workers process each item twice."
+    - "The queue raises `QueueFull`."
+    - "Nothing. `task_done` is optional."
+  answer: A
+  why: |
+    `join()` waits until the count of unfinished items reaches zero, and each `task_done()` lowers it by one. Put the call in a `finally` block so errors do not skip it.

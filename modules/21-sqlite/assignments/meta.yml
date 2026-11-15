@@ -1,0 +1,23 @@
+setup: |
+  `sqlite3` is part of Python, so there is nothing to install. The tests use an in-memory database (`":memory:"`) or a file in a temporary folder. They create the tables themselves, so you only write the functions. Every function takes an open connection as its first argument.
+assignments:
+  - dir: a1-todo-store
+    title: To-do store
+    goal: Build a small to-do store on SQLite with create, add, list, complete and delete functions. Practises `execute`, `?` placeholders, `lastrowid`, `rowcount` and `with conn:`.
+    solution_note: |
+      Each change runs inside `with conn:`, so it commits when the block ends. `cursor.lastrowid` gives the new id and `cursor.rowcount` tells whether `UPDATE` found a row. The result dicts are built from column positions, so the code works with any `row_factory`.
+  - dir: a2-join-queries
+    title: JOIN queries
+    goal: Write queries that join `authors` and `books`, filter by author name with a parameter, and list authors that have no books. Practises `JOIN`, `LEFT JOIN` and `GROUP BY`.
+    solution_note: |
+      An inner `JOIN` drops authors without books. `LEFT JOIN` keeps them, and `COUNT(b.id)` counts only real books, because `COUNT(*)` would count the empty row as 1. `WHERE b.id IS NULL` finds the authors that matched nothing.
+  - dir: a3-sales-report
+    title: Aggregate sales report
+    goal: Use `SUM`, `GROUP BY`, `ORDER BY` and `LIMIT` to report revenue per customer, totals per month and the best-selling product. Practises aggregates and formatting cents as dollars.
+    solution_note: |
+      The database does the adding, so Python only formats the result. `substr(ordered_on, 1, 7)` cuts `YYYY-MM` out of an ISO date. Money is kept as integer cents and divided by 100 only for display.
+  - dir: a4-migrate-upsert
+    title: Migrations and upsert
+    goal: Apply schema migration steps once, using `PRAGMA user_version` as the version counter, and write a settings store that uses `INSERT ... ON CONFLICT DO UPDATE`. Practises schema changes over time and upserts.
+    solution_note: |
+      `migrations[version:]` is exactly the list of steps not yet run, and `enumerate(..., start=version + 1)` numbers them. After each step the version is saved, so a crash in the middle resumes at the right place. In the upsert, `excluded.value` is the value you tried to insert, and `updates = updates + 1` refers to the stored row.

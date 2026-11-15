@@ -1,0 +1,169 @@
+- q: |
+    In a class-based context manager, what happens if `__exit__` returns `True` while the `with` body raised an exception?
+  options:
+    - "The exception is raised again, with a longer traceback."
+    - "The program stops at once."
+    - "`__exit__` is called a second time."
+    - "The exception is swallowed and the program continues after the `with` block."
+  answer: D
+  why: |
+    A true return value tells Python the exception was handled. Return `False` or `None` (the default) to let it continue. Swallowing errors by accident hides bugs, so return `True` only on purpose.
+
+- q: |
+    What is the output?
+
+    ```python
+    from contextlib import contextmanager
+
+    @contextmanager
+    def tag(name):
+        print("open", name)
+        yield
+        print("close", name)
+
+    with tag("a"):
+        print("body")
+    ```
+  options:
+    - "`body`, `open a`, `close a`"
+    - "`open a`, `body`, `close a`"
+    - "`open a`, `close a`, `body`"
+    - "`open a`, `body`"
+  answer: B
+  why: |
+    Code before `yield` runs when the block starts, the body runs at the `yield`, and the code after `yield` runs when the block ends.
+
+- q: |
+    What is the output?
+
+    ```python
+    from contextlib import contextmanager
+
+    @contextmanager
+    def tag():
+        print("open")
+        yield
+        print("close")
+
+    try:
+        with tag():
+            raise ValueError
+    except ValueError:
+        print("caught")
+    ```
+  options:
+    - "`open`, `close`, `caught`"
+    - "`open`, `close`"
+    - "`open`, `caught`"
+    - "`caught`"
+  answer: C
+  why: |
+    The error is thrown into the generator at the `yield`. With no `try` / `finally` around the `yield`, the line `print("close")` is skipped. Put cleanup in `finally` to make it run every time.
+
+- q: |
+    When is `contextlib.ExitStack` the right tool?
+  options:
+    - "When you must enter a number of context managers that is only known at run time, for example one file per path in a list."
+    - "When you want to stop a program with an exit code."
+    - "When you need to ignore all exceptions."
+    - "When you want to run code in another thread."
+  answer: A
+  why: |
+    A fixed `with a, b:` cannot handle a list of unknown length. `ExitStack` collects the cleanups as you go and runs them in reverse order, even if one step fails.
+
+- q: |
+    What is the output?
+
+    ```python
+    from contextvars import ContextVar
+
+    v = ContextVar("v", default=1)
+    token = v.set(2)
+    v.set(3)
+    v.reset(token)
+    print(v.get())
+    ```
+  options:
+    - "`2`"
+    - "`3`"
+    - "`None`"
+    - "`1`"
+  answer: D
+  why: |
+    `reset(token)` restores the value the variable had **before** the `set` that produced the token. That was the default, `1`. The later `set(3)` does not matter.
+
+- q: |
+    Why does `threading.local()` not give each asyncio task its own value?
+  options:
+    - "`threading.local` can store only strings."
+    - "All tasks run on the same thread, so they share the same thread-local object."
+    - "`threading.local` is deleted when the first `await` runs."
+    - "asyncio creates one thread per task, and each one overwrites the others."
+  answer: B
+  why: |
+    Tasks take turns on one thread of the event loop. A `ContextVar` is tracked per context, and each task has its own context.
+
+- q: |
+    What is the output?
+
+    ```python
+    from contextvars import ContextVar, copy_context
+
+    w = ContextVar("w", default="out")
+    ctx = copy_context()
+
+    def f():
+        w.set("in")
+
+    ctx.run(f)
+    print(w.get())
+    ```
+  options:
+    - "`in`"
+    - "`None`"
+    - "`out`"
+    - "`LookupError`"
+  answer: C
+  why: |
+    `ctx.run(f)` runs `f` inside the copy, so the `set` changes only the copy. The current context still has the default `out`.
+
+- q: |
+    A coroutine sets `w` to `"A"`, creates a task with `asyncio.create_task(child())`, then sets `w` to `"B"` before awaiting the task. What does `child()` read when it runs?
+  options:
+    - "`\"A\"`, because the task copied the context when it was created."
+    - "`\"B\"`, because it runs later."
+    - "The default value of `w`."
+    - "It raises an error, because tasks cannot read context variables."
+  answer: A
+  why: |
+    A task takes a copy of the current context at creation. Later `set` calls by the parent change the parent's context, not the child's copy.
+
+- q: |
+    What happens here?
+
+    ```python
+    from contextlib import suppress
+
+    with suppress(KeyError):
+        int("x")
+    print("done")
+    ```
+  options:
+    - "`done` is printed, because `suppress` hides all errors."
+    - "A `ValueError` is raised and `done` is not printed."
+    - "`done` is printed after a `KeyError` message."
+    - "Nothing happens at all."
+  answer: B
+  why: |
+    `suppress(KeyError)` hides only `KeyError`. `int("x")` raises `ValueError`, which is not in the list, so it propagates.
+
+- q: |
+    What do you pass to `ContextVar.reset()`?
+  options:
+    - "The new value you want."
+    - "The name of the variable."
+    - "The `Token` returned by the earlier `set()` call."
+    - "Nothing, it takes no arguments."
+  answer: C
+  why: |
+    The token records the old value, so `reset(token)` can put it back exactly, even with nested `set` calls.

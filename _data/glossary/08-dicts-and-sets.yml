@@ -1,0 +1,7 @@
+- {term: Dictionary (dict), meaning: "A collection that maps keys to values. Lookup by key is fast and insertion order is kept."}
+- {term: Key, meaning: "The label used to find a value in a dict. It must be hashable."}
+- {term: Hashable, meaning: "An object whose value never changes, so Python can compute a fixed hash number for it. Strings, numbers and tuples of them are hashable. Lists and dicts are not."}
+- {term: Set, meaning: "An unordered collection of unique, hashable items. Supports union, intersection and difference."}
+- {term: Frozenset, meaning: "An immutable set. It is hashable, so it can be a dict key."}
+- {term: Counter, meaning: "A dict subclass in collections that counts items. A missing key counts as 0."}
+- {term: defaultdict, meaning: "A dict in collections that creates a default value for a missing key when you first use it."}

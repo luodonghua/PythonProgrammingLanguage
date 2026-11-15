@@ -1,0 +1,7 @@
+- {term: CSV, meaning: "Comma-separated values. A text format with one record per line and fields split by a delimiter."}
+- {term: JSON, meaning: "A text format for data made of objects, arrays, strings, numbers, true, false and null."}
+- {term: Serialization, meaning: "Turning a Python object into text or bytes so you can store or send it. JSON dumps is an example."}
+- {term: Regular expression, meaning: "A pattern language for finding and extracting text, used through the re module."}
+- {term: Capture group, meaning: "A part of a regex in parentheses. Its matched text can be read with group(), and a named group with (?P<name>...)."}
+- {term: Greedy match, meaning: "A quantifier such as + or * that matches as much text as it can. Adding ? makes it lazy."}
+- {term: TOML, meaning: "A configuration file format. The tomllib module reads it, for example pyproject.toml."}

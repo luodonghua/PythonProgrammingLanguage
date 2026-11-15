@@ -1,0 +1,7 @@
+- {term: Context manager, meaning: "An object with __enter__ and __exit__ that a with statement uses to run setup and cleanup around a block."}
+- {term: __exit__, meaning: "Runs when a with block ends. It receives the exception, if any. Returning True swallows the exception."}
+- {term: contextlib.contextmanager, meaning: "A decorator that turns a generator with one yield into a context manager. Code before yield is setup and code after it is cleanup."}
+- {term: ExitStack, meaning: "A contextlib tool that holds any number of context managers or callbacks and closes them in reverse order."}
+- {term: ContextVar, meaning: "A variable whose value is separate for each context, such as each asyncio task. Read it with get() and change it with set()."}
+- {term: Token, meaning: "The object that ContextVar.set() returns. Passing it to reset() restores the value from before that set."}
+- {term: copy_context, meaning: "Returns a copy of the current context. Code run with its run() method cannot change the original."}

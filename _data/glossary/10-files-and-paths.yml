@@ -1,0 +1,6 @@
+- {term: File mode, meaning: "The second argument of open(). r reads, w writes and erases, a appends, and b adds binary mode."}
+- {term: Context manager (with), meaning: "A with block that sets something up and always cleans up, for example closing a file, even when an error happens."}
+- {term: Encoding, meaning: "The rule that maps characters to bytes. UTF-8 is the standard choice for text files."}
+- {term: Path, meaning: "A pathlib object for a file or folder location. Join parts with /."}
+- {term: Glob, meaning: "A pattern such as *.txt that matches file names. Path.glob finds files in one folder and Path.rglob searches all subfolders."}
+- {term: Absolute and relative path, meaning: "An absolute path starts at the root of the file system. A relative path starts at the current working folder."}

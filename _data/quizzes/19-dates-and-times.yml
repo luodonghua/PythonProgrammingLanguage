@@ -1,0 +1,137 @@
+- q: |
+    What is the output?
+
+    ```python
+    from datetime import date
+
+    print((date(2025, 3, 1) - date(2025, 2, 1)).days)
+    ```
+  options:
+    - "`31`"
+    - "`30`"
+    - "`28`"
+    - "`1`"
+  answer: C
+  why: |
+    Subtracting two dates gives a `timedelta`, and `.days` is its number of days. February 2025 has 28 days (2025 is not a leap year), so the gap from February 1 to March 1 is 28.
+
+- q: |
+    What happens when you compare a naive datetime with an aware one, as in `naive < aware`?
+  options:
+    - "It raises `TypeError`."
+    - "Python assumes the naive value is UTC and compares them."
+    - "Python assumes the naive value is in your local zone."
+    - "It returns `False`."
+  answer: A
+  why: |
+    Python refuses to guess. A naive value does not say which zone it is in, so the comparison raises `TypeError: can't compare offset-naive and offset-aware datetimes`. Make both values aware first.
+
+- q: |
+    What is the output?
+
+    ```python
+    from datetime import date
+
+    print(date(2025, 3, 14).strftime("%d/%m/%Y"))
+    ```
+  options:
+    - "`2025/03/14`"
+    - "`03/14/2025`"
+    - "`14-03-2025`"
+    - "`14/03/2025`"
+  answer: D
+  why: |
+    `%d` is the day, `%m` the month and `%Y` the four-digit year, in the order and with the separators you wrote. The format string decides everything about the layout.
+
+- q: |
+    Which expression gives the current time as an aware UTC datetime?
+  options:
+    - "`datetime.now()`"
+    - "`datetime.now(UTC)`"
+    - "`datetime.utcnow()`"
+    - "`date.today()`"
+  answer: B
+  why: |
+    `datetime.now(UTC)` returns a value with `tzinfo` set. `datetime.now()` is naive local time. `utcnow()` returns a naive value and is deprecated since Python 3.12. `date.today()` has no time of day.
+
+- q: |
+    What is the output?
+
+    ```python
+    from datetime import datetime, timedelta, UTC
+    from zoneinfo import ZoneInfo
+
+    ny = ZoneInfo("America/New_York")
+    before = datetime(2025, 3, 8, 12, 0, tzinfo=ny)
+    after = before + timedelta(days=1)
+    print(after.astimezone(UTC) - before.astimezone(UTC))
+    ```
+  options:
+    - "`23:00:00`"
+    - "`1 day, 0:00:00`"
+    - "`1 day, 1:00:00`"
+    - "`0:00:00`"
+  answer: A
+  why: |
+    New York switched to daylight saving time on March 9, 2025, so that day has 23 hours. Adding one day keeps the wall clock at noon, but the real elapsed time is 23 hours. Subtracting the two aware values directly would give `1 day, 0:00:00`, because same-zone arithmetic uses the wall clock. Converting to UTC first gives the true elapsed time.
+
+- q: |
+    You have an aware datetime `t` in UTC and want the same moment in Paris time. Which call does that?
+  options:
+    - "`t.replace(tzinfo=ZoneInfo(\"Europe/Paris\"))`"
+    - "`t + ZoneInfo(\"Europe/Paris\")`"
+    - "`t.astimezone(ZoneInfo(\"Europe/Paris\"))`"
+    - "`ZoneInfo(\"Europe/Paris\")(t)`"
+  answer: C
+  why: |
+    `astimezone` converts: the moment stays the same and the clock reading changes. `replace(tzinfo=...)` keeps the clock reading and changes the label, so it describes a different moment.
+
+- q: |
+    What is the output?
+
+    ```python
+    from datetime import timedelta
+
+    print(timedelta(hours=36))
+    ```
+  options:
+    - "`36:00:00`"
+    - "`1 day, 12:00:00`"
+    - "`12:00:00`"
+    - "`1.5 days`"
+  answer: B
+  why: |
+    A `timedelta` stores days and seconds separately. 36 hours is 1 day and 12 hours, and the text form shows it that way.
+
+- q: |
+    What does `date.weekday()` return for a Monday?
+  options:
+    - "`1`"
+    - "`7`"
+    - "`\"Monday\"`"
+    - "`0`"
+  answer: D
+  why: |
+    `weekday()` counts from Monday as 0 up to Sunday as 6. `isoweekday()` counts Monday as 1 up to Sunday as 7.
+
+- q: |
+    What is the safest way to store a timestamp in a database or log file?
+  options:
+    - "As a naive local time, because it is easy to read."
+    - "As text in the format `%d/%m/%y`."
+    - "As an aware UTC time, or ISO text with an offset."
+    - "As the local time plus the name of your computer."
+  answer: C
+  why: |
+    UTC has no daylight saving jumps, so values sort and subtract correctly. Convert to a local zone only when you show the value to a person. A naive local time is ambiguous in the hour when clocks go back.
+
+- q: |
+    Why should `age_on(birthday, today)` take `today` as a parameter and not call `date.today()` inside?
+  options:
+    - "`date.today()` cannot be called inside a function."
+    - "Parameters make functions run faster."
+    - "`date.today()` returns a naive value, so it is always wrong."
+    - "A test can then pass in a fixed date."
+  answer: D
+  why: |
+    A function that reads the clock itself returns different results on different days, so a test written today fails tomorrow. Passing the date in makes the function deterministic. Calling `date.today()` is allowed and has nothing to do with speed.

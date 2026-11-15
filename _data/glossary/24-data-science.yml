@@ -1,0 +1,7 @@
+- {term: DataFrame, meaning: "A pandas table with labelled rows (the index) and named columns. Each column is a Series."}
+- {term: Series, meaning: "A pandas one-dimensional column of values with an index of labels."}
+- {term: Boolean mask, meaning: "A column of True and False values used inside df[...] to keep only the rows where it is True."}
+- {term: NaN, meaning: "Not a Number. pandas uses it to mark a missing value in a numeric column."}
+- {term: groupby, meaning: "Splits rows into groups by the values of a column, so that each group can be summarised, for example with sum or mean."}
+- {term: merge, meaning: "Joins two DataFrames on a shared column, like a SQL JOIN. The how option picks inner, left, right or outer."}
+- {term: Backend (matplotlib), meaning: "The part of matplotlib that draws. The Agg backend draws to image files and needs no window."}

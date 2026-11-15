@@ -1,0 +1,176 @@
+- q: |
+    Inside a method, what does `self` refer to?
+  options:
+    - "The class the method is defined in"
+    - "The instance the method was called on"
+    - "The module that contains the class"
+    - "The previous object that was created"
+  answer: B
+  why: |
+    Python passes the instance as the first argument. `rex.speak()` is the same as `Dog.speak(rex)`, so `self` is `rex`. The class itself is passed only to class methods (as `cls`).
+
+- q: |
+    What is the output?
+
+    ```python
+    class A:
+        x = 1
+
+    a, b = A(), A()
+    a.x = 5
+    print(a.x, b.x, A.x)
+    ```
+  options:
+    - "`5 5 5`"
+    - "`1 1 1`"
+    - "`5 5 1`"
+    - "`5 1 1`"
+  answer: D
+  why: |
+    `a.x = 5` creates a new instance attribute on `a` only. `b` and the class still see the class attribute `1`.
+
+- q: |
+    What is the output?
+
+    ```python
+    class P:
+        def __init__(self, v):
+            self.v = v
+
+        def __repr__(self):
+            return f"P({self.v})"
+
+    print([P(1), P(2)])
+    ```
+  options:
+    - "`[P(1), P(2)]`"
+    - "`[<P object>, <P object>]`"
+    - "`P(1), P(2)`"
+    - "`[1, 2]`"
+  answer: A
+  why: |
+    A list shows its items with `repr()`, so it calls `__repr__` for each element.
+
+- q: |
+    Which method does `print(obj)` call first?
+  options:
+    - "`__repr__`"
+    - "`__init__`"
+    - "`__str__`"
+    - "`__format__`"
+  answer: C
+  why: |
+    `print` converts the object with `str()`, which calls `__str__`. If the class has no `__str__`, Python falls back to `__repr__`.
+
+- q: |
+    What is the output?
+
+    ```python
+    class S:
+        def __init__(self):
+            self._n = 0
+
+        @property
+        def n(self):
+            return self._n
+
+    s = S()
+    try:
+        s.n = 3
+    except AttributeError:
+        print("AttributeError")
+    else:
+        print(s.n)
+    ```
+  options:
+    - "`AttributeError`"
+    - "`3`"
+    - "`0`"
+    - "`TypeError`"
+  answer: A
+  why: |
+    A property without a setter is read-only. Assigning to it raises `AttributeError`. To allow assignment, add a method decorated with `@n.setter`.
+
+- q: |
+    What is the output?
+
+    ```python
+    class Box:
+        def __init__(self, *items):
+            self.items = list(items)
+
+        def __len__(self):
+            return len(self.items)
+
+    print(len(Box(1, 2, 3)), bool(Box()))
+    ```
+  options:
+    - "`3 True`"
+    - "`0 False`"
+    - "`3 3`"
+    - "`3 False`"
+  answer: D
+  why: |
+    `len()` calls `__len__`. When a class has `__len__` but no `__bool__`, truthiness uses the length: an empty `Box` has length 0, so `bool(Box())` is `False`.
+
+- q: |
+    What is the usual job of a `@classmethod`?
+  options:
+    - "To hide a method from other code"
+    - "To provide an alternative constructor such as `Date.from_string(text)`"
+    - "To make an attribute read-only"
+    - "To run code when the object is deleted"
+  answer: B
+  why: |
+    A class method receives the class as `cls`, so it can build and return instances (`cls(...)`), which also works for subclasses. Read-only attributes use `@property`.
+
+- q: |
+    A class defines `__init__` but no `__eq__`. What does `P(1) == P(1)` give?
+
+    ```python
+    class P:
+        def __init__(self, v):
+            self.v = v
+    ```
+  options:
+    - "`True`, because the values are equal"
+    - "`TypeError`, because `P` cannot be compared"
+    - "`False`, because the default `==` compares identity"
+    - "`None`"
+  answer: C
+  why: |
+    The default `__eq__` is true only when both sides are the same object. Define `__eq__` (or use `@dataclass`) to compare by value.
+
+- q: |
+    In `__add__`, what should you do when `other` is a type you do not support?
+  options:
+    - "Raise `ValueError`"
+    - "Return `None`"
+    - "Print a warning and return `self`"
+    - "Return `NotImplemented`"
+  answer: D
+  why: |
+    `NotImplemented` tells Python this operand cannot handle the operation, so it tries the other operand's reflected method. If that fails too, Python raises a clear `TypeError`. Returning `None` would hide the problem.
+
+- q: |
+    What is the output?
+
+    ```python
+    class T:
+        count = 0
+
+        def __init__(self):
+            T.count += 1
+
+    T()
+    T()
+    print(T.count)
+    ```
+  options:
+    - "`2`"
+    - "`0`"
+    - "`1`"
+    - "`AttributeError`"
+  answer: A
+  why: |
+    `T.count += 1` changes the class attribute, which every instance shares. Each call to `T()` runs `__init__` once, so the count is 2.

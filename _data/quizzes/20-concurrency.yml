@@ -1,0 +1,170 @@
+- q: |
+    You must apply a slow calculation to 8 large inputs, and the work is pure Python with no waiting. On the standard (GIL) build, which tool can use several CPU cores?
+  options:
+    - "`ThreadPoolExecutor`"
+    - "`ProcessPoolExecutor`"
+    - "`asyncio.gather`"
+    - "`threading.Lock`"
+  answer: B
+  why: |
+    Each process has its own interpreter and its own GIL, so processes can run on several cores at once. Threads and asyncio tasks share one GIL and take turns when the work is pure calculation. A lock only protects shared data.
+
+- q: |
+    What does the GIL in the standard CPython build do?
+  options:
+    - "It stops you from creating more than one thread."
+    - "It makes every operation in your program thread-safe."
+    - "It lets threads share data without locks."
+    - "It lets only one thread run Python bytecode at a time."
+  answer: D
+  why: |
+    The GIL allows one thread to execute Python code at a time. It does not make your own multi-step updates safe, so `counter += 1` can still lose updates. A thread that waits for I/O releases the GIL, which is why threads still help I/O-bound work.
+
+- q: |
+    What is the output?
+
+    ```python
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        print(list(pool.map(str.upper, ["a", "b", "c"])))
+    ```
+  options:
+    - "`['A', 'B', 'C']`"
+    - "`['C', 'B', 'A']`"
+    - "The order depends on which thread finishes first."
+    - "`<generator object ...>`"
+  answer: A
+  why: |
+    `Executor.map` returns results in the order of the inputs, even when the jobs finish in a different order. `as_completed` is the tool that yields results in finishing order. Wrapping the result in `list` turns it into a list.
+
+- q: |
+    What is the output?
+
+    ```python
+    import threading
+
+    counter = 0
+    lock = threading.Lock()
+
+    def add():
+        global counter
+        for _ in range(1000):
+            with lock:
+                counter += 1
+
+    threads = [threading.Thread(target=add) for _ in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    print(counter)
+    ```
+  options:
+    - "Any number up to `4000`, it changes between runs."
+    - "`1000`"
+    - "`4000`"
+    - "`0`"
+  answer: C
+  why: |
+    Each of the 4 threads adds 1 a thousand times, and the lock makes each update happen one at a time, so no update is lost. The `join()` calls make `print` wait until all threads are done. Without the lock, updates could be lost.
+
+- q: |
+    Which statement about the free-threaded build of CPython is correct?
+  options:
+    - "It is the default build in Python 3.14, so the GIL is gone everywhere."
+    - "An optional build without the GIL, added in 3.13 and officially supported in 3.14."
+    - "It makes all threaded code correct without locks."
+    - "It only works with `ProcessPoolExecutor`."
+  answer: B
+  why: |
+    The free-threaded build is separate from the standard build. It does not make unsafe code safe, so locks are still needed for shared data that changes.
+
+- q: |
+    What is the output?
+
+    ```python
+    import queue
+
+    q = queue.Queue()
+    for n in (1, 2, 3):
+        q.put(n)
+    print(q.get(), q.get())
+    ```
+  options:
+    - "`3 2`"
+    - "`1 3`"
+    - "`2 1`"
+    - "`1 2`"
+  answer: D
+  why: |
+    `Queue` is first in, first out (FIFO). The first `get()` returns the oldest item, `1`, and the second returns `2`. One item (`3`) stays in the queue.
+
+- q: |
+    What is the output?
+
+    ```python
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor() as pool:
+        future = pool.submit(lambda: 1 / 0)
+        try:
+            future.result()
+        except ZeroDivisionError:
+            print("caught")
+    ```
+  options:
+    - "`caught`"
+    - "Nothing is printed and the program ends silently."
+    - "A traceback appears and the program stops before `try`."
+    - "`None`"
+  answer: A
+  why: |
+    The exception happens in the worker thread, and the future stores it. `future.result()` raises it again in the calling thread, where `except` can catch it.
+
+- q: |
+    Why do you call `thread.join()`?
+  options:
+    - "It starts the thread."
+    - "It stops the thread at once."
+    - "It waits until the thread has finished."
+    - "It gives the thread a lock."
+  answer: C
+  why: |
+    `start()` begins the thread, and `join()` blocks the caller until the thread ends. Without it you may read results before they exist.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def job(name, pauses):
+        for _ in range(pauses):
+            await asyncio.sleep(0)
+        return name
+
+    async def main():
+        return await asyncio.gather(job("slow", 3), job("fast", 0))
+
+    print(asyncio.run(main()))
+    ```
+  options:
+    - "`['fast', 'slow']`"
+    - "`['slow', 'fast']`"
+    - "`('slow', 'fast')`"
+    - "`['slow']`"
+  answer: B
+  why: |
+    `gather` returns the results in the order you passed the coroutines, not in the order they finish. `fast` finishes first, but `slow` is listed first. The result is a list, not a tuple.
+
+- q: |
+    Why must code that starts a `ProcessPoolExecutor` usually sit under `if __name__ == "__main__":`?
+  options:
+    - "Process pools cannot be used inside functions."
+    - "It makes the processes faster."
+    - "The guard is needed to pickle the results."
+    - "Workers may re-import your file and start more pools."
+  answer: D
+  why: |
+    Some platforms (Windows, macOS) start workers by importing the main module. Code at the top level would run again in each worker. The guard keeps the pool creation in the original process only.

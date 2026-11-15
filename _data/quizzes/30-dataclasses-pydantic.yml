@@ -1,0 +1,153 @@
+- q: |
+    What is the output?
+
+    ```python
+    from dataclasses import dataclass
+
+    @dataclass
+    class P:
+        x: int
+
+    print(P("hello"))
+    ```
+  options:
+    - "`TypeError`"
+    - "`ValueError`"
+    - "`P(x='hello')`"
+    - "`P(x=0)`"
+  answer: C
+  why: |
+    A dataclass does not check types at run time. The annotation `int` is only a hint, so any value is accepted. Pydantic is the tool that validates.
+
+- q: |
+    A dataclass has the field `items: list = []`. What happens when the class is defined?
+  options:
+    - "It raises `ValueError` and asks for `default_factory`."
+    - "All instances share one list, silently."
+    - "Each instance gets its own list."
+    - "The field is ignored."
+  answer: A
+  why: |
+    `@dataclass` rejects mutable defaults (list, dict, set) because they would be shared by every instance. Write `items: list = field(default_factory=list)`.
+
+- q: |
+    What is the output?
+
+    ```python
+    from dataclasses import dataclass, replace
+
+    @dataclass(frozen=True)
+    class Q:
+        x: int
+
+    p = Q(1)
+    q = replace(p, x=2)
+    print(p, q)
+    ```
+  options:
+    - "`Q(x=2) Q(x=2)`"
+    - "`FrozenInstanceError`"
+    - "`Q(x=1) Q(x=1)`"
+    - "`Q(x=1) Q(x=2)`"
+  answer: D
+  why: |
+    `replace` builds a **new** object with the changed field. The frozen original stays as it was.
+
+- q: |
+    What is the output?
+
+    ```python
+    from pydantic import BaseModel
+
+    class M(BaseModel):
+        n: int
+
+    print(repr(M(n="7").n))
+    ```
+  options:
+    - "`'7'`"
+    - "`7`"
+    - "`ValidationError`"
+    - "`7.0`"
+  answer: B
+  why: |
+    In its default (lax) mode Pydantic converts the string `"7"` to the integer `7`. Strict mode would reject it.
+
+- q: |
+    What does `ValidationError.errors()` return?
+  options:
+    - "A single string with the first problem."
+    - "The model instance, with bad fields set to `None`."
+    - "A list of dicts, one per problem, with keys such as `loc`, `type` and `msg`."
+    - "A set of field names."
+  answer: C
+  why: |
+    Pydantic collects every problem and reports them together. `loc` is the path to the field, `type` is a stable code such as `string_too_short`, and `msg` is a readable text.
+
+- q: |
+    Which statement about strict mode in Pydantic is correct?
+  options:
+    - "`int` fields then reject the string `\"7\"` instead of converting it."
+    - "It makes validation run faster by skipping the type checks."
+    - "It converts every value to a string."
+    - "It only affects nested models."
+  answer: A
+  why: |
+    Strict mode turns off conversions between types. It still checks every field. In the default lax mode, `"7"` becomes `7`.
+
+- q: |
+    What is the output?
+
+    ```python
+    from pydantic import BaseModel, ValidationError
+
+    class U(BaseModel):
+        name: str
+        age: int
+
+    try:
+        U(name=1, age="x")
+    except ValidationError as e:
+        print(e.error_count())
+    ```
+  options:
+    - "`0`"
+    - "`1`, only the first problem is reported"
+    - "`3`"
+    - "`2`"
+  answer: D
+  why: |
+    Pydantic does not convert the int `1` to a string, and `"x"` is not a valid int. Both fields fail, and both errors are reported together.
+
+- q: |
+    You read a JSON file written by another team and want to be sure the fields have the right types before using them. Which is the better choice?
+  options:
+    - "A plain dataclass, because it is in the standard library."
+    - "A Pydantic model, because it validates and converts incoming data."
+    - "A plain dict, because it never raises errors."
+    - "A frozen dataclass, because frozen classes check their types."
+  answer: B
+  why: |
+    Data from outside your program is untrusted. Pydantic checks it and reports every problem. A dataclass (frozen or not) does not check types.
+
+- q: |
+    Which call builds a model from a JSON **string**?
+  options:
+    - "`Model.model_dump(text)`"
+    - "`Model(text)`"
+    - "`Model.model_copy(text)`"
+    - "`Model.model_validate_json(text)`"
+  answer: D
+  why: |
+    `model_validate_json` parses and validates in one step. `model_validate` takes a Python dict. `model_dump` goes the other way, from a model to a dict.
+
+- q: |
+    What must a function decorated with `@field_validator("name")` do at the end?
+  options:
+    - "Return the value to store, which may be changed (for example stripped)."
+    - "Return `True` or `False`."
+    - "Print an error message."
+    - "Return `None` when the value is fine."
+  answer: A
+  why: |
+    The returned value replaces the input. To reject a value, raise `ValueError`. Pydantic then turns that into a `ValidationError` entry for the field.

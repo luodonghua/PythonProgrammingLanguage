@@ -27,11 +27,11 @@
 - q: |
     What is the recommended way to test whether `x` is `None`?
   options:
-    - "`if x == None:`"
     - "`if x is None:`"
+    - "`if x == None:`"
     - "`if x = None:`"
     - "`if not None x:`"
-  answer: B
+  answer: A
   why: |
     `None` is a single object, so use the identity test `is None`. A single `=` is assignment and is a `SyntaxError` inside an `if` condition.
 
@@ -48,11 +48,11 @@
         print("C")
     ```
   options:
-    - "`A`"
-    - "`B`"
     - "`A` then `B`"
+    - "`B`"
+    - "`A`"
     - "`C`"
-  answer: A
+  answer: C
   why: |
     `15 % 3 == 0` is true, so the first branch runs. Python skips every `elif` and `else` after a branch has run. This is why FizzBuzz must test "divisible by both" first.
 
@@ -64,10 +64,10 @@
     ```
   options:
     - "`True`"
-    - "`0`"
     - "`default`"
+    - "`0`"
     - "`False`"
-  answer: C
+  answer: B
   why: |
     `or` returns the first truthy operand (or the last operand if none is truthy), not just `True` or `False`. `0` is falsy, so the result is `"default"`.
 
@@ -92,10 +92,10 @@
     In a `match` statement, what does `case _:` do?
   options:
     - "Matches only the value `_`"
-    - "Matches anything, and does not bind a name"
-    - "Raises an error because `_` is invalid"
     - "Matches only `None`"
-  answer: B
+    - "Raises an error because `_` is invalid"
+    - "Matches anything, and does not bind a name"
+  answer: D
   why: |
     `_` is the wildcard pattern. Put it last as the default case. A bare name such as `case ok:` is different: it captures the value and matches anything, and Python rejects it if more cases follow (`name capture 'ok' makes remaining patterns unreachable`).
 
@@ -103,10 +103,10 @@
     What does `case 4 | 6 | 9 | 11:` mean?
   options:
     - "The bitwise OR of 4, 6, 9 and 11"
-    - "Match if the subject is any one of those four values"
     - "Match only if the subject is all four values at once"
+    - "Match if the subject is any one of those four values"
     - "A syntax error. Only one value is allowed."
-  answer: B
+  answer: C
   why: |
     In a pattern, `|` separates alternatives (an or-pattern). It is not the bitwise operator.
 
@@ -121,11 +121,11 @@
             print("small")
     ```
   options:
-    - "`big`"
     - "`small`"
+    - "`big`"
     - "Nothing is printed"
     - "A `SyntaxError`"
-  answer: B
+  answer: A
   why: |
     A guard (`if x > 10`) adds an extra condition to a case. For `n = 3` it is false, so Python moves to the next case. `case x:` is last, so a capture pattern is allowed there and matches anything.
 

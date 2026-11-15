@@ -1,0 +1,25 @@
+intro: |
+  Four tasks on a small, polite HTTP client: retries with backoff, bounded concurrency, a streamed response and rate limits. Every test uses `httpx.MockTransport`, so nothing touches the network and nothing really waits.
+setup: |
+  This topic uses `httpx`, which is already listed in the project dependencies (`uv sync` installs it). Tests run async code. The project configures `pytest-asyncio` in auto mode, so you write plain `async def test_...` functions and need no decorator.
+assignments:
+  - dir: a1-fetch-json-retry
+    title: Fetch JSON with retries
+    goal: Write `fetch_json`, which retries transport errors and 5xx answers with exponential backoff, but raises at once on 4xx. Practises try/except, `raise_for_status` and dependency injection of `sleep`.
+    solution_note: |
+      The loop sleeps before every attempt except the first. The `HTTPStatusError` handler re-raises 4xx errors and records 5xx errors. After the last attempt the stored error is raised. The injected `sleep` makes the test instant.
+  - dir: a2-bounded-fetch-all
+    title: Fetch many URLs with a limit
+    goal: Fetch a list of URLs concurrently, keep the result order, return `None` for failures and never run more than `limit` requests at once. Practises `asyncio.gather` and `Semaphore`.
+    solution_note: |
+      Each URL gets a small coroutine that holds the semaphore while it makes one request. `gather` returns results in input order. Catching errors inside the coroutine turns a failure into `None` and keeps the other requests alive.
+  - dir: a3-stream-events
+    title: Read a streamed response
+    goal: Turn a `data:` line stream into an async generator of dicts, and then collect the text. Practises `client.stream`, `aiter_lines` and async generators.
+    solution_note: |
+      `async with client.stream(...)` keeps the connection open while the generator yields. Returning from the generator at `[DONE]` leaves the `async with` block and closes the connection. `collect_text` consumes the generator with `async for`.
+  - dir: a4-rate-limit
+    title: Obey 429 and Retry-After
+    goal: Parse the `Retry-After` header safely and write a GET helper that waits and retries while the server answers 429. Practises header parsing, caps and defaults, and a bounded retry loop.
+    solution_note: |
+      `retry_after_seconds` converts with `float`, falls back to a default for bad values and caps the result. The loop sleeps only when another attempt remains, and raises `RateLimitError` after the last 429.

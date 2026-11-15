@@ -1,0 +1,148 @@
+- q: |
+    Why do tests for code that calls a paid web API use a fake instead of the real API?
+  options:
+    - "A fake finds more bugs in the API itself than a real call to the service would."
+    - "Python cannot make HTTP requests inside a test, because the test runner blocks all network access."
+    - "Fake tests are fast, free, offline and repeatable. The real API is slow, costs money and varies."
+    - "Real calls are forbidden by pytest, which refuses to run any test that opens a socket."
+  answer: C
+  why: |
+    A good test runs in milliseconds and gives the same result each time. Slow, random or paid dependencies break that. You can still run a few separate integration tests against the real service.
+
+- q: |
+    In `pytest-asyncio` **auto mode**, what do you need to write to run an async test?
+  options:
+    - "`@pytest.mark.asyncio` above every test."
+    - "Call `asyncio.run(...)` inside every test."
+    - "Just `async def test_something():`. No decorator is needed."
+    - "Replace `async def` with `def` and use `time.sleep`."
+  answer: A
+  why: |
+    Auto mode collects every `async def test_...` and runs it in an event loop. The decorator is needed only in the default strict mode. Calling `asyncio.run` inside a test would try to start a second loop.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+    from unittest.mock import AsyncMock
+
+
+    async def main():
+        m = AsyncMock(side_effect=[1, ValueError("x")])
+        print(await m())
+        try:
+            await m()
+        except ValueError as e:
+            print("raised", e)
+        print(m.await_count)
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "It prints `1`, then `raised x`, then `2`."
+    - "It prints `1`, then `raised x`, then `1`."
+    - "It prints `1`, then `2`, and the `ValueError` is not caught."
+    - "It prints `raised x`, then `2`."
+  answer: B
+  why: |
+    A `side_effect` list is used in order. The first call returns `1`. The second item is an exception instance, so the second call raises it. Both calls were awaited, so `await_count` is 2.
+
+- q: |
+    A test replaces an `async def get(url)` method with `MagicMock(return_value="body")`. The code under test does `body = await client.get(url)`. What happens?
+  options:
+    - "It works the same as with `AsyncMock`, because `await` accepts any value."
+    - "The test passes without ever running the code under test."
+    - "`await` raises a `TypeError`, because the call returned a plain string."
+    - "The code waits forever, because the mock never finishes."
+  answer: C
+  why: |
+    `MagicMock` calls return their value directly. `await "body"` fails, because a string is not awaitable. `AsyncMock` returns a coroutine, which is what `await` needs.
+
+- q: |
+    A retry function accepts a parameter `sleep=asyncio.sleep`. Why does a test pass its own `sleep`?
+  options:
+    - "Because `asyncio.sleep` is broken inside tests and raises an error."
+    - "To make the retries succeed, because the real `sleep` makes every attempt fail."
+    - "To change which event loop pytest uses for the test."
+    - "To skip the real waiting and also check which delays were requested."
+  answer: D
+  why: |
+    A recording fake returns at once and stores each delay, so the test is fast and can assert `sleeps == [1, 2]`. The retries succeed or fail because of the scripted client, not because of `sleep`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+    from unittest.mock import AsyncMock
+
+
+    async def main():
+        m = AsyncMock(return_value=5)
+        r = m()
+        print(type(r).__name__, await r, m.await_count)
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`coroutine 5 1`"
+    - "`AsyncMock 5 0`"
+    - "`coroutine 5 0`"
+    - "`int 5 0`"
+  answer: A
+  why: |
+    Calling an `AsyncMock` returns a coroutine object. Awaiting it gives the `return_value` 5, and only then is the call counted as awaited, so `await_count` is 1 at the end of the `print` arguments.
+
+- q: |
+    `app.py` starts with `from time import monotonic` and calls `monotonic()` inside its functions. Which patch changes what `app` sees?
+  options:
+    - "`monkeypatch.setattr(\"app.time\", fake)`"
+    - "`monkeypatch.setattr(\"time.monotonic\", fake)`"
+    - "`monkeypatch.setattr(\"app.monotonic\", fake)`"
+    - "None. A function imported with `from ... import` cannot be patched."
+  answer: C
+  why: |
+    `from time import monotonic` copied the name into the `app` module. Functions look it up there, so you patch `app.monotonic`. Patching `time.monotonic` changes the original, but `app` still holds the old reference.
+
+- q: |
+    How can a test check "the call gives up after the time limit" without relying on how fast the computer is?
+  options:
+    - "Sleep for 10 seconds, then measure the elapsed time and compare it with a constant."
+    - "Run the test several times on your own computer and trust it if it passes every time."
+    - "Measure the call and check that it took less than 0.5 seconds."
+    - "Make the work wait on an `asyncio.Event` that nobody sets, with a short timeout."
+  answer: D
+  why: |
+    The work can never finish by itself, so the result is the same on a fast or slow machine. A short limit (such as 0.01 seconds) keeps the test quick. Assertions on elapsed time fail on busy computers.
+
+- q: |
+    What is the output?
+
+    ```python
+    # client.get fails twice with ConnectionError and then returns "body"
+    # sleep is a fake that appends to a list called sleeps
+    # delays are 1, then 2 (that is, 2 ** n for n = 0, 1)
+    print(result, sleeps, client.get.await_count)
+    ```
+  options:
+    - "`body [1, 2, 4] 3`"
+    - "`body [1, 2] 3`"
+    - "`body [1, 2] 2`"
+    - "`body [] 3`"
+  answer: B
+  why: |
+    Two failures cause two sleeps, with delays 1 and 2. The third call succeeds, so there is no third sleep. The client was awaited three times in total.
+
+- q: |
+    A class records every URL passed to `get` and returns scripted answers. Which description fits best?
+  options:
+    - "A fake that also acts as a spy."
+    - "A dummy, because it is never used."
+    - "A mock, because it contains the word `Mock`."
+    - "The real client."
+  answer: A
+  why: |
+    It replaces the real client with a simple working version (a fake), and it keeps a record of the calls (a spy). Calling it a mock usually means a library object that checks the calls for you.

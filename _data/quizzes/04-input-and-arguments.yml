@@ -1,0 +1,138 @@
+- q: |
+    What type does `input("Age: ")` return when the user types `25`?
+  options:
+    - "`int`"
+    - "`str`"
+    - "`float`"
+    - "It depends on what the user types."
+  answer: B
+  why: |
+    `input()` always returns a `str`, even when the text looks like a number. Convert it yourself with `int()` or `float()`.
+
+- q: |
+    The user types `7`. What is printed?
+
+    ```python
+    value = input("n: ")
+    print(value * 2)
+    ```
+  options:
+    - "`14`"
+    - "`TypeError`"
+    - "`7 7`"
+    - "`77`"
+  answer: D
+  why: |
+    `value` is the string `"7"`. Multiplying a string by 2 repeats it, so the result is `"77"`. Use `int(value) * 2` to get 14.
+
+- q: |
+    You run `python tool.py a b`. What is `len(sys.argv)`?
+  options:
+    - "`2`"
+    - "`4`"
+    - "`3`"
+    - "`1`"
+  answer: C
+  why: |
+    `sys.argv` is `['tool.py', 'a', 'b']`. The script name counts as the first item.
+
+- q: |
+    An `argparse` parser has `parser.add_argument("--shout", action="store_true")`. What is `args.shout` when the user does not type `--shout`?
+  options:
+    - "`False`"
+    - "`None`"
+    - "`True`"
+    - "The program stops with an error."
+  answer: A
+  why: |
+    `store_true` sets the value to `True` when the flag is present. When it is absent, the default is `False`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--n", type=int, default=5)
+    print(parser.parse_args([]).n + 1, parser.parse_args(["--n", "2"]).n + 1)
+    ```
+  options:
+    - "`6 6`"
+    - "`6 3`"
+    - "`5 2`"
+    - "`51 21`"
+  answer: B
+  why: |
+    With no arguments, `n` is the default 5, so `5 + 1` is 6. With `--n 2`, `type=int` converts `"2"` to the number 2, so `2 + 1` is 3. Without `type=int` the second call would raise `TypeError`.
+
+- q: |
+    What is printed?
+
+    ```python
+    answers = iter(["abc", "-1", "30"])
+
+    def read_age():
+        while True:
+            text = next(answers)
+            try:
+                age = int(text)
+            except ValueError:
+                continue
+            if 0 <= age <= 120:
+                return age
+
+    print(read_age())
+    ```
+  options:
+    - "`-1`"
+    - "`abc`"
+    - "`30`"
+    - "`ValueError`"
+  answer: C
+  why: |
+    `"abc"` raises `ValueError`, so the loop continues. `"-1"` converts fine but fails the range check, so the loop continues again. `"30"` passes both checks and is returned.
+
+- q: |
+    By convention, what does a program's exit code `0` mean?
+  options:
+    - "Success."
+    - "The program printed nothing."
+    - "A fatal error."
+    - "The user cancelled the program."
+  answer: A
+  why: |
+    `0` means success. Any other number, such as `1` or `2`, signals a failure. Shells, scripts and CI systems read this code.
+
+- q: |
+    Where should a program send its error messages?
+  options:
+    - "To stdout with `print(message)`, so users see everything in one place."
+    - "Into the exit code."
+    - "To a variable named `error`."
+    - "To stderr, with `print(message, file=sys.stderr)`."
+  answer: D
+  why: |
+    stderr is a separate stream. When a user redirects the normal output to a file, the errors still appear on the screen. Mixing them into stdout makes the output harder to use in pipelines.
+
+- q: |
+    Why would you write `def read_int(prompt, input_fn=input)` instead of calling `input()` directly inside the function?
+  options:
+    - "It makes the function run faster than a direct call to `input()`."
+    - "It lets Python convert every answer to `int` automatically."
+    - "A test can pass in a fake `input_fn` with scripted answers."
+    - "It is required by `argparse`."
+  answer: C
+  why: |
+    Passing the input function as a parameter is a form of dependency injection. The default `input` keeps the normal behaviour, and tests supply a stand-in. The function still has to convert the text to `int` itself.
+
+- q: |
+    A user runs `python greet.py Ada --times x`, and `--times` is declared with `type=int`. What happens?
+  options:
+    - "`times` becomes the string `\"x\"` and the program carries on."
+    - "`argparse` prints an error to stderr and exits with code 2."
+    - "`times` becomes `0`."
+    - "The program continues and raises `ValueError` later in your own code."
+  answer: B
+  why: |
+    `argparse` applies `type=int` while parsing. When the conversion fails, it reports `invalid int value: 'x'` and exits with code 2. Your own code never sees the bad value.

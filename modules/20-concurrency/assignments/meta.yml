@@ -1,0 +1,28 @@
+setup: |
+  These tests start threads and processes, but none of them measures time. They use events, barriers and queues, so they give the same result on a fast or a slow computer. The process pool tests start a few worker processes and take about a second.
+assignments:
+  - dir: a1-parallel-map
+    title: Parallel map that keeps order
+    goal: Write `parallel_map(func, items, workers)` with a thread pool. Results must come back in input order even when jobs finish in a different order. Practises `ThreadPoolExecutor.map` and exception propagation.
+    solution_note: |
+      `Executor.map` already returns results in input order, and it re-raises a job's exception when you read that result. The `with` block waits for all workers before it exits.
+  - dir: a2-safe-counter
+    title: Thread-safe counter
+    goal: Build a `SafeCounter` class that many threads can increment without losing updates, and a helper that runs a task in several threads. Practises `threading.Thread`, `join` and `Lock`.
+    solution_note: |
+      `self._count += n` is a read, an add and a write, so two threads can overwrite each other. Every access goes through `with self._lock:`. The `value` property also takes the lock so it never reads in the middle of an update.
+  - dir: a3-producer-consumer
+    title: Producer and consumers with a Queue
+    goal: Feed items through a `queue.Queue` to several consumer threads and collect the results in input order. Practises `Queue`, sentinel values to stop workers, and storing errors as results.
+    solution_note: |
+      Each queue entry carries its index, so a consumer can write `results[index]` without a lock (each index is written once). One `None` per consumer ends the loops. Joining the threads guarantees every result is in place before the function returns.
+  - dir: a4-process-pool
+    title: Process pool for CPU-bound work
+    goal: Split a list into chunks and sum the chunks in separate processes, then check that the work ran in other processes. Practises `ProcessPoolExecutor` and picklable functions.
+    solution_note: |
+      The built-in `sum` can be pickled, so it can be sent to the workers. `split_chunks` uses `divmod` to share the remainder between the first chunks. The partial sums come back to the parent, which adds them.
+  - dir: a5-gather-intro
+    title: A first asyncio.gather
+    goal: Run several coroutines together with `asyncio.gather`, keep the result order, and turn failures into results with `return_exceptions=True`. These are `async def` tests.
+    solution_note: |
+      `gather(*coroutines)` returns results in the order you passed them. With `return_exceptions=True` an error does not cancel the other jobs. It appears in the result list as an exception object, which `isinstance` can detect.

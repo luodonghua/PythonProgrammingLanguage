@@ -1,0 +1,7 @@
+- {term: Thread, meaning: "A path of execution inside one process. Threads share memory, so shared data needs locks."}
+- {term: Process, meaning: "A running program with its own memory and its own Python interpreter."}
+- {term: GIL, meaning: "The Global Interpreter Lock. In the standard CPython build it lets one thread run Python code at a time."}
+- {term: Race condition, meaning: "A bug where the result depends on the timing of threads that change the same data."}
+- {term: Lock, meaning: "An object that lets one thread at a time enter a section of code. Use it with the with statement."}
+- {term: Future, meaning: "An object that stands for a result that is not ready yet. result() waits for it and re-raises any exception."}
+- {term: I/O-bound vs CPU-bound, meaning: "I/O-bound work mostly waits for disk or network. CPU-bound work mostly calculates."}

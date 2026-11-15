@@ -1,0 +1,141 @@
+- q: |
+    You run a program that calls `double("ab")` on a function declared `def double(x: int) -> int`. What does Python itself do?
+  options:
+    - "Raises `TypeError` before the function starts"
+    - "Runs it. Only a type checker would complain"
+    - "Converts `\"ab\"` to an integer"
+    - "Refuses to import the module"
+  answer: B
+  why: |
+    Type hints are not enforced when the program runs. Python stores them, and tools such as mypy, pyright and editors read them.
+
+- q: |
+    What is the output?
+
+    ```python
+    def f(a: int, b: str = "x") -> bool:
+        return True
+
+    print(f("1", 2))
+    ```
+  options:
+    - "`TypeError`"
+    - "`False`"
+    - "`None`"
+    - "`True`"
+  answer: D
+  why: |
+    The arguments have the wrong types according to the hints, but Python does not check them. The function returns `True`. A type checker would report two errors for this call.
+
+- q: |
+    What does the hint `int | None` mean?
+  options:
+    - "The value is an `int` or `None`"
+    - "The value is the bitwise OR of an `int` and `None`"
+    - "The value is always an `int`, and `None` is converted to 0"
+    - "The value must be both an `int` and `None`"
+  answer: A
+  why: |
+    In a type hint, `X | Y` is a union: either type is allowed. `int | None` replaces the older `Optional[int]`.
+
+- q: |
+    What is the output?
+
+    ```python
+    def first[T](items: list[T]) -> T:
+        return items[0]
+
+    print(first("hello"))
+    ```
+  options:
+    - "`hello`"
+    - "`['hello']`"
+    - "`h`"
+    - "`TypeError`"
+  answer: C
+  why: |
+    The hint says `list[T]`, but nothing checks it at run time. A string is indexable, so `items[0]` is `"h"`. A type checker would flag the call because `"hello"` is a `str`, not a `list`.
+
+- q: |
+    Which hint describes a dictionary that maps names (strings) to scores (integers)?
+  options:
+    - "`dict(str, int)`"
+    - "`dict[str, int]`"
+    - "`{str: int}`"
+    - "`dict[str: int]`"
+  answer: B
+  why: |
+    Built-in collections accept type arguments in square brackets, separated by commas: `dict[str, int]`. The `typing.Dict` spelling is only needed for very old Python versions.
+
+- q: |
+    What is the output?
+
+    ```python
+    def g(x: int | None) -> str:
+        return "none" if x is None else str(x + 1)
+
+    print(g(None), g(2))
+    ```
+  options:
+    - "`none 3`"
+    - "`None 3`"
+    - "`none 2`"
+    - "`TypeError`"
+  answer: A
+  why: |
+    `g(None)` takes the first branch and returns the string `"none"`. `g(2)` returns `str(3)`, which is `"3"`. Testing `x is None` before using `x + 1` is exactly what a type checker asks for.
+
+- q: |
+    What does `Literal["r", "w"]` express?
+  options:
+    - "A string that is at most two characters long"
+    - "A list that contains `\"r\"` and `\"w\"`"
+    - "A value that must be exactly `\"r\"` or exactly `\"w\"`"
+    - "Any string, but only if it is written in lower case"
+  answer: C
+  why: |
+    `Literal` limits a value to specific constants. A checker rejects `open_it("x")`. Python does not check it at run time.
+
+- q: |
+    What does `python -m doctest -v module.py` do?
+  options:
+    - "Prints every docstring in the module"
+    - "Checks that each function has a docstring"
+    - "Formats the docstrings in Google style"
+    - "Runs the `>>>` examples in docstrings and checks the output"
+  answer: D
+  why: |
+    doctest finds lines that start with `>>>` in docstrings, runs them, and compares the result with the text below. A mismatch is reported as a failure.
+
+- q: |
+    Why is `def add_item(item: str, items: list[str] = []) -> list[str]` still a bug?
+  options:
+    - "Type hints cannot be combined with default values"
+    - "The hint must be `List[str]`"
+    - "The default list is created once and shared by every call"
+    - "Lists cannot be used as default values for a `str` parameter"
+  answer: C
+  why: |
+    A type hint does not change how defaults work. The `[]` is built once, when the function is defined, so appended items accumulate across calls. Use `items: list[str] | None = None` and create the list inside.
+
+- q: |
+    What is printed?
+
+    ```python
+    from typing import TypedDict
+
+    class Movie(TypedDict):
+        title: str
+        year: int
+
+    m: Movie = {"title": "Alien", "year": 1979}
+    print(type(m))
+    ```
+  options:
+    - "`<class 'dict'>`"
+    - "`<class 'Movie'>`"
+    - "`<class 'typing.TypedDict'>`"
+    - "`<class 'object'>`"
+  answer: A
+  why: |
+    A `TypedDict` is only a description for type checkers. At run time the value is an ordinary `dict`.

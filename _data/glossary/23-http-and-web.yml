@@ -1,0 +1,7 @@
+- {term: HTTP, meaning: "The text protocol that browsers and programs use to talk to web servers. A client sends a request and the server sends back a response."}
+- {term: Status code, meaning: "A three-digit number in the response. 2xx means success, 3xx redirect, 4xx a client error, 5xx a server error."}
+- {term: Header, meaning: "A Name: value line sent with a request or response, such as Content-Type or Content-Length."}
+- {term: Query string, meaning: "The part of a URL after the ?, made of key=value pairs joined by &. Build it with urllib.parse.urlencode."}
+- {term: JSON API, meaning: "A web service that receives and returns data as JSON text, with the header Content-Type: application/json."}
+- {term: REST, meaning: "A style of web API where URLs name resources and HTTP methods (GET, POST, PUT, DELETE) name the action."}
+- {term: WSGI, meaning: "The standard Python interface between a web server and a web application. Flask and Django use it."}

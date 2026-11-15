@@ -1,0 +1,7 @@
+- {term: Module, meaning: "A single .py file that you can import. Its top-level names become attributes of the module."}
+- {term: Package, meaning: "A folder of modules with an __init__.py file. Import its parts with dotted names such as shop.pricing."}
+- {term: "__name__", meaning: "A variable set by Python in every module. It is __main__ in the file you run directly and the module name when the file is imported."}
+- {term: sys.path, meaning: "The list of folders Python searches when it imports a module."}
+- {term: Standard library, meaning: "The modules that come with Python, such as math, json, pathlib and itertools. No installation needed."}
+- {term: PyPI, meaning: "The Python Package Index, the public collection of third-party packages that tools such as uv and pip install."}
+- {term: Relative import, meaning: "An import inside a package that starts with a dot, such as from . import pricing, meaning from this package."}

@@ -1,0 +1,164 @@
+- q: |
+    The line `@deco` is written directly above `def f(): ...`. What does Python do?
+  options:
+    - "It calls `deco()` once with no arguments and ignores `f`."
+    - "It runs `f = deco(f)` right after the function is defined."
+    - "It runs `deco` every time `f` is called, but never changes the name `f`."
+    - "It copies the body of `deco` into `f`."
+  answer: B
+  why: |
+    The decorator syntax is shorthand for `f = deco(f)`. The name `f` then points at whatever `deco` returned, usually a wrapper function.
+
+- q: |
+    What is the output?
+
+    ```python
+    def shout(func):
+        def wrapper(*a, **k):
+            return func(*a, **k)
+        return wrapper
+
+    @shout
+    def hello():
+        pass
+
+    print(hello.__name__)
+    ```
+  options:
+    - "`hello`"
+    - "`shout`"
+    - "`None`"
+    - "`wrapper`"
+  answer: D
+  why: |
+    `hello` is now the inner `wrapper` function, and it has its own `__name__`. Adding `@functools.wraps(func)` to the wrapper would copy `hello` as the name.
+
+- q: |
+    What does `@functools.wraps(func)` do inside a decorator?
+  options:
+    - "It copies `__name__`, `__doc__` and similar attributes from `func` to the wrapper."
+    - "It makes the wrapper run faster."
+    - "It caches the results of `func`."
+    - "It stops `func` from raising exceptions."
+  answer: A
+  why: |
+    `wraps` keeps the identity of the original function (name, docstring, module, and a link `__wrapped__`). It changes nothing about speed, caching or errors.
+
+- q: |
+    A decorator is defined as `def repeat(times): ...` that returns a real decorator. A learner writes `@repeat` (no parentheses) above a function. What happens?
+  options:
+    - "It works the same as `@repeat(1)`."
+    - "Python raises a `SyntaxError`."
+    - "The function is passed in as `times`, so `repeat` returns a decorator instead of a wrapped function."
+    - "`times` is set to `None`."
+  answer: C
+  why: |
+    `@repeat` means `func = repeat(func)`. Here `repeat` takes `times`, so it receives the function, and the name `func` ends up bound to the inner decorator. Calling it later fails in a confusing way. Write `@repeat(3)`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import functools
+
+    @functools.cache
+    def f(n):
+        print("run", n)
+        return n
+
+    f(1)
+    f(1)
+    f(2)
+    ```
+  options:
+    - "`run 1`, `run 1`, `run 2` (three lines)"
+    - "`run 1`, `run 2` (two lines)"
+    - "`run 1` (one line)"
+    - "Nothing is printed."
+  answer: B
+  why: |
+    The second `f(1)` finds the stored result, so the function body (and its `print`) does not run again. `f(2)` is a new argument, so it runs.
+
+- q: |
+    Why does a `retry` decorator take `sleep=time.sleep` as a parameter?
+  options:
+    - "Tests can pass a fake `sleep` that records the delays, so they run instantly and are deterministic."
+    - "`time.sleep` cannot be called inside a wrapper."
+    - "It makes the retries happen in parallel."
+    - "Python requires every decorator argument to have a default."
+  answer: A
+  why: |
+    Passing a function in (dependency injection) lets a test replace the real wait. The test can check the list of delays without waiting and without depending on the clock.
+
+- q: |
+    What is the output?
+
+    ```python
+    def tag(label):
+        print("A", label)
+        def deco(func):
+            print("B", func.__name__)
+            return func
+        return deco
+
+    @tag("x")
+    def g():
+        pass
+
+    print("C")
+    ```
+  options:
+    - "`C`, then `A x`, then `B g`"
+    - "`A x`, then `C`"
+    - "`B g`, then `A x`, then `C`"
+    - "`A x`, then `B g`, then `C`"
+  answer: D
+  why: |
+    Decoration happens once, when `def g` runs. First `tag("x")` is called (prints `A x`), then the returned `deco` is called with `g` (prints `B g`). The final `print("C")` comes after. Nothing runs when `g` is not called.
+
+- q: |
+    A function decorated with `@functools.cache` is called as `total([1, 2])`. What happens?
+  options:
+    - "It returns the sum and caches it."
+    - "It returns the sum but does not cache it."
+    - "It raises `TypeError: unhashable type: 'list'`."
+    - "It raises `ValueError`."
+  answer: C
+  why: |
+    The cache stores results in a dict keyed by the arguments, so every argument must be hashable. A list is not. Pass a tuple instead.
+
+- q: |
+    What is the output?
+
+    ```python
+    from functools import singledispatch
+
+    @singledispatch
+    def kind(x):
+        return "other"
+
+    @kind.register
+    def _(x: int):
+        return "int"
+
+    print(kind(True), kind(1.5))
+    ```
+  options:
+    - "`int other`"
+    - "`other other`"
+    - "`int int`"
+    - "`other int`"
+  answer: A
+  why: |
+    `bool` is a subclass of `int`, so `True` uses the `int` version. `float` is not an `int`, so `1.5` falls back to the default.
+
+- q: |
+    When is `functools.cached_property` a good choice over a plain `@property`?
+  options:
+    - "When the value must be recomputed on every access."
+    - "When the attribute needs a setter that validates input."
+    - "When the class uses `__slots__` and has no `__dict__`."
+    - "When computing the value is slow and it stays the same for the life of the object."
+  answer: D
+  why: |
+    `cached_property` computes once per instance and stores the result in the instance `__dict__`. It suits expensive, stable values. It does not recompute, and it needs a `__dict__`, so it does not work with plain `__slots__` classes.

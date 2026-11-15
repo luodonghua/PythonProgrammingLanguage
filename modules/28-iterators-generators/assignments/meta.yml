@@ -1,0 +1,24 @@
+setup: |
+  Assignment 3 uses a small data file, `app.log`, in its folder. The test reads it for you.
+assignments:
+  - dir: a1-generators
+    title: First generators
+    goal: Write an endless Fibonacci generator, a `take` helper and a lazy `chunker`. Practises `yield`, laziness and `itertools.islice`.
+    solution_note: |
+      `fibonacci` keeps two numbers in a loop that never ends. `take` uses `islice`, which stops reading after `n` items. `chunker` pulls `size` items at a time from one shared iterator, and stops when a slice comes back empty.
+  - dir: a2-iterator-classes
+    title: Iterator classes
+    goal: Write an iterator class (`Countdown`) and an iterable class (`Playlist`) by hand. Practises `__iter__`, `__next__` and the difference between iterable and iterator.
+    solution_note: |
+      An iterator returns itself from `__iter__` and keeps its position, so it can be used once. An iterable returns a **fresh** iterator from `__iter__`, so it can be looped many times. `repeat` is a generator method that uses `yield from`.
+  - dir: a3-log-pipeline
+    title: Lazy log pipeline
+    goal: Build a pipeline of generators that reads a log file line by line, parses records, filters by level and counts them. Practises chaining generators and streaming a file.
+    files_note: The log file `app.log` is in the same folder.
+    solution_note: |
+      Each stage is a small generator that reads from the previous one. `read_lines` uses `with open(...)` inside a generator, so the file closes when the loop ends. `split(maxsplit=3)` keeps the message together.
+  - dir: a4-streams
+    title: Stream tools
+    goal: Write a `send`-driven running average, a moving average, a duplicate remover and a sorted merge, all lazy. Practises `send`, `deque`, and `heapq.merge`.
+    solution_note: |
+      `running_average` receives numbers with `yield` as an expression. `moving_average` uses `deque(maxlen=window)`, which drops the oldest value by itself. `merge_sorted` delegates to `heapq.merge`, which only needs the front item of each stream.

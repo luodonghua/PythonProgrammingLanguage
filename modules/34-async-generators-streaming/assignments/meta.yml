@@ -1,0 +1,25 @@
+setup: |
+  The tests are `async def` functions and run with pytest-asyncio in auto mode. They never wait for real time: sources use `asyncio.sleep(0)` and the tests inject a fake `sleep` where a delay is needed.
+
+  Assignments 3 and 4 start background tasks. If a solution forgets to cancel them, a test can wait forever, so those test files stop a test after 5 seconds and report it as failed.
+assignments:
+  - dir: a1-ticker-and-chunks
+    title: Ticker, chunks and a session
+    goal: Write your first async generators (a timer and a text chunker), read a stream into a list, stop early without leaking the source, and build an async context manager.
+    solution_note: |
+      The generators are loops with `yield`. `take` closes the stream in `finally`, so the source's own cleanup runs at once. `@asynccontextmanager` turns a generator with one `yield` into an `async with` block, and `finally` makes "close" happen on errors too.
+  - dir: a2-aggregate-stream
+    title: Aggregate a stream
+    goal: Compute running totals and a summary while items arrive, and rebuild complete lines from chunks that split text anywhere.
+    solution_note: |
+      Each function keeps only a small state (a total, or a text buffer) and handles one item at a time. `lines_from_chunks` splits the buffer with `split("\n", 1)` as long as it contains a newline, then yields what is left at the end.
+  - dir: a3-buffered-stream
+    title: Buffer a stream with a bounded queue
+    goal: Read a source ahead of the consumer with a producer task and a bounded `asyncio.Queue`, so a slow consumer slows the producer (backpressure).
+    solution_note: |
+      The producer puts a `DONE` marker at the end, and the consumer stops when it sees it. `buffered` cancels and awaits the producer in `finally`, so nothing is left running when the reader stops early. `aclosing` makes the source stream close when the producer is cancelled.
+  - dir: a4-merge-and-timeout
+    title: Merge streams and limit each wait
+    goal: Merge several async streams in arrival order, and add a time limit to the wait for each item.
+    solution_note: |
+      One pump task per stream feeds a shared queue, and the generator counts "done" messages. Errors travel through the queue as messages and are raised in the reader. `with_item_timeout` wraps each `anext` in `asyncio.timeout`, so the limit applies to one item, not to the whole stream.

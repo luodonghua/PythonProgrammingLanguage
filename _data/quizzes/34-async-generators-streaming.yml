@@ -1,0 +1,186 @@
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def numbers():
+        for i in range(5):
+            yield i
+
+    async def main():
+        print([x * x async for x in numbers() if x % 2 == 0])
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`[0, 1, 4, 9, 16]`"
+    - "`[1, 9]`"
+    - "`[0, 4, 16]`"
+    - "`TypeError`"
+  answer: C
+  why: |
+    The async comprehension reads `0` to `4`, keeps the even numbers `0`, `2`, `4`, and squares them. Option D would be the result of using a plain `for` over an async generator.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def gen():
+        try:
+            for i in range(10):
+                yield i
+        finally:
+            print("cleanup")
+
+    async def main():
+        async for i in gen():
+            if i == 1:
+                break
+        print("after break")
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`cleanup` then `after break`"
+    - "`after break` then `cleanup`"
+    - "`after break` only"
+    - "`cleanup` only"
+  answer: B
+  why: |
+    A `break` leaves the generator suspended. Its `finally` block runs later, when the loop shuts down async generators at the end of `asyncio.run`. To run cleanup at once, close the generator with `aclose()` or `contextlib.aclosing`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def numbers():
+        for i in range(5):
+            yield i
+
+    async def main():
+        g = numbers()
+        print(await anext(g), await anext(g))
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`0 1`"
+    - "`0 0`"
+    - "`1 2`"
+    - "`[0, 1]`"
+  answer: A
+  why: |
+    Each `anext` call advances the same generator by one item, so the two calls give `0` and `1`. A new generator is not created on each call.
+
+- q: |
+    What happens when you loop over an async generator with a plain `for`?
+
+    ```python
+    async def main():
+        for x in numbers():
+            print(x)
+    ```
+  options:
+    - "It works, but it blocks the event loop."
+    - "It yields coroutine objects instead of items."
+    - "It yields the first item only."
+    - "It raises `TypeError`, because an async generator is not a normal iterable."
+  answer: D
+  why: |
+    An async generator has `__aiter__` and `__anext__`, not `__iter__`. Use `async for`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+    from contextlib import asynccontextmanager
+
+    @asynccontextmanager
+    async def session(name):
+        print("open", name)
+        try:
+            yield name
+        finally:
+            print("close", name)
+
+    async def main():
+        async with session("db") as s:
+            print("using", s)
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`using db`, `open db`, `close db`"
+    - "`open db`, `close db`, `using db`"
+    - "`open db`, `using db`, `close db`"
+    - "`open db`, `using db`"
+  answer: C
+  why: |
+    The code before `yield` runs on entry. The block body runs while the generator is paused at `yield`. The `finally` part runs when the block ends, even if it raised an error.
+
+- q: |
+    You read only the first three items of an async generator that holds a database connection, then stop. What is the safest way to release the connection at once?
+  options:
+    - "Do nothing. The loop always closes it before the next line."
+    - "Call `time.sleep(1)` so Python can catch up."
+    - "Wrap the generator in `contextlib.aclosing` or call `await gen.aclose()`."
+    - "Call `asyncio.run` on the generator."
+  answer: C
+  why: |
+    `aclose()` raises `GeneratorExit` inside the generator at its `yield`, so its `finally` block runs right away. Without it, cleanup waits until garbage collection or loop shutdown.
+
+- q: |
+    What does **backpressure** mean when you use `asyncio.Queue(maxsize=10)` between a producer and a consumer?
+  options:
+    - "When the queue has 10 items, `put` waits, so a slow consumer slows the producer."
+    - "The queue deletes the oldest item when an eleventh arrives."
+    - "The consumer must call `get` ten times in a row."
+    - "The queue raises an error as soon as the eleventh item arrives."
+  answer: A
+  why: |
+    `await queue.put(x)` suspends while the queue is full. The producer waits instead of piling up data in memory. `put_nowait` is the version that raises `QueueFull`.
+
+- q: |
+    A server sends text in chunks like `"ab"`, `"c\nde"`, `"f\n"`. Why must a line-streaming function keep a buffer?
+  options:
+    - "Python cannot yield strings that contain a newline."
+    - "`async for` joins the chunks automatically."
+    - "A buffer makes the stream faster."
+    - "Chunk boundaries are arbitrary. A line can start in one chunk and end in a later one."
+  answer: D
+  why: |
+    The chunks above hold the lines `abc` and `def`, but no chunk contains either of them whole. The function keeps leftover text and yields a line only when its newline has arrived.
+
+- q: |
+    What happens when this code is compiled?
+
+    ```python
+    async def numbers():
+        yield 1
+        return 99
+    ```
+  options:
+    - "`SyntaxError`, because an async generator cannot return a value."
+    - "It works, and `99` is the last item."
+    - "It works, and `99` is available as `StopAsyncIteration.value`."
+    - "It works, but `99` is ignored."
+  answer: A
+  why: |
+    A bare `return` is allowed and ends the generator. `return value` is a `SyntaxError` in an async generator. Yield the value instead if you need it.
+
+- q: |
+    You want items from two async streams in the order they arrive. Which design works?
+  options:
+    - "`async for a in s1:` followed by `async for b in s2:`"
+    - "`zip(s1, s2)`"
+    - "Run one task per stream that puts items into a shared `asyncio.Queue`, and yield from the queue."
+    - "Call `sorted(s1, s2)`."
+  answer: C
+  why: |
+    The first option reads `s1` completely before it starts `s2`. `zip` does not accept async iterators. Tasks plus a shared queue let each item go out as soon as it arrives from either stream.

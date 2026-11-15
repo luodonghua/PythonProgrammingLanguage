@@ -1,0 +1,9 @@
+order_id,customer,category,quantity,unit_price
+1,Ana,Books,2,12.50
+2,Ben,Games,1,59.99
+3,Ana,Games,1,29.99
+4,Cleo,Books,4,8.25
+5,Ben,Books,1,15.00
+6,Cleo,Music,3,9.99
+7,Ana,Music,2,9.99
+8,Dev,Games,2,19.50

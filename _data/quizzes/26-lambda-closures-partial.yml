@@ -1,0 +1,160 @@
+- q: |
+    Which of these is a valid `lambda`?
+  options:
+    - "`lambda x: return x + 1`"
+    - "`lambda x: x + 1`"
+    - "`lambda x: { y = x + 1 }`"
+    - "`lambda(x): x + 1`"
+  answer: B
+  why: |
+    A lambda body is a single expression, and its value is returned automatically. A `return` statement, an assignment or a block cannot appear inside it, and the parameters are written without parentheses.
+
+- q: |
+    What is the output?
+
+    ```python
+    words = ["pear", "Fig", "banana", "kiwi"]
+    print(sorted(words, key=lambda w: (len(w), w)))
+    ```
+  options:
+    - "`['Fig', 'kiwi', 'pear', 'banana']`"
+    - "`['banana', 'pear', 'kiwi', 'Fig']`"
+    - "`['Fig', 'banana', 'kiwi', 'pear']`"
+    - "`['pear', 'kiwi', 'Fig', 'banana']`"
+  answer: A
+  why: |
+    The key is a tuple, so items sort by length first: `Fig` (3), then `kiwi` and `pear` (4), then `banana` (6). The two 4-letter words are ordered by the second tuple item, so `kiwi` comes before `pear`.
+
+- q: |
+    What is the output?
+
+    ```python
+    funcs = [lambda: i for i in range(3)]
+    print([f() for f in funcs])
+    ```
+  options:
+    - "`[0, 1, 2]`"
+    - "`[0, 0, 0]`"
+    - "`[1, 2, 3]`"
+    - "`[2, 2, 2]`"
+  answer: D
+  why: |
+    The three lambdas share one variable `i`. They read it when they are called, after the loop has finished, and `i` is then `2`. Writing `lambda i=i: i` copies the current value into each function.
+
+- q: |
+    What is the output?
+
+    ```python
+    def make_counter():
+        n = 0
+        def inc():
+            nonlocal n
+            n += 1
+            return n
+        return inc
+
+    a, b = make_counter(), make_counter()
+    print(a(), a(), b())
+    ```
+  options:
+    - "`1 2 3`"
+    - "`1 1 1`"
+    - "`1 2 1`"
+    - "`0 1 0`"
+  answer: C
+  why: |
+    Each call to `make_counter` creates its own `n`, so `a` and `b` count separately. `a` returns 1 and then 2. `b` starts at 0 and returns 1.
+
+- q: |
+    In the code below, what happens when `inc()` is called?
+
+    ```python
+    def make_counter():
+        n = 0
+        def inc():
+            n += 1
+            return n
+        return inc
+    ```
+  options:
+    - "It raises `UnboundLocalError`, because `n += 1` makes `n` a local variable of `inc`."
+    - "It returns `1`, because `inc` can see `n`."
+    - "It raises `NameError`, because `n` does not exist."
+    - "It returns `1` and also changes the outer `n`."
+  answer: A
+  why: |
+    An assignment inside a function makes that name local to the function. `n += 1` then reads a local `n` that has no value yet. Declaring `nonlocal n` tells Python to use the variable of the enclosing function.
+
+- q: |
+    What is the output?
+
+    ```python
+    from functools import partial
+
+    binary = partial(int, base=2)
+    print(binary("11"), binary("11", base=10))
+    ```
+  options:
+    - "`3 3`"
+    - "`11 11`"
+    - "`3 11`"
+    - "`TypeError`"
+  answer: C
+  why: |
+    `partial` stores `base=2`, so `binary("11")` is `int("11", base=2)`, which is `3`. A keyword given at call time replaces the stored one, so the second call is `int("11", base=10)`, which is `11`.
+
+- q: |
+    What is the output?
+
+    ```python
+    from operator import itemgetter
+
+    pairs = [("a", 3), ("b", 1), ("c", 2)]
+    print(sorted(pairs, key=itemgetter(1)))
+    ```
+  options:
+    - "`[('a', 3), ('b', 1), ('c', 2)]`"
+    - "`[('a', 3), ('c', 2), ('b', 1)]`"
+    - "`[1, 2, 3]`"
+    - "`[('b', 1), ('c', 2), ('a', 3)]`"
+  answer: D
+  why: |
+    `itemgetter(1)` returns the item at index 1 of each pair, so the pairs are compared by their numbers. `sorted` still returns the whole pairs, in the order 1, 2, 3.
+
+- q: |
+    What is the output?
+
+    ```python
+    m = map(str.upper, ["a", "b"])
+    print(list(m), list(m))
+    ```
+  options:
+    - "`['A', 'B'] ['A', 'B']`"
+    - "`['A', 'B'] []`"
+    - "`[] ['A', 'B']`"
+    - "`<map object> <map object>`"
+  answer: B
+  why: |
+    `map` returns an iterator, which can be read only once. The first `list(m)` uses up the items, so the second one finds nothing left. A list comprehension would give a list that can be read again.
+
+- q: |
+    You need a list with every number of `nums` doubled. Which version is the usual Python style?
+  options:
+    - "`[n * 2 for n in nums]`"
+    - "`list(map(lambda n: n * 2, nums))`"
+    - "`list(filter(lambda n: n * 2, nums))`"
+    - "`doubled = lambda nums: [n * 2 for n in nums]`"
+  answer: A
+  why: |
+    A list comprehension is short and needs no lambda. The `map` version works but is longer. `filter` selects items and does not change them. Assigning a lambda to a name goes against PEP 8, which says to use `def`.
+
+- q: |
+    What does a dictionary such as `ops = {"+": operator.add, "-": operator.sub}` let you do?
+  options:
+    - "Run both functions at once whenever you read `ops`."
+    - "Store the results of `add` and `sub` for later."
+    - "Call a function by name, like `ops[\"+\"](2, 3)`, instead of writing a long `if`/`elif` chain."
+    - "Make the functions run faster than a normal call."
+  answer: C
+  why: |
+    Functions are ordinary values, so they can be dictionary values. Looking up the key gives the function, and you call it. The dictionary stores the functions themselves, not their results, and adding a new operator means adding one entry.

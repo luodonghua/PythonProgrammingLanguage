@@ -1,0 +1,6 @@
+- {term: Interpreter, meaning: "The program (python) that reads your code and runs it."}
+- {term: REPL, meaning: "Read-eval-print loop. The interactive prompt that starts when you run python alone."}
+- {term: Script, meaning: "A .py file you run with python file.py or uv run file.py."}
+- {term: Traceback, meaning: "The report Python prints when an error stops your program. Read it from the bottom."}
+- {term: Comment, meaning: "Text after # that Python ignores."}
+- {term: Virtual environment, meaning: "A project-private folder of installed packages, so projects do not clash. uv creates it for you in .venv."}

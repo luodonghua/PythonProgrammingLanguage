@@ -1,0 +1,24 @@
+setup: |
+  Assignments 2 to 4 use **Pydantic**, which the project already lists as a dependency. Assignment 3 reads a small data file, `products.json`, from its folder.
+assignments:
+  - dir: a1-order
+    title: Order dataclasses
+    goal: Model an order with a frozen `LineItem` and an `Order` dataclass that validates itself in `__post_init__`, computes totals in integer cents, and returns changed copies. Practises `frozen`, `field(default_factory=...)`, `replace` and `asdict`.
+    solution_note: |
+      `LineItem` is frozen, so nothing can change it after creation. `Order.items` uses `default_factory=list` so each order gets its own list. `with_item` builds a new list and calls `replace`, which copies the order without touching the original. Integer cents avoid float rounding errors.
+  - dir: a2-user-model
+    title: A validated user model
+    goal: Write a Pydantic `User` model with constraints and a custom email validator, then parse a batch of rows and report which fields failed. Practises `Field`, `field_validator`, coercion and `ValidationError.errors()`.
+    solution_note: |
+      `str_strip_whitespace` cleans strings before the length checks. The email validator runs after the type check and can return a changed value (lower-case). `exc.errors()` is a list of dicts, and the first item of `loc` is the field name.
+  - dir: a3-messy-json
+    title: Messy JSON into models
+    goal: Parse a JSON file with strings for numbers, comma-separated tags and invalid rows into `Product` models, collecting errors instead of stopping. Practises coercion, a `mode="before"` validator and error reporting.
+    files_note: The data file `products.json` is in the same folder.
+    solution_note: |
+      A `mode="before"` validator sees the raw input, so it can turn `"a, b"` into a list before Pydantic checks the type. `load_products` catches `ValidationError` per row, so one bad row does not stop the rest. The `type` of an error (such as `float_parsing`) is stable and machine-readable.
+  - dir: a4-parse-until-valid
+    title: Parse until valid
+    goal: Write a loop that asks a producer for JSON, validates it, and on failure asks again with the validation errors in the prompt. The tests use a scripted fake producer, so nothing is random. Practises `model_validate_json`, error formatting and custom exceptions.
+    solution_note: |
+      `model_validate_json` also reports invalid JSON as a `ValidationError` (with an empty `loc`), so one `except` handles both problems. Each new prompt starts from the original task, so feedback does not pile up. Attributes on `GaveUp` let the caller see what went wrong.

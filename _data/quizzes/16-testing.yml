@@ -1,0 +1,157 @@
+- q: |
+    Which test does pytest collect and run automatically?
+  options:
+    - "A function `check_total()` in `test_cart.py`"
+    - "A function `total_test()` in `cart_tests.py`"
+    - "A function `test_total()` in `test_cart.py`"
+    - "A function `Test_total()` in `cart.py`"
+  answer: C
+  why: |
+    By default pytest looks in files named `test_*.py` (or `*_test.py`) for functions whose names start with `test`. A function that does not follow the naming rule is silently ignored, which is a common reason for "my test never runs".
+
+- q: |
+    The file below is run with `pytest -q`. What is the last summary line (ignoring the time)?
+
+    ```python
+    import pytest
+
+    @pytest.mark.parametrize("n", [1, 2, 3])
+    def test_positive(n):
+        assert n > 0
+
+    def test_one():
+        assert True
+    ```
+  options:
+    - "`4 passed`"
+    - "`2 passed`"
+    - "`3 passed`"
+    - "`1 passed`"
+  answer: A
+  why: |
+    `parametrize` runs `test_positive` once per value, so there are 3 test cases. With `test_one` that makes 4.
+
+- q: |
+    What is the summary line (ignoring the time)?
+
+    ```python
+    import pytest
+
+    def test_a():
+        assert 1 + 1 == 2
+
+    @pytest.mark.skip(reason="later")
+    def test_b():
+        assert False
+
+    def check_c():
+        assert False
+    ```
+  options:
+    - "`1 passed, 2 failed`"
+    - "`1 passed, 1 failed`"
+    - "`2 passed`"
+    - "`1 passed, 1 skipped`"
+  answer: D
+  why: |
+    `test_a` passes. `test_b` is collected but skipped by the marker. `check_c` does not start with `test`, so pytest never collects it, and the `assert False` inside is never run.
+
+- q: |
+    What is the summary line (ignoring the time)?
+
+    ```python
+    import pytest
+
+    @pytest.fixture
+    def items():
+        return []
+
+    def test_add(items):
+        items.append(1)
+        assert items == [1]
+
+    def test_again(items):
+        assert items == []
+    ```
+  options:
+    - "`1 failed, 1 passed`"
+    - "`2 passed`"
+    - "`2 failed`"
+    - "`1 passed`"
+  answer: B
+  why: |
+    A fixture with the default scope runs again for every test, so each test gets a new empty list. `test_add` cannot change what `test_again` sees.
+
+- q: |
+    What is the summary line (ignoring the time)?
+
+    ```python
+    def test_float():
+        assert 0.1 + 0.2 == 0.3
+
+    def test_ok():
+        assert round(0.1 + 0.2, 1) == 0.3
+    ```
+  options:
+    - "`2 passed`"
+    - "`2 failed`"
+    - "`1 failed, 1 passed`"
+    - "`1 passed, 1 skipped`"
+  answer: C
+  why: |
+    `0.1 + 0.2` is `0.30000000000000004` in binary floating point, so the first assert fails. Rounding first fixes the second test. `pytest.approx(0.3)` is the usual tool for comparing floats.
+
+- q: |
+    What does `@pytest.mark.parametrize` do?
+  options:
+    - "Runs one test once for each set of inputs"
+    - "Runs a test several times to find flaky behaviour"
+    - "Skips a test unless a parameter is given"
+    - "Passes command-line options to the program being tested"
+  answer: A
+  why: |
+    It turns a list of inputs and expected results into separate test cases. That avoids copy-pasted tests, and a failure names the exact case.
+
+- q: |
+    What is `with pytest.raises(ValueError):` used for?
+  options:
+    - "Catching any error so the test can carry on"
+    - "Marking a test as an expected failure"
+    - "Ignoring any exception raised inside the block"
+    - "Checking that the block raises `ValueError`"
+  answer: D
+  why: |
+    The test passes only if a `ValueError` is raised inside the block. If no exception is raised, or a different one, the test fails.
+
+- q: |
+    What is the `tmp_path` fixture?
+  options:
+    - "The folder that contains the test file"
+    - "A new, empty temporary folder (a `pathlib.Path`) for each test"
+    - "The path of the current Python interpreter"
+    - "A shared folder that keeps files between test runs"
+  answer: B
+  why: |
+    Each test gets its own fresh temporary directory, so tests can write files freely without touching real data or each other.
+
+- q: |
+    A test uses `monkeypatch.setattr("builtins.input", fake_input)`. When is the original `input` restored?
+  options:
+    - "Never, because the change is permanent for the whole run"
+    - "After every line in the test"
+    - "Only if you call `monkeypatch.undo()`"
+    - "Automatically, when the test ends"
+  answer: D
+  why: |
+    `monkeypatch` records every change and reverts them at the end of the test, even when the test fails. That keeps tests independent.
+
+- q: |
+    What is the order of steps in test-driven development (TDD)?
+  options:
+    - "Write the code, write a test, fix the test"
+    - "Write a failing test, make it pass, refactor"
+    - "Refactor, write a test, write the code"
+    - "Write all the tests at the end of the project"
+  answer: B
+  why: |
+    The loop is red (a failing test for the next behaviour), green (the simplest code that passes), refactor (clean up while the tests stay green).

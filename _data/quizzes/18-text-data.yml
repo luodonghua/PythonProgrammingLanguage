@@ -1,0 +1,134 @@
+- q: |
+    A file `a.csv` has the header `name,qty` and the row `pen,3`. What is the type of `row["qty"]` when you read it with `csv.DictReader`?
+  options:
+    - "`int`, because `3` looks like a number"
+    - "`str`, because the `csv` module never converts values"
+    - "`float`, because CSV numbers are decimal"
+    - "It depends on the column header"
+  answer: B
+  why: |
+    CSV is plain text, so every field arrives as a `str`. Convert it yourself with `int()` or `float()`, and handle `ValueError` for bad values.
+
+- q: |
+    What is the output?
+
+    ```python
+    import re
+    print(re.findall(r"\d+", "10-20"))
+    ```
+  options:
+    - "`['1', '0', '2', '0']`"
+    - "`['10-20']`"
+    - "`['10', '20']`"
+    - "`[10, 20]`"
+  answer: C
+  why: |
+    `\d+` matches one or more digits in a row, so `10` and `20` are two matches. `findall` always returns strings, never numbers.
+
+- q: |
+    What is the output?
+
+    ```python
+    import json
+    print(json.dumps({"x": (1, 2)}))
+    ```
+  options:
+    - '`{"x": [1, 2]}`'
+    - '`{"x": (1, 2)}`'
+    - "`TypeError`"
+    - "`{'x': [1, 2]}`"
+  answer: A
+  why: |
+    JSON has arrays but no tuples, so a tuple is written as an array. Reading it back gives a list, so a round trip does not return the original tuple. JSON also requires double quotes, which rules out the last option.
+
+- q: |
+    What is the output?
+
+    ```python
+    import re
+    print(re.match(r"\d+", "abc123"))
+    ```
+  options:
+    - "`123`"
+    - "`<re.Match object; span=(3, 6), match='123'>`"
+    - "`''`"
+    - "`None`"
+  answer: D
+  why: |
+    `re.match` only tries to match at the start of the string. `a` is not a digit, so there is no match and the result is `None`. `re.search` would find `123`.
+
+- q: |
+    Why do you open CSV files with `newline=""`?
+  options:
+    - "It makes the file read faster."
+    - "The `csv` module then handles line endings itself."
+    - "It removes the header row."
+    - "It converts the file to UTF-8."
+  answer: B
+  why: |
+    Without `newline=""`, Python translates line endings before the `csv` module sees them. Quoted fields that contain line breaks can then be read or written wrongly. The setting has no effect on speed, headers or encoding (that is `encoding=`).
+
+- q: |
+    Why should you write regex patterns as raw strings, such as `r"\d+"`?
+  options:
+    - "Raw strings make the pattern match faster."
+    - "Raw strings allow Unicode characters."
+    - "Backslashes reach `re` unchanged, not as Python escapes."
+    - "Without the `r`, the pattern always raises an error."
+  answer: C
+  why: |
+    Python processes backslash escapes in normal strings first (`\n` becomes a newline). A raw string passes the backslashes through to `re`. Some patterns, such as `"\d"`, still work without `r` but give a warning in recent Python versions.
+
+- q: |
+    What is the output?
+
+    ```python
+    import re
+    print(re.sub(r"(\w+) (\w+)", r"\2 \1", "hello world"))
+    ```
+  options:
+    - "`hello world`"
+    - "`world hello`"
+    - "`2 1`"
+    - "`helloworld`"
+  answer: B
+  why: |
+    The pattern has two groups, one for each word. In the replacement, `\2` inserts the second group and `\1` the first, so the words swap.
+
+- q: |
+    What does `json.loads("{bad json}")` do?
+  options:
+    - "It returns an empty dict."
+    - "It returns the string unchanged."
+    - "It returns `None`."
+    - "It raises `json.JSONDecodeError`, a subclass of `ValueError`."
+  answer: D
+  why: |
+    Invalid JSON text raises an exception instead of returning a value. Catch `json.JSONDecodeError` (or `ValueError`) when the input comes from outside your program.
+
+- q: |
+    How do you open a TOML file for `tomllib.load`?
+  options:
+    - "In binary mode: `open(path, \"rb\")`."
+    - "In text mode: `open(path, \"r\")`."
+    - "In write mode: `open(path, \"w\")`."
+    - "You pass the path string directly."
+  answer: A
+  why: |
+    `tomllib.load` needs a binary file object, because TOML must be decoded as UTF-8 by the library itself. For a string use `tomllib.loads`. The module only reads TOML and cannot write it.
+
+- q: |
+    What is the output?
+
+    ```python
+    import re
+    print(re.findall(r"<.+?>", "<a><b>"))
+    ```
+  options:
+    - "`['<a><b>']`"
+    - "`['a', 'b']`"
+    - "`['<a>', '<b>']`"
+    - "`[]`"
+  answer: C
+  why: |
+    The `?` after `+` makes the match lazy: it takes as few characters as possible, so each tag matches alone. Without the `?` the match is greedy and returns `['<a><b>']`.

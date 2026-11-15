@@ -1,0 +1,25 @@
+setup: |
+  Assignments 2 and 4 contain a file `implementations.py` with the functions the grader runs your test cases against. Leave it unchanged.
+assignments:
+  - dir: a1-parse-duration
+    title: Make the tests pass
+    goal: Read a test file that acts as the specification and write `parse_duration` so that every test passes. Practises reading tests, parsing text and raising `ValueError`.
+    solution_note: |
+      The regular expression `(\d+)([dhms])` matches one part at a time. The code walks along the text, checks that units appear in order and only once, and raises `ValueError` as soon as a piece does not match. This is the test-first style: the tests came first.
+  - dir: a2-test-leap-year
+    title: Write the tests (leap years)
+    goal: Instead of writing the function, write the test cases. Your cases must accept the correct leap-year function and catch six buggy ones.
+    files_note: The folder also contains `implementations.py` (the correct function and six buggy ones).
+    solution_note: |
+      Each bug needs a specific year. 1900 exposes "divisible by 4 only", 2000 exposes "forgot the 400 rule", 1800 exposes "divisible by 200", and 1600 exposes "divisible by 1000". A good test suite is a set of inputs chosen to expose mistakes. The ordinary years 2024 and 2023 are not enough.
+  - dir: a3-todo-file
+    title: To-do list in a JSON file
+    goal: Implement a small JSON-backed to-do list. The tests show the pytest tools for this kind of code, `tmp_path`, `monkeypatch` and `capsys`.
+    solution_note: |
+      Every function takes the file path as a parameter, so tests can pass a path inside `tmp_path`. `prompt_add` calls `input()` directly, which lets `monkeypatch` replace it. Functions that raise leave the file unchanged because they check before they save.
+  - dir: a4-test-clamp
+    title: Write the tests (clamp)
+    goal: Write test cases for `clamp(x, low, high)`, including a case that expects an exception, so that six buggy versions are caught.
+    files_note: The folder also contains `implementations.py` (the correct function and six buggy ones).
+    solution_note: |
+      Boundary values catch the bugs: a value exactly on each edge, a float inside the range, `low == high`, and `low > high` with an expected `ValueError`. Cases that stay in the middle of the range pass for nearly every buggy version.

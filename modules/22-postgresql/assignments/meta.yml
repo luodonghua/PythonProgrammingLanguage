@@ -1,0 +1,44 @@
+setup: |
+  These tasks need a running PostgreSQL server. The repository includes a `compose.yaml` for one. With Docker installed, run this in the project folder:
+
+  ```bash
+  docker compose up -d
+  ```
+
+  This starts PostgreSQL 17 on port 5432. The tests connect with the default DSN `postgresql://postgres:postgres@localhost:5432/postgres`. To use a different server, set the environment variable `PRACTICE_PG_DSN` to its DSN.
+
+  Each test gets a fresh temporary schema (a private set of tables), and the schema is dropped afterwards. Your tables never collide with each other or with other data in the database.
+
+  **If no database is running, the tests are skipped, not failed.** A skipped test proves nothing, so start the server before you judge your solution. When you are done, stop it with:
+
+  ```bash
+  docker compose down
+  ```
+
+  The `psycopg` driver is already part of the course environment (`uv sync`). Every function takes the open connection `conn` as its first argument. The connection does not autocommit, so commit your changes.
+assignments:
+  - dir: a1-create-and-insert
+    title: Create a table and insert with RETURNING
+    goal: Create a `books` table with an identity key, `NUMERIC` and `TIMESTAMPTZ` columns, insert books with `RETURNING id`, insert a batch in one transaction, and read a book back as a dict. Practises `%s` parameters, `dict_row` and `conn.transaction()`.
+    solution_note: |
+      `RETURNING id` gives the new key without a second query. `add_books` runs inside one `with conn.transaction():`, so a bad row (rejected by Python or by the database) undoes the whole batch. Validation happens before the SQL runs, so the connection never enters an aborted transaction.
+  - dir: a2-search-books
+    title: Parameterized search
+    goal: Write a search that combines optional filters (title text, maximum price, a list of authors) into one query, using only `%s` parameters. Practises dynamic `WHERE` clauses without SQL injection, `ILIKE`, `= ANY(%s)` and `GROUP BY`.
+    solution_note: |
+      The SQL text is assembled only from fixed fragments (`title ILIKE %s`, `price <= %s`, `author = ANY(%s)`). All user values go into the `params` list. The `%` and `_` in the search text are escaped with a backslash, so they match themselves instead of acting as wildcards. A Python list passed to `ANY(%s)` becomes a PostgreSQL array.
+  - dir: a3-transfer
+    title: Money transfer with rollback
+    goal: Move money between two accounts so that the withdrawal and the deposit happen together or not at all. Practises `conn.transaction()`, `SELECT ... FOR UPDATE`, custom exceptions and nested transactions (savepoints).
+    solution_note: |
+      The whole transfer runs inside `with conn.transaction():`. If the target account does not exist, the `LookupError` leaves the block and the withdrawal is rolled back. `FOR UPDATE` locks the source row, so a second transfer must wait until the first one commits. In `transfer_many`, each inner `transaction()` becomes a savepoint inside the outer one.
+  - dir: a4-upsert-counter
+    title: Upsert counter
+    goal: Build a page-hit counter with one `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` statement. Practises upserts, `EXCLUDED`, `LIMIT` with a parameter and `rowcount`.
+    solution_note: |
+      One statement both inserts a new page and adds to an existing one, so two programs counting at the same time cannot lose a hit. A read followed by a write could. `EXCLUDED.hits` is the value you tried to insert, and `page_hits.hits` is the stored value.
+  - dir: a5-jsonb-events
+    title: JSONB events
+    goal: Store event payloads as JSONB and query them with `@>`, `->>` and a cast. Practises `Jsonb(...)`, containment queries and aggregates over JSON fields.
+    solution_note: |
+      `Jsonb(payload)` sends a Python dict as JSONB, and a JSONB column comes back as a dict. `payload @> %s` finds rows that contain all the given pairs, and an empty dict matches every row. `->>` returns text, so `average_ms` casts it with `::numeric` before `avg`, and `avg` skips rows where the key is missing.

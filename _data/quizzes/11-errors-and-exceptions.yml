@@ -1,0 +1,143 @@
+- q: |
+    Which exception does `int("abc")` raise?
+  options:
+    - "`TypeError`"
+    - "`ValueError`"
+    - "`KeyError`"
+    - "`SyntaxError`"
+  answer: B
+  why: |
+    The argument has the right **type** (a string), but its **value** cannot be converted, so Python raises `ValueError`. A `TypeError` would come from something like `int([1])`.
+
+- q: |
+    What is the output?
+
+    ```python
+    try:
+        print("a")
+        int("x")
+        print("b")
+    except ValueError:
+        print("c")
+    finally:
+        print("d")
+    ```
+  options:
+    - "`a b c d`, each on its own line"
+    - "`a c`, each on its own line"
+    - "`a b d`, each on its own line"
+    - "`a c d`, each on its own line"
+  answer: D
+  why: |
+    `a` prints, then `int("x")` raises `ValueError`. The rest of the `try` block (`b`) is skipped, the `except` block prints `c`, and `finally` always runs, so `d` follows.
+
+- q: |
+    Which line is the best way to handle a failed conversion of user text to a number?
+  options:
+    - "`except ValueError:`"
+    - "`except:`"
+    - "`except Exception: pass`"
+    - "`except BaseException:`"
+  answer: A
+  why: |
+    Name the exact exception you expect. A bare `except:` and the broad forms also catch bugs such as `NameError` and even `KeyboardInterrupt` (Ctrl+C), and they hide the cause of failures.
+
+- q: |
+    What is the output?
+
+    ```python
+    try:
+        x = [1, 2, 3][5]
+    except LookupError:
+        print("lookup")
+    except IndexError:
+        print("index")
+    ```
+  options:
+    - "`index`"
+    - "`index` and then `lookup`"
+    - "`lookup`"
+    - "Nothing, because the exception is not caught"
+  answer: C
+  why: |
+    `IndexError` is a subclass of `LookupError`. Python checks the `except` clauses from top to bottom and runs the first one that matches, so `LookupError` catches it and the `IndexError` clause is never reached. Put the more specific class first.
+
+- q: |
+    What does `raise AppError("bad value") from exc` do?
+  options:
+    - "It raises `exc` again and ignores `AppError`"
+    - "It raises `AppError` and stores `exc` in its `__cause__` attribute"
+    - "It catches `exc` and continues the program"
+    - "It raises both exceptions at the same time"
+  answer: B
+  why: |
+    `from` links the original error to the new one. The traceback shows both, so the reader sees what really went wrong underneath.
+
+- q: |
+    What is the output?
+
+    ```python
+    def parse(text):
+        try:
+            n = int(text)
+        except ValueError:
+            return -1
+        else:
+            return n * 2
+        finally:
+            print("done")
+
+    print(parse("4"))
+    ```
+  options:
+    - "`8`"
+    - "`done`"
+    - "`-1` and then `done`"
+    - "`done`, then `8`"
+  answer: D
+  why: |
+    `int("4")` works, so `else` runs and returns `8`. The `finally` block still runs before the function really returns, so `done` is printed first. `print` then shows `8`.
+
+- q: |
+    Why is `except Exception: pass` a bad habit?
+  options:
+    - "It silently hides every error, so bugs go unnoticed"
+    - "It is a `SyntaxError`"
+    - "It makes the program run slower"
+    - "It stops the program on the first error"
+  answer: A
+  why: |
+    The program continues as if nothing happened, and you lose the information that something failed. Catch specific exceptions and at least log what you ignore.
+
+- q: |
+    `class TooYoung(ValueError): ...` is defined. Code raises `TooYoung("under 18")` inside `try`. Which handler catches it?
+  options:
+    - "Only `except TooYoung`"
+    - "Only `except Exception`"
+    - "Both `except TooYoung` and `except ValueError`"
+    - "None of them, because custom exceptions cannot be caught by built-in types"
+  answer: C
+  why: |
+    An exception is caught by its own class and by every parent class. `TooYoung` is a `ValueError`, which is an `Exception`, so all three handlers would match.
+
+- q: |
+    Why should you not use `assert` to validate input from a user?
+  options:
+    - "`assert` can only compare numbers"
+    - "Python can run with assertions switched off (`python -O`), so the check may disappear"
+    - "`assert` always stops the whole computer"
+    - "`assert` is slower than `if`"
+  answer: B
+  why: |
+    Assertions are for checking your own assumptions during development. Real input checks need `if` and `raise`, so they always run.
+
+- q: |
+    Which approach is written in the EAFP ("easier to ask forgiveness than permission") style?
+  options:
+    - "Run `value = data[key]` inside `try` and handle `KeyError`"
+    - "Check `if key in data:` before reading `data[key]`"
+    - "Write `assert key in data` before reading `data[key]`"
+    - "Copy `data` first and read from the copy"
+  answer: A
+  why: |
+    EAFP tries the operation and handles the failure. The `if key in data` version checks first ("look before you leap", LBYL).

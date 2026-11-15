@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-multiples
+    title: Sums, products and digits
+    goal: Write three small accumulator functions, `sum_of_multiples`, `factorial` and `digit_sum`. Practises `for`, `range`, `break` and building a result in a loop.
+    solution_note: |
+      Each function follows the same pattern: initialise (`total = 0` or `result = 1`), update inside the loop, return after it. In `sum_of_multiples`, `break` after the first matching divisor stops a number such as 15 from being counted twice.
+  - dir: a2-patterns
+    title: Text patterns
+    goal: Return multiplication tables, triangles, pyramids and checkerboards as lists of strings. Practises nested loops and string building.
+    solution_note: |
+      Returning a list of lines (instead of printing) keeps the logic testable. The checkerboard uses `(row + col) % 2` to alternate, and the pyramid pads each row with `height - row` spaces.
+  - dir: a3-guessing
+    title: Guessing game logic
+    goal: Judge guesses, play a game from scripted guesses with a try limit, and count the guesses a binary-search player needs. Practises `for`, `while`, early `return` and slicing.
+    solution_note: |
+      `guesses[:max_tries]` limits the loop without a counter, and `return` inside the loop stops at the first correct guess. The strategy function halves the range every round, which is why 100 numbers need at most 7 guesses.
+  - dir: a4-collatz-primes
+    title: Collatz chains and primes
+    goal: Count Collatz steps, find the start below a limit with the longest chain, and build a sieve of Eratosthenes. Practises `while`, nested loops, lists of booleans and `enumerate`.
+    solution_note: |
+      The sieve marks multiples of each prime as not prime, starting at `p * p` because smaller multiples were already marked by smaller primes. `enumerate(is_prime)` pairs each number with its flag so a comprehension can collect the primes.

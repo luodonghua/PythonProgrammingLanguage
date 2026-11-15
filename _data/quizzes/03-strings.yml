@@ -1,0 +1,135 @@
+- q: |
+    What is the output?
+
+    ```python
+    s = "programming"
+    print(s[3:7])
+    ```
+  options:
+    - "`gramm`"
+    - "`ogra`"
+    - "`gram`"
+    - "`rogr`"
+  answer: C
+  why: |
+    Indexes start at 0, so `s[3]` is `"g"`. The slice includes index 3 and excludes index 7, which gives the four characters at indexes 3, 4, 5 and 6: `gram`.
+
+- q: |
+    What is the output?
+
+    ```python
+    word = "hello"
+    word.upper()
+    print(word)
+    ```
+  options:
+    - "`hello`"
+    - "`HELLO`"
+    - "`None`"
+    - "`TypeError`"
+  answer: A
+  why: |
+    Strings are immutable. `upper()` returns a new string, and the code throws that result away. `word` still points to `"hello"`. Write `word = word.upper()` to keep it.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(f"{7:03d} {1234567:,}")
+    ```
+  options:
+    - "`7 1234567`"
+    - "`007 1234567`"
+    - "`7 1,234,567`"
+    - "`007 1,234,567`"
+  answer: D
+  why: |
+    `03d` pads the integer with zeros to a width of 3. The `,` option adds thousands separators.
+
+- q: |
+    What does `"hello".find("z")` return?
+  options:
+    - "It raises `ValueError`."
+    - "`-1`"
+    - "`None`"
+    - "`0`"
+  answer: B
+  why: |
+    `find` returns `-1` when the text is missing. The similar method `index` raises `ValueError` instead. Because `-1` is also a valid index, check for it before you use the result.
+
+- q: |
+    What is the output?
+
+    ```python
+    print("a-b-c".split("-", 1))
+    ```
+  options:
+    - "`['a', 'b', 'c']`"
+    - "`['a', 'b-c']`"
+    - "`['a-b', 'c']`"
+    - "`['a', '-', 'b-c']`"
+  answer: B
+  why: |
+    The second argument is the maximum number of splits. With 1, Python splits at the first `-` only and keeps the rest together.
+
+- q: |
+    Why does `",".join([1, 2])` fail?
+  options:
+    - "`join` needs `str` items, and these are `int`."
+    - "`join` can only use a space as a separator."
+    - "`join` works on tuples but never on lists."
+    - "The list must have at least three items."
+  answer: A
+  why: |
+    `join` needs every item to be a `str`. It raises `TypeError` for ints. Convert them first: `",".join(str(n) for n in [1, 2])` gives `"1,2"`.
+
+- q: |
+    What is `len(r"a\tb")`?
+
+    (The `r` before the quote makes it a raw string.)
+  options:
+    - "`3`, because `\t` is one tab character"
+    - "`2`"
+    - "`4`"
+    - "`5`"
+  answer: C
+  why: |
+    In a raw string, the backslash is an ordinary character. The four characters are `a`, `\`, `t` and `b`. Without the `r`, the string would have 3 characters.
+
+- q: |
+    What is the output?
+
+    ```python
+    text = "naïve"
+    print(len(text), len(text.encode("utf-8")))
+    ```
+  options:
+    - "`5 5`"
+    - "`6 6`"
+    - "`6 5`"
+    - "`5 6`"
+  answer: D
+  why: |
+    The text has 5 characters. In UTF-8, `ï` needs two bytes and the other letters need one each, so the byte string has 6 bytes.
+
+- q: |
+    Which f-string prints `1234567.891` as `1,234,567.89`?
+  options:
+    - "`f\"{x:.2f,}\"`"
+    - "`f\"{x:,.2f}\"`"
+    - "`f\"{x:2,f}\"`"
+    - "`f\"{x:,2}\"`"
+  answer: B
+  why: |
+    The order in a format spec is `[width][,][.precision][type]`. The comma comes before the precision, so `,.2f` means "thousands separator, two decimals, fixed-point".
+
+- q: |
+    In Python 3.14, what does `t"Hello {name}"` evaluate to?
+  options:
+    - "A `Template` object, not a `str`."
+    - "A normal `str`, the same as the f-string result."
+    - "A `bytes` object."
+    - "A `SyntaxError`, because only f-strings can contain braces."
+  answer: A
+  why: |
+    A t-string produces a `string.templatelib.Template`, not a `str`. Code that receives it can inspect the static parts and the values before building any final text.

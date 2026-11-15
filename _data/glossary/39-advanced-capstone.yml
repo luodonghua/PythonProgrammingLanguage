@@ -1,0 +1,7 @@
+- {term: Orchestrator, meaning: "The part of a multi-agent program that splits a job into tasks, starts the workers, and merges their results."}
+- {term: Sub-agent (worker), meaning: "A small agent that handles one task, for example by asking a model one question and validating the reply."}
+- {term: Fan-out, meaning: "Starting many tasks at the same time from one place and collecting their results afterwards."}
+- {term: Partial failure, meaning: "A run in which some tasks fail and others succeed. A good runner reports both instead of stopping at the first error."}
+- {term: Fail fast, meaning: "Stopping the whole group of tasks at the first error. In a TaskGroup the other tasks are cancelled and an ExceptionGroup is raised."}
+- {term: Backpressure, meaning: "A slow consumer slowing down its producers, for example with a bounded queue that makes put() wait when it is full."}
+- {term: Exit code, meaning: "A number a program returns to the operating system. 0 means success, and other values signal a failure that scripts can check."}

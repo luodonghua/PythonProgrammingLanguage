@@ -1,0 +1,129 @@
+- q: |
+    What is the purpose of `if __name__ == "__main__":` at the bottom of a file?
+  options:
+    - "It makes the file faster to import"
+    - "It marks the file as a package"
+    - "Its block runs only when the file is run directly, not when it is imported"
+    - "It is required at the end of every Python file"
+  answer: C
+  why: |
+    When you run `python file.py`, Python sets `__name__` to `"__main__"`. When another file imports it, `__name__` is the module name. The guard keeps demo or command-line code from running on import.
+
+- q: |
+    The file `greet.py` contains only `print(__name__)`. Another file `app.py` contains `import greet`. What does `python app.py` print?
+  options:
+    - "`greet`"
+    - "`app`"
+    - "`__main__`"
+    - "Nothing"
+  answer: A
+  why: |
+    `import greet` runs the file once, and inside it `__name__` is the module's own name, `greet`. Only the file you start directly gets `__main__`.
+
+- q: |
+    What turns a folder `shop/` into a regular package?
+  options:
+    - "A file called `package.py`"
+    - "A file called `main.py`"
+    - "A file called `setup.txt`"
+    - "A file called `__init__.py`"
+  answer: D
+  why: |
+    `__init__.py` marks the folder as a package. It runs when the package is first imported and can be empty. `__main__.py` is a different file: it is what `python -m shop` runs.
+
+- q: |
+    What is the output?
+
+    ```python
+    from math import floor
+
+    print(floor(2.7), floor(-2.7))
+    ```
+  options:
+    - "`2 -2`"
+    - "`2 -3`"
+    - "`3 -3`"
+    - "`3 -2`"
+  answer: B
+  why: |
+    `floor` rounds toward minus infinity, so 2.7 becomes 2 and -2.7 becomes -3. Rounding toward zero (`int`) would give -2 for the second value.
+
+- q: |
+    You create a file `random.py` next to your script, and the script runs `import random`. What usually happens?
+  options:
+    - "Python always picks the standard library module"
+    - "Python raises `SyntaxError`"
+    - "Python merges both modules"
+    - "Python imports your file instead of the standard module"
+  answer: D
+  why: |
+    The folder of the running script is first in `sys.path`, so your `random.py` is found before the standard library. Functions like `random.randint` then fail with `AttributeError`. Give your files other names.
+
+- q: |
+    What is the output?
+
+    ```python
+    import random
+
+    a = random.Random(1).random()
+    b = random.Random(1).random()
+    print(a == b)
+    ```
+  options:
+    - "`True`"
+    - "`False`"
+    - "`None`"
+    - "It depends on the time of day"
+  answer: A
+  why: |
+    Two generators created with the same seed produce the same sequence, so the first numbers are equal. Fixed seeds make code with randomness repeatable, for example in tests.
+
+- q: |
+    How do you add the third-party package `httpx` to a project that uses `uv`?
+  options:
+    - "`import httpx` installs it automatically"
+    - "Copy the package folder into `site-packages` by hand"
+    - "`uv add httpx`"
+    - "Write `httpx` in `__init__.py`"
+  answer: C
+  why: |
+    `uv add httpx` installs the package into the project environment and records it in `pyproject.toml`. A plain `import` only loads a package that is already installed.
+
+- q: |
+    Inside the package `shop`, the file `tools.py` contains `from . import pricing`. What does the dot mean?
+  options:
+    - "Import from the standard library"
+    - "Import `pricing` from the same package as `tools.py`"
+    - "Import `pricing` from the folder above the package"
+    - "Import every name from the current file"
+  answer: B
+  why: |
+    A single leading dot is a relative import: "from this package". The absolute form `from shop import pricing` does the same and works from anywhere. Relative imports fail in a file that you run directly as a script.
+
+- q: |
+    What is the output?
+
+    ```python
+    import itertools
+
+    print(list(itertools.batched("abcde", 2)))
+    ```
+  options:
+    - "`[('a', 'b'), ('c', 'd'), ('e',)]`"
+    - "`[('a', 'b'), ('c', 'd')]`"
+    - "`['ab', 'cd', 'e']`"
+    - "`[('a', 'b', 'c', 'd', 'e')]`"
+  answer: A
+  why: |
+    `batched` groups items into **tuples** of the given size, and the last tuple may be shorter. Nothing is dropped, and `batched` needs Python 3.12 or later.
+
+- q: |
+    What does `python -m shop` do, where `shop` is a package?
+  options:
+    - "It installs the package"
+    - "It runs every module in the package"
+    - "It lists the files in the package"
+    - "It runs the package's `__main__.py` with the package importable"
+  answer: D
+  why: |
+    The `-m` option finds the package through `sys.path` and executes its `__main__.py`. That gives a package a command-line entry point.

@@ -1,0 +1,7 @@
+- {term: Coroutine, meaning: "The object you get by calling an async def function. Its code runs only when it is awaited or scheduled as a task."}
+- {term: Event loop, meaning: "The scheduler that runs coroutines in one thread. It switches between tasks at each await."}
+- {term: await, meaning: "Pauses the current coroutine until the awaited coroutine, task or future has a result. Other tasks can run meanwhile."}
+- {term: Task, meaning: "A coroutine scheduled to run in the background, made with asyncio.create_task()."}
+- {term: gather, meaning: "asyncio.gather() runs awaitables concurrently and returns their results in the order they were passed."}
+- {term: Blocking call, meaning: "A call that holds the thread until it finishes, such as time.sleep(). In async code it freezes every task."}
+- {term: Semaphore, meaning: "A counter of free slots. asyncio.Semaphore(n) lets at most n tasks into a block at once."}

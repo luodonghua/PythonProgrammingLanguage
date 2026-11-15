@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-bank-account
+    title: Bank account
+    goal: Build a class that validates its input and protects its balance with a read-only property. Practises `__init__`, properties, `ValueError` and `__repr__`.
+    solution_note: |
+      The balance lives in `self._balance`. Only `deposit` and `withdraw` change it, and they check the amount **before** touching the balance, so a failed call leaves the account unchanged.
+  - dir: a2-vector2d
+    title: Vector2D with operators
+    goal: Make your own type work with `+`, `-`, `*`, `==`, `abs()`, unpacking and `bool()` by writing special methods.
+    solution_note: |
+      Each operator method returns `NotImplemented` for types it does not support, so Python raises a clear `TypeError`. `__rmul__ = __mul__` makes `3 * v` work as well as `v * 3`. `__iter__` enables `x, y = v`.
+  - dir: a3-stack-queue
+    title: Stack and Queue
+    goal: Write two small container classes. Practises `__len__`, `__iter__`, `__repr__`, truthiness and choosing the right data structure.
+    solution_note: |
+      Both classes only define `__len__`, so `bool()` works through the length. The stack wraps a list (fast at the end). The queue wraps `collections.deque`, because `list.pop(0)` is slow for long lists while `deque.popleft()` is fast.
+  - dir: a4-inventory
+    title: Inventory with an alternative constructor
+    goal: Combine a property, container methods and a `@classmethod` that builds an object from text.
+    solution_note: |
+      `from_text` calls `cls()`, not `Inventory()`, so subclasses get an instance of their own type. Items whose count reaches 0 are deleted, which keeps `len()` and `in` honest.

@@ -1,0 +1,6 @@
+- {term: Type hint, meaning: "An annotation such as x: int or -> str that states the expected type. Python stores it but does not enforce it."}
+- {term: Type checker, meaning: "A tool such as mypy or pyright that reads type hints and reports mismatches without running the program."}
+- {term: Union, meaning: "A type that allows several types, written X | Y. X | None marks an optional value."}
+- {term: Generic, meaning: "A function or class that works with a type chosen by the caller, written with a type variable such as def first[T](items: list[T]) -> T."}
+- {term: Docstring, meaning: "A string as the first statement of a function, class or module. It is stored in __doc__ and shown by help()."}
+- {term: doctest, meaning: "A standard module that runs the >>> examples found in docstrings and checks their output."}

@@ -1,0 +1,7 @@
+- {term: DSN, meaning: "Data source name. The connection string for a database, such as postgresql://user:password@host:5432/dbname."}
+- {term: psycopg, meaning: "The PostgreSQL driver for Python. Version 3 is imported as psycopg."}
+- {term: Parameter (%s), meaning: "A placeholder for a value in psycopg SQL. The value is sent separately, which prevents SQL injection."}
+- {term: RETURNING, meaning: "A clause that makes INSERT, UPDATE or DELETE return the changed rows, for example the new id."}
+- {term: Upsert, meaning: "INSERT ... ON CONFLICT DO UPDATE. It inserts a row, or updates the existing row when a unique rule is hit."}
+- {term: JSONB, meaning: "A PostgreSQL type that stores JSON in binary form so you can query inside it with operators like -> and @>."}
+- {term: Isolation level, meaning: "The rule for what one transaction can see of another's changes. The PostgreSQL default is READ COMMITTED."}

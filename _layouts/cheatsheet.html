@@ -1,0 +1,23 @@
+---
+layout: default
+---
+{% assign sheet = site.data.cheatsheets[page.sheet] %}
+<h1>{{ sheet.title }}</h1>
+<p>{{ sheet.subtitle }}</p>
+<div class="cs-actions">
+  <a class="btn" href="{{ page.pdf | relative_url }}" download>Download PDF (A4)</a>
+  <button type="button" class="btn" onclick="window.print()">Print this page</button>
+  <a href="{{ page.other_url | relative_url }}">{{ page.other_title }}</a>
+</div>
+<div class="cs-grid">
+{% for sec in sheet.sections %}
+<section class="cs-sec">
+<h2>{{ sec.title }}</h2>
+{% for item in sec.items %}<pre><code>{{ item.code | strip | escape }}{% if item.out %}
+<span class="out">{% assign olines = item.out | strip | split: "
+" %}{% for l in olines %}# {{ l | escape }}{% unless forloop.last %}
+{% endunless %}{% endfor %}</span>{% endif %}</code></pre>
+{% endfor %}
+</section>
+{% endfor %}
+</div>

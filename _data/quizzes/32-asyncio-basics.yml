@@ -1,0 +1,151 @@
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def hello():
+        return 1
+
+    async def main():
+        c = hello()
+        print(type(c).__name__)
+        await c
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`int`"
+    - "`Task`"
+    - "`coroutine`"
+    - "`function`"
+  answer: C
+  why: |
+    Calling an `async def` function does not run its body. It returns a coroutine object. The body runs when something awaits it.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def job():
+        print("job")
+
+    async def main():
+        t = asyncio.create_task(job())
+        print("main")
+        await t
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`main` then `job`"
+    - "`job` then `main`"
+    - "`main` only"
+    - "`job` only"
+  answer: A
+  why: |
+    `create_task` schedules `job` but does not run it. `main` keeps running until its first `await`, so it prints `main` first. The `await t` then lets `job` run.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+    async def pick(name, yields):
+        for _ in range(yields):
+            await asyncio.sleep(0)
+        return name
+
+    async def main():
+        print(await asyncio.gather(pick("a", 3), pick("b", 0)))
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`['b', 'a']`, because `b` finishes first"
+    - "`['a']`"
+    - "`('a', 'b')`"
+    - "`['a', 'b']`"
+  answer: D
+  why: |
+    `gather` returns results in the order you passed the awaitables. `b` finishes first, but `a` is first in the list. The result is a list, not a tuple.
+
+- q: |
+    What does `asyncio.run(main())` do?
+  options:
+    - "It starts a new thread and runs `main()` there while the caller goes on."
+    - "It runs `main()` on a new event loop, then closes the loop."
+    - "It runs `main()` in a separate process."
+    - "It turns `main` into a regular function."
+  answer: B
+  why: |
+    `asyncio.run` is the bridge from normal code to async code. It uses one thread. The coroutines share it by taking turns at each `await`.
+
+- q: |
+    A coroutine calls `time.sleep(2)` while 10 other tasks are waiting for network replies. What happens?
+  options:
+    - "Only that coroutine pauses. The other tasks go on."
+    - "Python raises an error, because `time.sleep` is not allowed inside a coroutine."
+    - "The whole loop stops for 2 seconds."
+    - "The event loop starts a thread for the sleep."
+  answer: C
+  why: |
+    `time.sleep` blocks the one thread that runs the event loop. Use `await asyncio.sleep(2)` so other tasks can run during the wait.
+
+- q: |
+    You must call a blocking library function from async code. What is the simplest safe way to do it?
+  options:
+    - "`await asyncio.to_thread(func, arg)`"
+    - "`await func(arg)`"
+    - "`asyncio.run(func(arg))`"
+    - "`asyncio.sleep(func(arg))`"
+  answer: A
+  why: |
+    `to_thread` runs the function in a worker thread and gives you an awaitable result, so the loop stays free. `await func(arg)` fails because a normal function does not return an awaitable.
+
+- q: |
+    What is the main purpose of `asyncio.Semaphore(3)`?
+  options:
+    - "It makes three copies of each task."
+    - "It runs every task three times."
+    - "It cancels any task that runs for more than three seconds."
+    - "It lets three tasks into a block at a time."
+  answer: D
+  why: |
+    A semaphore counts free slots. Each `async with` takes one, and the fourth task waits until one is released. This keeps you under a server's rate limit.
+
+- q: |
+    `asyncio.gather(a(), b(), return_exceptions=True)` and `b()` raises `ValueError`. What does the call return?
+  options:
+    - "It raises `ValueError` and discards the result of `a()`."
+    - "A list holding the result of `a()` and the `ValueError` object."
+    - "Only the result of `a()`."
+    - "`None`."
+  answer: B
+  why: |
+    With `return_exceptions=True`, exceptions are returned in the result list at the position of the failed awaitable. You then check each item with `isinstance(item, Exception)`.
+
+- q: |
+    Which code runs 100 requests concurrently?
+  options:
+    - "`for u in urls: await fetch(u)`"
+    - "`for u in urls: fetch(u)`"
+    - "`await asyncio.gather(*(fetch(u) for u in urls))`"
+    - "`await asyncio.sleep(0)`"
+  answer: C
+  why: |
+    The first option awaits each request before starting the next. The second never runs them. `gather` starts all of them and waits for every result.
+
+- q: |
+    When does asyncio make a program faster?
+  options:
+    - "When most of the time is spent waiting for I/O, such as network replies."
+    - "When a function does heavy arithmetic in pure Python."
+    - "Always, because `await` makes code run in parallel on all CPU cores."
+    - "Only when you also call `time.sleep`."
+  answer: A
+  why: |
+    One event loop runs on one thread, so only waits overlap. Calculations still run one at a time. CPU-bound work needs processes (topic 20).

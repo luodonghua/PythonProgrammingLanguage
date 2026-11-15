@@ -1,0 +1,185 @@
+- q: |
+    Which pair of classes is best modelled with **composition** (has-a)?
+  options:
+    - "`Dog` and `Animal`"
+    - "`Circle` and `Shape`"
+    - "`Car` and `Engine`"
+    - "`ValueError` and `Exception`"
+  answer: C
+  why: |
+    A car *has* an engine, but it is not an engine. The other pairs read naturally as "is a": a dog is an animal, a circle is a shape, a `ValueError` is an exception.
+
+- q: |
+    What is the output?
+
+    ```python
+    class Base:
+        def __init__(self):
+            self.items = ["base"]
+
+    class Child(Base):
+        def __init__(self):
+            self.extra = 1
+
+    c = Child()
+    try:
+        print(c.items)
+    except AttributeError:
+        print("AttributeError")
+    ```
+  options:
+    - "`AttributeError`"
+    - "`['base']`"
+    - "`[]`"
+    - "`None`"
+  answer: A
+  why: |
+    `Child.__init__` replaces `Base.__init__` and never calls it, so `items` is never created. Add `super().__init__()` as the first line of `Child.__init__`.
+
+- q: |
+    What is the output?
+
+    ```python
+    class P:
+        def who(self):
+            return "P"
+
+        def show(self):
+            return self.who()
+
+    class Q(P):
+        def who(self):
+            return "Q"
+
+    print(Q().show())
+    ```
+  options:
+    - "`P`"
+    - "`PQ`"
+    - "`AttributeError`"
+    - "`Q`"
+  answer: D
+  why: |
+    `show` is inherited from `P`, but `self` is a `Q`. `self.who()` looks the method up on the real type of the object, so `Q.who` runs. This is polymorphism.
+
+- q: |
+    What is the output?
+
+    ```python
+    class A:
+        def go(self):
+            return ["A"]
+
+    class B(A):
+        def go(self):
+            return ["B"] + super().go()
+
+    class C(A):
+        def go(self):
+            return ["C"] + super().go()
+
+    class D(B, C):
+        def go(self):
+            return ["D"] + super().go()
+
+    print(D().go())
+    ```
+  options:
+    - "`['D', 'B', 'A']`"
+    - "`['D', 'B', 'C', 'A']`"
+    - "`['D', 'A']`"
+    - "`['D', 'C', 'B', 'A']`"
+  answer: B
+  why: |
+    `super()` follows the method resolution order of the object's class: `D`, `B`, `C`, `A`. So `B`'s `super().go()` calls `C.go`, not `A.go`.
+
+- q: |
+    What is the output?
+
+    ```python
+    from abc import ABC, abstractmethod
+
+    class S(ABC):
+        @abstractmethod
+        def area(self): ...
+
+    class Bad(S):
+        pass
+
+    try:
+        Bad()
+    except TypeError:
+        print("TypeError")
+    else:
+        print("created")
+    ```
+  options:
+    - "`created`"
+    - "`NotImplementedError`"
+    - "`TypeError`"
+    - "`AttributeError`"
+  answer: C
+  why: |
+    A class that still has abstract methods cannot be instantiated. Python raises `TypeError` when you call `Bad()`, before any method runs.
+
+- q: |
+    What is the output?
+
+    ```python
+    class X: pass
+    class Y(X): pass
+
+    print(isinstance(Y(), X), isinstance(X(), Y))
+    ```
+  options:
+    - "`True False`"
+    - "`True True`"
+    - "`False True`"
+    - "`False False`"
+  answer: A
+  why: |
+    A `Y` is an `X`, so the first test is true. A plain `X` is not a `Y`, so the second is false. The relationship only goes one way.
+
+- q: |
+    In a method of a subclass, what does `super()` give you?
+  options:
+    - "A new instance of the parent class"
+    - "A proxy that finds the next class in the method resolution order"
+    - "A copy of the current object"
+    - "The class object `object`"
+  answer: B
+  why: |
+    `super()` does not build a new object. It returns a proxy for the current object that starts the attribute search after the current class in the MRO.
+
+- q: |
+    Why is `class Stack(list)` usually a worse design than a `Stack` class that holds a list in `self._items`?
+  options:
+    - "Python does not allow subclassing `list`"
+    - "A subclass cannot add new methods"
+    - "Holding a list makes `push` slower"
+    - "It exposes every list method, such as `insert`, and so breaks the stack rule"
+  answer: D
+  why: |
+    Python allows subclassing `list`, but the stack then has a large public interface that you did not choose. With composition, only the methods you write are public, and you can change the inner list later.
+
+- q: |
+    What does a `typing.Protocol` let you describe?
+  options:
+    - "A base class that every implementation has to inherit from"
+    - "A rule that Python enforces when the code runs"
+    - "The methods an object needs, with no inheritance required"
+    - "A way to hide private attributes"
+  answer: C
+  why: |
+    A protocol describes a structure (duck typing). A class matches if it has the methods, even if it never mentions the protocol. Type checkers check this. Python itself does not enforce annotations at run time.
+
+- q: |
+    Which use of inheritance is a good fit?
+  options:
+    - "`class Logger(dict)` so that you can reuse `dict.update`"
+    - "`class Order(Database)` so that an order can call `self.save()`"
+    - "`class Config(list)` because a config has several entries"
+    - "`class InvalidAgeError(ValueError)` for your own error type"
+  answer: D
+  why: |
+    An invalid-age error really is a kind of `ValueError`, so code that catches `ValueError` can handle it. The other options inherit only to borrow code, and a has-a relationship (an order *uses* a database) is better served by composition.

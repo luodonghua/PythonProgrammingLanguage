@@ -1,0 +1,26 @@
+assignments:
+  - dir: a1-timer-env
+    title: Timer and temporary environment
+    goal: Write a `Timer` context manager class (with an injected clock) and a `temporary_env` context manager function. Practises `__enter__`, `__exit__`, `@contextmanager` and `finally`.
+    solution_note: |
+      `Timer.__exit__` returns `False`, so errors are not hidden, and it records the time in every case. `temporary_env` remembers the old values first, and puts them back in `finally`, so a failing block cannot leave the environment changed.
+  - dir: a2-transactions
+    title: Rollback and error collector
+    goal: Write a `transaction` manager that commits a working copy only on success, and an `ErrorCollector` that swallows chosen exceptions. Practises how `__exit__` and `@contextmanager` treat exceptions.
+    solution_note: |
+      In `transaction`, the commit lines come after `yield`. If the block raises, the exception is thrown into the generator at the `yield`, so the commit never runs and `db` stays unchanged. `ErrorCollector.__exit__` returns `True` only for the listed types, which is what swallows the error.
+  - dir: a3-exitstack
+    title: ExitStack and redirect_stdout
+    goal: Open any number of files with `ExitStack`, capture what a function prints, and close several objects in reverse order. Practises the tools in `contextlib`.
+    solution_note: |
+      `stack.enter_context` registers each file as soon as it is opened. If the third `open` fails, the stack still closes the first two while the error propagates. `redirect_stdout` swaps `sys.stdout` for the buffer and restores it afterwards.
+  - dir: a4-request-id
+    title: Request id in a ContextVar
+    goal: Keep a request id in a `ContextVar`, bind it for a block with a token, wrap it in a decorator, and run code in a copy of the context. Practises `set`, `get`, `reset` and `copy_context`.
+    solution_note: |
+      `set()` returns a `Token` and `reset(token)` restores the exact previous value, so nested blocks unwind correctly. `copy_context().run(...)` runs the function in a copy, so its changes disappear when it returns.
+  - dir: a5-async-isolation
+    title: Isolation between asyncio tasks
+    goal: Show with `asyncio.gather` that each task has its own context value, and that a child task starts with a copy of its parent's context. Practises `ContextVar` with async code. The tests are `async def` functions.
+    solution_note: |
+      `gather` wraps each coroutine in a task, and a task copies the current context when it is created. Setting the variable in one task therefore does not change what another task, or the caller, sees.

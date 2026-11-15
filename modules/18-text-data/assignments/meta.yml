@@ -1,0 +1,26 @@
+setup: |
+  Three of these tasks come with small data files (`sales.csv`, `inventory.csv`, `people.csv`) in the assignment folders. Do not move them. Your code reads them with paths the tests pass in.
+assignments:
+  - dir: a1-sum-column
+    title: Sum a CSV column
+    goal: Read a CSV file with `csv.DictReader` and add up a column, including a total of quantity times price. Practises the `csv` module, type conversion and `KeyError` for a missing column.
+    files_note: The data file `sales.csv` is in the same folder.
+    solution_note: |
+      `DictReader` gives a `str` for every field, so each value goes through `float()` or `int()`. `reader.fieldnames` is `None` for an empty file, which is why the code checks it before raising `KeyError`. A product name such as `"notebook, A5"` is one field because the `csv` module honours the quotes.
+  - dir: a2-csv-to-json
+    title: CSV to JSON converter
+    goal: Convert each CSV field to the best Python type and write the rows as an indented JSON array. Practises `json.dump` and a small conversion function.
+    files_note: The data file `inventory.csv` is in the same folder.
+    solution_note: |
+      `convert_value` tries `int`, then `float`, and falls back to the text. The order matters, because `float("12")` would turn whole numbers into floats. An empty field becomes `None`, which JSON writes as `null`.
+  - dir: a3-regex-extract
+    title: Regex extractor
+    goal: Extract e-mail addresses and ISO dates from text and parse a log line into a dict. Practises `findall`, groups, named groups and `fullmatch`.
+    solution_note: |
+      Compile the patterns once at module level. The date pattern uses the look-arounds `(?<!\d)` and `(?!\d)` so a longer run of digits does not match. `dict.fromkeys` removes duplicate e-mails while keeping order. `fullmatch` with named groups returns `groupdict()` or `None`.
+  - dir: a4-clean-rows
+    title: Clean data and collect errors
+    goal: Validate every row of a messy CSV, keep the good rows and report each bad row with its line number and reason. Practises error handling per row and regex validation.
+    files_note: The data file `people.csv` is in the same folder.
+    solution_note: |
+      The loop checks the problems in the stated order and uses `continue` after recording the first one, so a row gives at most one error. `csv.reader` gives plain lists, which makes the field-count check easy. `enumerate(..., start=1)` keeps line numbers matching the file.

@@ -1,0 +1,9 @@
+[
+  {"sku": "ab-100", "name": "Pencil", "price": "0.50", "stock": "200", "tags": "office, school"},
+  {"sku": "AB-101", "name": "  Notebook ", "price": 2.25, "stock": 40, "tags": ["office"]},
+  {"sku": "CD-200", "name": "Lamp", "price": "twelve", "stock": 5},
+  {"sku": "CD-201", "name": "Chair", "price": 49.9, "stock": -3, "tags": ""},
+  {"sku": "EF-300", "name": "Mug", "price": 3},
+  {"name": "No sku", "price": 1, "stock": 1},
+  {"sku": "GH-400", "name": "Desk", "price": 120, "stock": "7", "tags": "furniture,office"}
+]

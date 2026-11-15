@@ -1,0 +1,155 @@
+- q: |
+    In a tool-calling agent loop, what ends the loop successfully?
+  options:
+    - "The first tool returns a result."
+    - "The model replies without any tool calls. Its text is the final answer."
+    - "The program has run every registered tool once."
+    - "The model sends an empty message."
+  answer: B
+  why: |
+    The loop keeps running tools and asking the model again until a reply contains no tool calls. A tool result only goes back into the conversation, and the model decides what to do with it.
+
+- q: |
+    A model asks for a tool called `weather`, but only `add` exists. What should the agent do?
+  options:
+    - "Raise `KeyError`, so the program stops and the developer sees the bug at once."
+    - "Pick the closest tool name and run that one."
+    - "Ignore the call and ask the model again with no extra message."
+    - "Return a tool message `error: unknown tool 'weather'` and continue the loop."
+  answer: D
+  why: |
+    The model can read the error and choose another tool or answer without one. Raising stops the whole run. Guessing a tool is dangerous, and ignoring the call leaves the model with no information, so it will likely repeat the mistake.
+
+- q: |
+    What is the output?
+
+    ```python
+    import inspect
+
+
+    def f(a: int, b: str = "x", c: list[int] | None = None) -> str: ...
+
+
+    sig = inspect.signature(f)
+    print([n for n, p in sig.parameters.items() if p.default is p.empty])
+    ```
+  options:
+    - "`['a', 'b', 'c']`"
+    - "`['b', 'c']`"
+    - "`['a']`"
+    - "`[]`"
+  answer: C
+  why: |
+    `p.default` is `inspect.Parameter.empty` only for parameters without a default value. Only `a` has none, so it is the only required parameter. This is how a schema's `"required"` list is built.
+
+- q: |
+    Why does the program validate tool arguments with the tool's type hints (for example with `pydantic.validate_call`) before calling the function?
+  options:
+    - "The arguments come from the model as text, so they can be wrong."
+    - "Validation makes the tool run faster, because wrong values are skipped."
+    - "Python refuses to call a function when the argument types do not match the hints."
+    - "The type hints are needed to build the list of messages."
+  answer: A
+  why: |
+    Type hints are not enforced at runtime. A wrong type would reach the function and fail in a confusing way, or worse, succeed with a wrong result. Validation turns the problem into a clear error message that goes back to the model.
+
+- q: |
+    What is the output?
+
+    ```python
+    import json
+    from pydantic import ValidationError, validate_call
+
+
+    def add(a: int, b: int) -> int:
+        return a + b
+
+
+    for raw in ['{"a": "2", "b": 3}', '{"a": 2}', '{"a": 2, "b": 3, "c": 4}']:
+        try:
+            print(validate_call(add)(**json.loads(raw)))
+        except ValidationError as e:
+            print("invalid", len(e.errors()))
+    ```
+  options:
+    - "`5`, then `invalid 1`, then `5`, because extra arguments are ignored"
+    - "`invalid 1` three times, because a string is not an integer"
+    - "`5`, then `2`, then `5`, because missing arguments default to 0"
+    - "`5`, then `invalid 1`, then `invalid 1`"
+  answer: D
+  why: |
+    The string `"2"` is converted to the integer 2, so the first call returns 5. The second call lacks `b`, and the third passes an unexpected argument `c`. Each of those gives one validation error.
+
+- q: |
+    A reply asks for 3 tools at once. They are run with `asyncio.TaskGroup`, one task per call, and the results are read from the task list in order. What do you get?
+  options:
+    - "In the order in which the tools finish, so the fastest tool comes first."
+    - "In call order, because results are read from the tasks in the order they were created."
+    - "In a random order, because the tasks run at the same time."
+    - "Only the result of the slowest tool, because it finishes last."
+  answer: B
+  why: |
+    The order of the list of tasks is the order of the calls. Reading `task.result()` task by task keeps that order, however long each tool took. The model matches results by `tool_call_id`, and a fixed order keeps the messages easy to read and to test.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+
+    async def work(n, rounds):
+        for _ in range(rounds):
+            await asyncio.sleep(0)
+        return n
+
+
+    async def main():
+        async with asyncio.TaskGroup() as g:
+            ts = [g.create_task(work(1, 3)), g.create_task(work(2, 0))]
+        print([t.result() for t in ts])
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`[2, 1]`, because `work(2, 0)` finishes first."
+    - "`[1]`"
+    - "`[1, 2]`"
+    - "`[None, None]`"
+  answer: C
+  why: |
+    The `async with` block waits until all tasks are done. The list `ts` holds the tasks in creation order, so the results are `[1, 2]` even though task 2 finished first.
+
+- q: |
+    One of three concurrent tool calls raises an exception, and `dispatch` does not catch it. The calls run in an `asyncio.TaskGroup`. What happens to the other two calls?
+  options:
+    - "They are cancelled, and the group raises an `ExceptionGroup`."
+    - "They keep running and return normally."
+    - "They run again from the start."
+    - "Nothing. The exception is silently ignored."
+  answer: A
+  why: |
+    When a task in a `TaskGroup` fails, the group cancels the other tasks and raises an `ExceptionGroup`. Making `dispatch` catch every tool exception and return an error message avoids this, so a bad tool call does not lose the good ones.
+
+- q: |
+    Why use a scripted `FakeModel` in the tests of an agent loop?
+  options:
+    - "Real models cannot return tool calls, so only a fake model can test them."
+    - "It lets the agent run on every machine, even one without Python installed."
+    - "A fake model gives better and more accurate answers than a real one."
+    - "The loop becomes deterministic, free and fast, and it can replay mistakes. It tests the loop, not the model."
+  answer: D
+  why: |
+    A real model gives different text each time and costs money. A script lets you test exact situations: a bad call followed by a good one, an endless series of tool requests, or a final answer on the last allowed step.
+
+- q: |
+    A tool receives an argument `path` chosen by the model. Which design is safest?
+  options:
+    - "Validate it, restrict it to one allowed folder, and open the file with Python's own file functions."
+    - "Pass it to `subprocess.run(f\"cat {path}\", shell=True)`, because the model is trusted."
+    - "Skip validation, because the model's output is already checked by the provider."
+    - "Build an SQL query from it with an f-string."
+  answer: A
+  why: |
+    Tool arguments are untrusted input, and text from a web page or a user can steer the model (prompt injection). Use validation, the smallest possible permissions, no shell and parameterized queries.

@@ -1,0 +1,296 @@
+title: Python advanced cheatsheet
+subtitle: "Python 3.14+ | topics 26-39 | luodonghua.github.io/PythonProgrammingLanguage"
+sections:
+  - title: Lambda, closures, partial
+    items:
+      - code: |
+          from functools import partial
+          from operator import itemgetter
+          rows = [("b", 2), ("a", 2), ("c", 1)]
+          print(sorted(rows, key=lambda r: (-r[1], r[0])))
+          print(sorted(rows, key=itemgetter(1))[0], partial(int, base=2)("101"))
+          def counter():
+              n = 0
+              def inc():
+                  nonlocal n; n += 1; return n
+              return inc
+          c = counter(); c(); print(c())
+          print([f() for f in [lambda i=i: i for i in range(3)]])
+        out: |
+          [('a', 2), ('b', 2), ('c', 1)]
+          ('c', 1) 5
+          2
+          [0, 1, 2]
+  - title: Decorators
+    items:
+      - code: |
+          import functools
+          REG = {}
+          def command(fn):
+              REG[fn.__name__] = fn; return fn
+          def retry(times=3, exceptions=(Exception,)):
+              def deco(fn):
+                  @functools.wraps(fn)
+                  def wrapper(*a, **kw):
+                      for i in range(times):
+                          try: return fn(*a, **kw)
+                          except exceptions:
+                              if i == times - 1: raise
+                  return wrapper
+              return deco
+          calls = []
+          @command
+          @retry(times=2, exceptions=(ValueError,))
+          def flaky():
+              calls.append(1)
+              if len(calls) < 2: raise ValueError
+              return "ok"
+          print(REG["flaky"](), len(calls), flaky.__name__)
+        out: ok 2 flaky
+  - title: functools
+    items:
+      - code: |
+          from functools import cache, singledispatch, cached_property
+          @cache
+          def fib(n): return n if n < 2 else fib(n - 1) + fib(n - 2)
+          @singledispatch
+          def show(x): return "obj"
+          @show.register
+          def _(x: int): return "int"
+          print(fib(50), show(1), show("s"), fib.cache_info().hits > 0)
+        out: 12586269025 int obj True
+  - title: Iterators and generators
+    items:
+      - code: |
+          import itertools as it
+          def countdown(n):
+              while n > 0:
+                  yield n; n -= 1
+          g = countdown(3)
+          print(next(g), list(g), sum(x * x for x in range(4)))
+          print(list(it.islice(it.count(5), 3)), list(it.batched("abcde", 2)))
+          print([(k, len(list(v))) for k, v in it.groupby("aabbb")])
+          def both(): yield from "ab"; yield from [1]
+          print(list(both()), list(it.accumulate([1, 2, 3])))
+        out: |
+          3 [2, 1] 14
+          [5, 6, 7] [('a', 'b'), ('c', 'd'), ('e',)]
+          [('a', 2), ('b', 3)]
+          ['a', 'b', 1] [1, 3, 6]
+  - title: Context managers
+    items:
+      - code: |
+          from contextlib import contextmanager, suppress, ExitStack
+          @contextmanager
+          def tag(name):
+              print(f"<{name}>", end=""); 
+              try: yield name
+              finally: print(f"</{name}>", end=" ")
+          with tag("b"): print("x", end="")
+          with suppress(KeyError): {}["k"]
+          class Res:
+              def __enter__(self): return self
+              def __exit__(self, et, ev, tb): print("closed"); return False
+          with Res(): pass
+        out: |
+          <b>x</b> closed
+  - title: contextvars
+    items:
+      - code: |
+          import asyncio, contextvars
+          trace = contextvars.ContextVar("trace", default="-")
+          async def work(n):
+              trace.set(f"t{n}"); await asyncio.sleep(0)
+              return trace.get()
+          async def main():
+              r = await asyncio.gather(work(1), work(2))
+              return r, trace.get()   # tasks get a COPY of the context
+          print(asyncio.run(main()))
+          tok = trace.set("x"); trace.reset(tok); print(trace.get())
+        out: |
+          (['t1', 't2'], '-')
+          -
+  - title: Dataclasses
+    items:
+      - code: |
+          from dataclasses import dataclass, field, replace, asdict
+          @dataclass(slots=True)
+          class Order:
+              item: str
+              qty: int = 1
+              tags: list = field(default_factory=list)
+              def __post_init__(self):
+                  if self.qty < 1: raise ValueError("qty")
+          o = Order("pen", 2)
+          print(replace(o, qty=5), asdict(o))
+        out: |
+          Order(item='pen', qty=5, tags=[]) {'item': 'pen', 'qty': 2, 'tags': []}
+  - title: Pydantic v2
+    items:
+      - code: |
+          from pydantic import BaseModel, Field, ValidationError, field_validator
+          class User(BaseModel):
+              name: str = Field(min_length=1)
+              age: int = Field(ge=0)
+              tags: list[str] = []
+              @field_validator("name")
+              @classmethod
+              def strip(cls, v): return v.strip()
+          u = User.model_validate({"name": " Al ", "age": "30"})   # "30" -> 30
+          print(u.model_dump(), User.model_validate_json('{"name":"B","age":1}').age)
+          try: User(name="", age=-1)
+          except ValidationError as e: print([x["loc"] for x in e.errors()])
+        out: |
+          {'name': 'Al', 'age': 30, 'tags': []} 1
+          [('name',), ('age',)]
+  - title: inspect and JSON Schema
+    items:
+      - code: |
+          import inspect
+          from typing import get_type_hints
+          from pydantic import TypeAdapter
+          def add(a: int, b: int = 1) -> int:
+              """Add."""
+              return a + b
+          sig = inspect.signature(add)
+          print(list(sig.parameters), sig.parameters["b"].default, inspect.getdoc(add))
+          print(get_type_hints(add)["a"].__name__, sig.bind(1).arguments)
+          print(TypeAdapter(list[int]).json_schema())
+        out: |
+          ['a', 'b'] 1 Add.
+          int {'a': 1}
+          {'items': {'type': 'integer'}, 'type': 'array'}
+  - title: asyncio basics
+    items:
+      - code: |
+          import asyncio
+          async def job(n):
+              await asyncio.sleep(0); return n * 2
+          async def main():
+              r = await asyncio.gather(job(1), job(2))     # in order
+              t = asyncio.create_task(job(5))               # starts now
+              sem = asyncio.Semaphore(2)
+              async with sem: pass
+              return r, await t, await asyncio.to_thread(len, "abc")
+          print(asyncio.run(main()))
+          # bug: job(1) without await never runs
+        out: ([2, 4], 10, 3)
+  - title: TaskGroup, timeout, except*
+    items:
+      - code: |
+          import asyncio
+          async def ok(): return 1
+          async def bad(): raise ValueError("boom")
+          async def slow(): await asyncio.sleep(10)
+          async def main():
+              try:
+                  async with asyncio.TaskGroup() as tg:
+                      a = tg.create_task(ok()); tg.create_task(bad())
+              except* ValueError as eg:
+                  print("caught", [str(e) for e in eg.exceptions], a.result())
+              try:
+                  async with asyncio.timeout(0.01): await slow()
+              except TimeoutError: print("timed out")
+          asyncio.run(main())
+        out: |
+          caught ['boom'] 1
+          timed out
+  - title: Cancellation and queues
+    items:
+      - code: |
+          import asyncio
+          async def worker(q, out):
+              while True:
+                  item = await q.get()
+                  try: out.append(item * 2)
+                  finally: q.task_done()
+          async def main():
+              q, out = asyncio.Queue(), []
+              ws = [asyncio.create_task(worker(q, out)) for _ in range(2)]
+              for i in range(4): q.put_nowait(i)
+              await q.join()
+              for w in ws: w.cancel()     # raises CancelledError inside
+              return sorted(out)
+          print(asyncio.run(main()))
+        out: "[0, 2, 4, 6]"
+  - title: Async generators
+    items:
+      - code: |
+          import asyncio
+          async def ticks(n):
+              for i in range(n):
+                  await asyncio.sleep(0); yield i
+          async def main():
+              out = [i async for i in ticks(3)]
+              async for i in ticks(5):
+                  if i == 1: break
+              return out
+          print(asyncio.run(main()))
+        out: "[0, 1, 2]"
+  - title: httpx (async) with MockTransport
+    items:
+      - code: |
+          import asyncio, httpx
+          def handler(req: httpx.Request) -> httpx.Response:
+              return httpx.Response(200, json={"path": req.url.path})
+          async def main():
+              t = httpx.MockTransport(handler)        # no network
+              async with httpx.AsyncClient(transport=t, timeout=5) as c:
+                  r = await c.get("https://api.test/items")
+                  r.raise_for_status()
+                  return r.json()
+          print(asyncio.run(main()))
+          # real use: AsyncClient(timeout=10); retry on 429/5xx with backoff
+        out: "{'path': '/items'}"
+  - title: Config, secrets, logging
+    items:
+      - code: |
+          import json, logging, os, sys
+          from pydantic import SecretStr
+          class Fmt(logging.Formatter):
+              def format(self, r): return json.dumps({"lvl": r.levelname, "msg": r.getMessage()})
+          h = logging.StreamHandler(sys.stdout); h.setFormatter(Fmt())
+          log = logging.getLogger("app"); log.addHandler(h); log.setLevel(logging.INFO)
+          log.info("start %s", "ok")
+          key = SecretStr("sk-123"); print(key, key.get_secret_value()[:2])
+          print(os.environ.get("NOT_SET", "default"))   # never log secrets
+        out: |
+          {"lvl": "INFO", "msg": "start ok"}
+          ********** sk
+          default
+  - title: Testing async code
+    items:
+      - check: none
+        code: |
+          # pyproject: asyncio_mode = "auto"
+          from unittest.mock import AsyncMock
+          async def test_fetch():                  # no decorator needed
+              client = AsyncMock(return_value={"ok": True})
+              assert await fetch(client) == {"ok": True}
+              client.assert_awaited_once()
+          class FakeSleep:                         # fake: no real waiting
+              def __init__(self): self.calls = []
+              async def __call__(self, s): self.calls.append(s)
+  - title: Agent loop skeleton
+    items:
+      - code: |
+          import asyncio, json
+          TOOLS = {"add": lambda a, b: a + b}
+          class FakeModel:                     # scripted replies, no API
+              def __init__(self, replies): self.replies = iter(replies)
+              async def __call__(self, msgs): return next(self.replies)
+          async def agent(model, question, max_steps=5):
+              msgs = [{"role": "user", "content": question}]
+              for _ in range(max_steps):
+                  reply = await model(msgs); msgs.append(reply)
+                  if not reply.get("tool_calls"): return reply["content"]
+                  for c in reply["tool_calls"]:
+                      try: out = TOOLS[c["name"]](**json.loads(c["arguments"]))
+                      except Exception as e: out = f"error: {e}"
+                      msgs.append({"role": "tool", "tool_call_id": c["id"], "content": str(out)})
+              return "step limit"
+          m = FakeModel([
+              {"tool_calls": [{"id": "1", "name": "add", "arguments": '{"a": 2, "b": 3}'}]},
+              {"content": "5"}])
+          print(asyncio.run(agent(m, "2+3?")))
+        out: "5"

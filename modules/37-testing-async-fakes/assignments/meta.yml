@@ -1,0 +1,25 @@
+intro: |
+  Four tasks about building the tools that make async tests fast and exact: a fake clock, a scripted fake client, a retrying class that takes its dependencies as arguments, and an async worker with a timeout helper. Some tests use `AsyncMock`, so you also see how a library mock is used.
+setup: |
+  No extra libraries are needed beyond `pytest` and `pytest-asyncio`, which the project already lists. The tests are `async def` functions. The project runs `pytest-asyncio` in auto mode, so they need no decorator. Nothing here waits for real, except one 0.01-second timeout in assignment 4.
+assignments:
+  - dir: a1-fake-clock
+    title: A fake clock
+    goal: Write `FakeClock` with `now`, `advance` and an async `sleep` that records the delay and moves time forward without waiting. Then use it in a `ticker` function.
+    solution_note: |
+      `sleep` appends to a list and advances the stored time, so a test can sleep for an hour in microseconds and check `clock.sleeps`. The `await asyncio.sleep(0)` at the end hands control to other tasks, as a real sleep would.
+  - dir: a2-fake-client
+    title: A scripted fake client
+    goal: Write `FakeClient`, which returns or raises the items of a script in order, records each call and complains when the code makes more calls than the script allows. Practises writing a fake and a spy.
+    solution_note: |
+      Exceptions in the script are raised, other items are returned. Recording the call first means failed calls are counted too. Raising `AssertionError` on an empty script turns an unplanned extra call into a clear test failure.
+  - dir: a3-retrying-fetcher
+    title: A retrying fetcher
+    goal: Write `RetryingFetcher`, which retries temporary errors with exponential backoff. The client and `sleep` are injected. The tests use `AsyncMock` and a recording `sleep`.
+    solution_note: |
+      `except self.retry_on` accepts a tuple of exception types. On the last attempt the exception is re-raised before any sleep. Because `sleep` and the client are constructor arguments, the tests never wait and never touch the network.
+  - dir: a4-worker-and-timeout
+    title: Queue worker and timeout helper
+    goal: Write `run_worker`, which processes queue items until a stop marker and keeps going after errors, and `call_with_timeout`, which cancels a call that takes too long and returns a default.
+    solution_note: |
+      The `finally` block calls `task_done()` exactly once per item, so `queue.join()` always finishes. `asyncio.timeout` cancels the inner call, so its own `finally` runs, and the `TimeoutError` is caught outside the `async with` block.

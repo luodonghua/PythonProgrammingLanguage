@@ -1,0 +1,25 @@
+intro: |
+  Four tasks on URLs, routing, fetching JSON and serving JSON. None of them needs the internet. Tasks 3 and 4 start a small server on your own computer (127.0.0.1, port chosen by the operating system), so you may see a firewall prompt on some systems. Allow it or ignore it. The tests talk only to your own machine.
+setup: |
+  No extra libraries are needed. Everything uses the Python standard library (`urllib`, `http.server`, `json`).
+assignments:
+  - dir: a1-urls
+    title: Build URLs and parse a request line
+    goal: Write `build_url` with correct slashes and percent-encoded parameters, and `parse_request_line` that splits a raw HTTP request line. Practises `urllib.parse` and input validation.
+    solution_note: |
+      `urlencode(..., doseq=True)` does all the escaping, so no quoting is written by hand. `rstrip("/")` and `lstrip("/")` give exactly one slash. `parse_qs` returns lists, so the solution keeps `values[0]`.
+  - dir: a2-router
+    title: A router and a raw HTTP response
+    goal: Write `route(method, target)`, which returns a status and a JSON payload, and `to_http_response`, which turns them into the bytes of an HTTP/1.1 response. Practises routing, status codes and the response format.
+    solution_note: |
+      The path decides whether a route exists (404 if not). Only then is the method checked (405). `Content-Length` is computed from the encoded body, because it counts bytes. `HTTPStatus(status).phrase` supplies "OK" and "Not Found".
+  - dir: a3-fetch-json
+    title: Fetch JSON with urllib
+    goal: Write `fetch_json`, which adds query parameters and headers, decodes the JSON body and turns every failure into one `ApiError`. Practises `urllib.request`, `HTTPError` versus `URLError`, and timeouts.
+    solution_note: |
+      `HTTPError` is a subclass of `URLError`, so it must be caught first. The `with` block closes the response. `raise ... from exc` keeps the original error attached for debugging.
+  - dir: a4-echo-server
+    title: A JSON echo server
+    goal: Finish a `BaseHTTPRequestHandler` that serves `GET /health` and `POST /echo`, with correct status codes for bad JSON, unknown paths and wrong methods. Practises `http.server` and reading a request body.
+    solution_note: |
+      `send_json` is the one place that writes a response, so every route sends the same headers. The body size comes from `Content-Length`, and `rfile.read(length)` reads exactly that many bytes. Bad JSON raises `ValueError`, which the handler turns into `400`.

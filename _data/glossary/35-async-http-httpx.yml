@@ -1,0 +1,6 @@
+- {term: Transport, meaning: "The part of an httpx client that really sends a request. MockTransport replaces it with your own function in tests."}
+- {term: Exponential backoff, meaning: "Waiting longer after each failed try, usually doubling the delay (0.5, 1, 2, 4 seconds)."}
+- {term: Rate limit, meaning: "A cap on how many requests a server accepts. The server answers 429 Too Many Requests when you go over it."}
+- {term: Retry-After, meaning: "A response header that tells the client how many seconds to wait before it tries again."}
+- {term: Semaphore, meaning: "A counter that lets at most N tasks into a block of code at the same time."}
+- {term: Streaming response, meaning: "A response that the client reads piece by piece (for example line by line) instead of waiting for the whole body."}

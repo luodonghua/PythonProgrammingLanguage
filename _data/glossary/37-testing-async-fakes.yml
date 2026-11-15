@@ -1,0 +1,6 @@
+- {term: Test double, meaning: "Any object used in a test in place of a real dependency. Stubs, fakes, spies and mocks are kinds of test doubles."}
+- {term: Fake, meaning: "A simple but working replacement for a real dependency, such as a clock that moves time without waiting."}
+- {term: Spy, meaning: "A test double that records how it was called, so the test can check the calls afterwards."}
+- {term: AsyncMock, meaning: "A mock from unittest.mock whose calls return awaitables. It records await_count and the arguments."}
+- {term: Dependency injection, meaning: "Passing the things a function needs (client, sleep, clock) in as arguments, so a test can pass fakes."}
+- {term: monkeypatch, meaning: "A pytest fixture that changes an attribute or environment variable for one test and restores it afterwards."}

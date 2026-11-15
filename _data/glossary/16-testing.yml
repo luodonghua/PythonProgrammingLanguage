@@ -1,0 +1,6 @@
+- {term: Test, meaning: "Code that runs your code with known input and checks the result with assert."}
+- {term: Fixture, meaning: "A function marked @pytest.fixture that prepares something a test needs. A test asks for it by parameter name."}
+- {term: Parametrize, meaning: "A pytest marker that runs one test function with many sets of inputs and expected results."}
+- {term: monkeypatch, meaning: "A pytest fixture that temporarily replaces attributes, dictionary items or environment variables, and undoes the change after the test."}
+- {term: TDD, meaning: "Test-driven development: write a failing test, make it pass with simple code, then refactor."}
+- {term: Regression test, meaning: "A test added for a bug that was fixed, so that the bug cannot return unnoticed."}

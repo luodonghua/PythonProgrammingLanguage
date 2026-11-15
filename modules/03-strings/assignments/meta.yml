@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-palindrome
+    title: Palindromes and word tools
+    goal: Check palindromes while ignoring punctuation, fix the capitalisation of a title, and count words. Practises slicing, `split`, `join` and string methods.
+    solution_note: |
+      `text[::-1]` reverses a string. Keeping only `isalnum()` characters in lower case makes the comparison ignore spaces and punctuation. `str.split()` with no argument splits on any run of whitespace, which is why `title_case` needs no extra clean-up.
+  - dir: a2-slugify
+    title: Slugify
+    goal: Turn titles into URL-friendly slugs, make them unique, and shorten long text. Practises loops over characters, `strip`, `while` and slicing.
+    solution_note: |
+      Each character is either kept or replaced by a single hyphen, and a hyphen is added only if the last piece is not already one. `strip("-")` removes hyphens at both ends. `truncate` cuts to `width - len(suffix)` so the result including the suffix fits in `width`.
+  - dir: a3-caesar
+    title: Caesar cipher
+    goal: Shift letters by a fixed amount, undo the shift, and crack a message with a known word. Practises `ord`, `chr`, `%` and string joining.
+    solution_note: |
+      `(ord(char) - base + shift) % 26` maps a letter to a position from 0 to 25, wraps around the alphabet (also for negative shifts, because `%` returns a non-negative number here) and `+ base` turns it back into a character. Decrypting is encrypting with the negative shift.
+  - dir: a4-receipt
+    title: Receipt formatter
+    goal: Print a receipt where every column lines up. Practises f-string width, alignment, precision and thousands separators.
+    solution_note: |
+      The spec `<14`, `>3` and `>13,.2f` fixes each column width, so every line has the same length. A nested field such as `{title:^{WIDTH}}` takes the width from a variable.

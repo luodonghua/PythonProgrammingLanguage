@@ -1,0 +1,157 @@
+- q: |
+    What is the output?
+
+    ```python
+    nums = [1, 2, 3, 4, 5, 6]
+    print(nums[1:5:2])
+    ```
+  options:
+    - "`[1, 3, 5]`"
+    - "`[2, 4]`"
+    - "`[2, 3, 4, 5]`"
+    - "`[2, 4, 6]`"
+  answer: B
+  why: |
+    The slice starts at index 1, stops before index 5 and moves 2 at a time. It takes indexes 1 and 3, which hold the values 2 and 4.
+
+- q: |
+    What is the output?
+
+    ```python
+    x = [[1], [2]]
+    y = x.copy()
+    y[0].append(5)
+    print(x)
+    ```
+  options:
+    - "`[[1], [2]]`"
+    - "`[[1, 5], [2, 5]]`"
+    - "`[[1], [2], 5]`"
+    - "`[[1, 5], [2]]`"
+  answer: D
+  why: |
+    `copy()` is shallow. It makes a new outer list, but both outer lists hold the same inner lists. Appending to `y[0]` also changes `x[0]`. Use `copy.deepcopy` to copy the inner lists too.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = [3, 1, 2]
+    print(a.sort())
+    ```
+  options:
+    - "`None`"
+    - "`[1, 2, 3]`"
+    - "`[3, 1, 2]`"
+    - "`True`"
+  answer: A
+  why: |
+    `list.sort()` sorts the list in place and returns `None`. Use `sorted(a)` if you want a new sorted list as the result.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = [10, 20, 30]
+    x = a.pop(1)
+    print(x, a)
+    ```
+  options:
+    - "`10 [20, 30]`"
+    - "`30 [10, 20]`"
+    - "`20 [10, 30]`"
+    - "`20 [10, 20, 30]`"
+  answer: C
+  why: |
+    `pop(1)` removes the item at index 1 and returns it. The value 20 goes to `x`, and the list keeps the other two items.
+
+- q: |
+    What is the output?
+
+    ```python
+    grid = [[0] * 2] * 2
+    grid[0][0] = 1
+    print(grid)
+    ```
+  options:
+    - "`[[1, 0], [1, 0]]`"
+    - "`[[1, 0], [0, 0]]`"
+    - "`[[0, 0], [0, 0]]`"
+    - "`[[1, 1], [0, 0]]`"
+  answer: A
+  why: |
+    `[[0] * 2] * 2` repeats a reference to the same inner list, so both rows are one object. Build separate rows with `[[0] * 2 for _ in range(2)]`.
+
+- q: |
+    What does `mid` hold after this line?
+
+    ```python
+    first, *mid, last = [1, 2, 3, 4, 5]
+    ```
+  options:
+    - "`[2, 3, 4, 5]`"
+    - "`[2, 3, 4]`"
+    - "`(2, 3, 4)`"
+    - "`3`"
+  answer: B
+  why: |
+    `first` takes 1 and `last` takes 5. The starred name collects everything in between into a **list**, so `mid` is `[2, 3, 4]`.
+
+- q: |
+    Which expression creates a tuple with exactly one item?
+  options:
+    - "`(5)`"
+    - "`[5]`"
+    - "`tuple(5)`"
+    - "`(5,)`"
+  answer: D
+  why: |
+    The comma makes the tuple. `(5)` is just the number 5 in parentheses, `[5]` is a list, and `tuple(5)` raises `TypeError` because 5 is not iterable.
+
+- q: |
+    What is the output?
+
+    ```python
+    print([c.upper() for c in "abc" if c != "b"])
+    ```
+  options:
+    - "`['A', 'B', 'C']`"
+    - "`['a', 'c']`"
+    - "`['A', 'C']`"
+    - "`ABC`"
+  answer: C
+  why: |
+    The `if` filters out `"b"` first. Then `c.upper()` turns the remaining letters into capitals, and the result is a list.
+
+- q: |
+    What happens here?
+
+    ```python
+    t = (1, [2, 3])
+    t[1].append(4)
+    print(t)
+    ```
+  options:
+    - "`TypeError`, because tuples cannot change."
+    - "It prints `(1, [2, 3, 4])`."
+    - "It prints `(1, [2, 3])`."
+    - "It prints `(1, [2], [3], 4)`."
+  answer: B
+  why: |
+    A tuple is immutable, but that only means it cannot replace its items. The second item is a list, and the list itself can still change.
+
+- q: |
+    After this code, which statement about `p` is true?
+
+    ```python
+    p = [3, 1, 2]
+    q = sorted(p, reverse=True)
+    ```
+  options:
+    - "`p` is `[3, 1, 2]` and `q` is `[3, 2, 1]`."
+    - "`p` and `q` are both `[3, 2, 1]`."
+    - "`p` is `[1, 2, 3]` and `q` is `[3, 2, 1]`."
+    - "`q` is `None`."
+  answer: A
+  why: |
+    `sorted()` builds a new list and leaves the original alone. The in-place method `p.sort(reverse=True)` would have changed `p` and returned `None`.

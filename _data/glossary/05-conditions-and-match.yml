@@ -1,0 +1,4 @@
+- {term: Truthy / falsy, meaning: "How a value behaves in an if. Falsy: False, None, zero, empty string and empty containers. Everything else is truthy."}
+- {term: Expression, meaning: "Code that produces a value, such as 2 + 3."}
+- {term: Statement, meaning: "Code that does something, such as if, for or an assignment."}
+- {term: Pattern (in match), meaning: "The shape after case that the subject is compared with. It can also bind names."}

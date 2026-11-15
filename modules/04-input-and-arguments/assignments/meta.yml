@@ -1,0 +1,23 @@
+assignments:
+  - dir: a1-read-number
+    title: Read numbers safely
+    goal: Write `read_int` and `read_yes_no`, which keep asking until the answer is valid. Practises `input()`, `int()`, `try`/`except ValueError`, loops and passing `input_fn` as a parameter.
+    solution_note: |
+      `input_fn=input` is a default parameter, so real programs get the keyboard and tests pass a scripted function. The `tries` counter stops the loop when `max_tries` is reached, and `return None` tells the caller that the user gave up.
+  - dir: a2-greeter
+    title: A greeter with argparse
+    goal: Build a command-line greeter with a positional name, `--times`, `--shout` and `--greeting`. Practises `argparse`, `main(argv)`, stdout, stderr and exit codes.
+    run_note: |
+      Try it in a terminal too: `uv run python modules/04-input-and-arguments/assignments/a2-greeter/starter.py Ada --shout`. Add `--help` to see the generated help.
+    solution_note: |
+      `nargs="+"` collects one or more words into a list. `main` takes `argv` so tests call `main(["Ada", "--shout"])` without a terminal, and returns an exit code instead of calling `sys.exit` itself. Errors that argparse detects (a missing name, `--times x`) exit with code 2.
+  - dir: a3-mortgage
+    title: Mortgage calculator CLI
+    goal: Compute a loan's monthly payment and wrap it in a command-line tool with validation. Practises `float` and `int` arguments, error handling, f-string formatting and exit codes.
+    solution_note: |
+      `monthly_payment` is a pure function that is easy to test. `main` catches its `ValueError`, prints the message to stderr and returns 1. The zero-rate case needs its own branch because the formula would divide by zero.
+  - dir: a4-menu
+    title: A to-do menu loop
+    goal: Write an interactive command loop that reads commands from `input_fn` and writes to `output_fn`. Practises `while True`, `match`, string splitting and testable I/O.
+    solution_note: |
+      Both `input_fn` and `output_fn` are parameters, so a test feeds a list of commands and collects the output in a list. `EOFError` is what `input()` raises when no more input exists, which makes piped input end the program cleanly.

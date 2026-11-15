@@ -1,0 +1,32 @@
+intro: |
+  Five stages of one project: an expense tracker. Each stage lives in its own folder with its own tests and repeats the few pieces it needs (such as the `Expense` dataclass), so you can do the stages in any order. Doing them 1 to 5 shows how the layers fit together. Stage 5 is a stretch task.
+setup: |
+  No extra libraries are needed. Stages use `csv`, `sqlite3`, `argparse`, `json`, `decimal` and `dataclasses` from the standard library. Money is always a `Decimal` (or whole cents in the database), never a `float`.
+assignments:
+  - dir: a1-parse-csv
+    title: "Stage 1: parse expenses.csv"
+    goal: Turn CSV rows into `Expense` dataclasses. Validate every field, and collect an error with its line number for each bad row instead of stopping. Practises `csv.DictReader`, `Decimal`, dataclasses and error handling.
+    files_note: "Data file: `expenses.csv` (it contains five bad rows on purpose)."
+    solution_note: |
+      `parse_row` holds all the rules and raises `ValueError`. `parse_expenses` loops, catches `ValueError`, and uses `reader.line_num` for the message. `Decimal("abc")` raises `InvalidOperation`, so it is caught and re-raised as `ValueError`. The check `exponent < -2` finds amounts with more than two decimals without calling `quantize`.
+  - dir: a2-repository
+    title: "Stage 2: SQLite repository"
+    goal: Write `ExpenseRepository` with `add`, `list_expenses` (optionally for one month) and `totals_by_category`. Practises `sqlite3`, `?` parameters, `GROUP BY` and converting between `Decimal` and integer cents.
+    solution_note: |
+      The table stores `cents` as an `INTEGER`, so sums are exact. `with self.conn:` commits each insert. The month filter uses `substr(day, 1, 7) = ?` with a parameter, and the totals query sorts in SQL with `ORDER BY total DESC, category`. `Decimal(cents).scaleb(-2)` shifts the decimal point and keeps two decimals.
+  - dir: a3-report
+    title: "Stage 3: monthly report"
+    goal: Format a month of expenses as a fixed-width text table, and find the top category. Practises f-string format specs (width, alignment, thousands separator), sorting with a tuple key and pure functions.
+    solution_note: |
+      A shared helper `_totals` computes the sorted totals. Sorting with the key `(-total, name)` puts big totals first and breaks ties A-Z. The format spec `>12,.2f` right-aligns in 12 columns with a thousands separator and two decimals. The function returns a string, so the CLI decides where to print it.
+  - dir: a4-cli
+    title: "Stage 4: command-line interface"
+    goal: Wire the layers together with `argparse` sub-commands `add`, `list` and `report`. `main(argv)` returns an exit code and sends errors to standard error. Practises `argparse`, exit codes, `capsys` testing and `try/finally`.
+    run_note: "From a terminal you can also try it: `uv run python modules/25-capstone/assignments/a4-cli/solution.py --db /tmp/e.db add 2024-03-01 food 4.50`."
+    solution_note: |
+      `build_parser` only describes the command line. `main` parses, runs the right branch inside `try`, turns a `ValueError` into an `error:` message on `stderr` with code 1, and closes the repository in `finally`. Usage errors never reach that code, because `argparse` exits with status 2 by itself.
+  - dir: a5-export-json
+    title: "Stage 5 (stretch): export to JSON"
+    goal: Write expenses to a JSON file and read them back, with validation of the file's structure. Practises `json`, `Decimal` and dates as strings, and defensive parsing.
+    solution_note: |
+      JSON has no `Decimal` or `date`, so both are strings and the importer rebuilds them. `sorted` is stable, so equal dates keep their input order. The importer checks the structure step by step and raises `ValueError` with a clear message, including the item number.

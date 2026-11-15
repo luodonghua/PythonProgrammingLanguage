@@ -1,0 +1,135 @@
+- q: |
+    A client sends a request for a page that does not exist. Which status code should the server answer with?
+  options:
+    - "`200`"
+    - "`404`"
+    - "`500`"
+    - "`301`"
+  answer: B
+  why: |
+    `404` means "not found". `200` means success, `500` means a bug on the server, and `301` is a redirect to another URL.
+
+- q: |
+    What is the output?
+
+    ```python
+    from urllib.parse import urlencode
+
+    print(urlencode({"q": "a b", "n": 1}))
+    ```
+  options:
+    - "`q=a b&n=1`"
+    - "`q=a%20b&n=1`"
+    - "`?q=a+b&n=1`"
+    - "`q=a+b&n=1`"
+  answer: D
+  why: |
+    `urlencode` writes a space as `+` and joins pairs with `&`. It does not add the leading `?`. `%20` is what `quote` uses for a space.
+
+- q: |
+    What is the output?
+
+    ```python
+    from urllib.parse import parse_qs
+
+    print(parse_qs("a=1&a=2&b=3"))
+    ```
+  options:
+    - "`{'a': ['1', '2'], 'b': ['3']}`"
+    - "`{'a': '2', 'b': '3'}`"
+    - "`{'a': ['1'], 'b': ['3']}`"
+    - "`[('a', '1'), ('a', '2'), ('b', '3')]`"
+  answer: A
+  why: |
+    A query key may repeat, so `parse_qs` maps every key to a **list** of values, even when the key appears once. Use `parse_qsl` if you want a list of pairs.
+
+- q: |
+    What is the output?
+
+    ```python
+    from urllib.parse import urlsplit
+
+    u = urlsplit("https://example.com:8080/a/b?x=1#top")
+    print(u.hostname, u.port, u.fragment)
+    ```
+  options:
+    - "`example.com:8080 8080 top`"
+    - "`example.com 8080 x=1`"
+    - "`example.com 8080 top`"
+    - "`https example.com top`"
+  answer: C
+  why: |
+    `hostname` is the host without the port, `port` is an `int`, and `fragment` is the text after `#`. The query (`x=1`) is a separate attribute.
+
+- q: |
+    In `urllib.request`, what happens when the server answers `404`?
+  options:
+    - "`urlopen` raises `urllib.error.HTTPError`, and its `code` is `404`."
+    - "`urlopen` returns a response whose `status` is `404`."
+    - "`urlopen` returns `None`, and the program must check for it."
+    - "`urlopen` raises `ConnectionError`, as it does for a refused connection."
+  answer: A
+  why: |
+    `urlopen` turns `4xx` and `5xx` answers into an `HTTPError`. `ConnectionError` is for failures to connect, which `urllib` reports as `URLError`. Catch `HTTPError` before `URLError`, because it is a subclass.
+
+- q: |
+    You start a test server with `ThreadingHTTPServer(("127.0.0.1", 0), Handler)`. What does port `0` mean?
+  options:
+    - "The server listens on every port of the machine at the same time."
+    - "The server is disabled until you set a port."
+    - "The server accepts only requests from port 0."
+    - "The operating system picks a free port, and you read it from `server.server_address[1]`."
+  answer: D
+  why: |
+    Port `0` asks the OS for any free port. Tests use it so they never collide with another program that already uses port 8000.
+
+- q: |
+    Why should you always pass `timeout=` to `urllib.request.urlopen`?
+  options:
+    - "It makes the download faster, because the server answers sooner."
+    - "It is required, otherwise `urlopen` raises `TypeError` at once."
+    - "Without it, a server that never answers can block your program forever."
+    - "It sets how many times the request is retried before it gives up."
+  answer: C
+  why: |
+    By default there is no time limit. A silent server then blocks the call indefinitely. `timeout` limits how long each blocking socket operation waits. It does not retry anything.
+
+- q: |
+    A handler method runs this code. What is wrong with it?
+
+    ```python
+    def do_GET(self):
+        self.send_response(200)
+        self.wfile.write("hello")
+        self.end_headers()
+    ```
+  options:
+    - "`send_response` must come last."
+    - "The body is written before `end_headers()`, and it is a `str` where `bytes` are needed."
+    - "`do_GET` must return the body instead of writing it."
+    - "Nothing is wrong. This is the correct order."
+  answer: B
+  why: |
+    The order is status line, headers, `end_headers()`, then the body. `wfile` is a binary stream, so the body must be `bytes`, for example `"hello".encode("utf-8")`.
+
+- q: |
+    A client sends `POST /echo` with a body that is not valid JSON. Which response is best?
+  options:
+    - "`500` with a traceback, because the server failed to parse it."
+    - "`400` with a JSON error body such as `{\"error\": \"invalid JSON\"}`."
+    - "`200` with an empty body, so the client does not see an error."
+    - "`404`, because the body was not found on the server."
+  answer: B
+  why: |
+    The client made the mistake, so the answer belongs in the `4xx` range. `400` (bad request) tells the client to fix its request. `500` would wrongly say the server has a bug.
+
+- q: |
+    Which request line is a valid way to ask a server for the note with id 3 in a REST-style API?
+  options:
+    - "`GET /notes/3 HTTP/1.1`"
+    - "`DELETE /notes HTTP/1.1`"
+    - "`POST /notes/3/read HTTP/1.1`"
+    - "`HTTP/1.1 /notes/3 GET`"
+  answer: A
+  why: |
+    A request line is `METHOD target VERSION`. In REST the URL names the resource (`/notes/3`) and the method gives the action: `GET` reads. `DELETE /notes` has no id, and the last option has the parts in the wrong order.

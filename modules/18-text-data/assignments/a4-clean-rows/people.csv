@@ -1,0 +1,9 @@
+name,age,email
+Ada Lovelace,36,ada@example.com
+,41,nobody@example.com
+Bob Stone,abc,bob@example.com
+Cy Young,-3,cy@example.com
+Di Prince,29,not-an-email
+"Eve, Jr.",52,eve@example.org
+Fay Wray,44
+Gus Fring,50,gus@example.com,extra

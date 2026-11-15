@@ -1,0 +1,23 @@
+setup: |
+  The tests are `async def` functions. The project runs pytest-asyncio in auto mode, so you do not need a decorator. Tests never wait for real time: they use `asyncio.sleep(0)` and events, so they are fast and the same on every machine.
+assignments:
+  - dir: a1-run-jobs
+    title: Run jobs concurrently
+    goal: Run a list of async jobs at the same time and return results in input order. Then make a version that reports each failure without losing the other results.
+    solution_note: |
+      `asyncio.gather` starts all coroutines and keeps the input order. `return_exceptions=True` puts exception objects into the result list, and you label them with `isinstance`. Jobs are passed as factories, so no coroutine exists before you start it.
+  - dir: a2-bounded-concurrency
+    title: Bounded concurrency
+    goal: Process many items with at most N running at once, and build a small meter that records the highest number of overlapping blocks.
+    solution_note: |
+      Each item runs inside `async with semaphore`. The meter is an async context manager, so `__aexit__` runs even when the block raises, which keeps the counter correct.
+  - dir: a3-async-retry
+    title: Async retry with backoff
+    goal: Retry a failing async call with a doubling delay. The sleep function is injected so tests do not wait.
+    solution_note: |
+      The loop re-raises on the last attempt and sleeps only between attempts. Taking `sleep` as a parameter lets a test pass a fake that records the delays.
+  - dir: a4-first-and-threads
+    title: First result wins, and blocking code in a thread
+    goal: Return the first finished result and cancel the rest. Also run blocking code with `asyncio.to_thread`.
+    solution_note: |
+      `asyncio.wait(..., return_when=FIRST_COMPLETED)` returns sets of finished and pending tasks. Cancel the pending ones, then `await asyncio.gather(*pending, return_exceptions=True)` so their cleanup finishes before you return. `to_thread` moves a blocking call to a worker thread.

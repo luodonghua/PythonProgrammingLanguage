@@ -1,0 +1,7 @@
+- {term: Dataclass, meaning: "A class made with @dataclass. Python writes __init__, __repr__ and __eq__ from the annotated fields. Types are not checked."}
+- {term: Frozen dataclass, meaning: "A dataclass created with frozen=True. Its fields cannot be changed after creation, and it can be used as a dict key."}
+- {term: default_factory, meaning: "A function that field() calls to make a fresh default value for each instance, such as list for an empty list."}
+- {term: Validation, meaning: "Checking that data has the right type, range and shape before the program uses it."}
+- {term: Coercion, meaning: "Automatic conversion of input to the declared type, such as the string '36' to the integer 36."}
+- {term: BaseModel, meaning: "The Pydantic base class. A subclass validates and converts its fields when you create an instance."}
+- {term: ValidationError, meaning: "The exception Pydantic raises for invalid data. Its errors() method lists every problem with a location, a type and a message."}

@@ -19,8 +19,9 @@ slugs = [m["slug"] for m in modules]
 if len(slugs) != len(set(slugs)):
     err("duplicate slug in _data/modules.yml")
 
+only = set(sys.argv[1:])  # optional: check just these slugs, even if not "ready" yet
 for m in modules:
-    if m["status"] != "ready":
+    if (only and m["slug"] not in only) or (not only and m["status"] != "ready"):
         continue
     slug = m["slug"]
     folder = ROOT / "modules" / slug
@@ -34,6 +35,9 @@ for m in modules:
         err(f"{slug}: missing quiz data")
     else:
         questions = yaml.safe_load(quiz_file.read_text())
+        letters = [q.get("answer") for q in questions]
+        if max(letters.count(c) for c in "ABCD") > 4:
+            err(f"{slug}: answer letters are unbalanced: {''.join(letters)}")
         if len(questions) != 10:
             err(f"{slug}: expected 10 questions, found {len(questions)}")
         for n, q in enumerate(questions, 1):
@@ -44,6 +48,14 @@ for m in modules:
                 err(f"{slug} Q{n}: answer {q.get('answer')!r} is not a valid option letter")
             if not str(q.get("why", "")).strip():
                 err(f"{slug} Q{n}: missing explanation")
+
+    gl = ROOT / "_data/glossary" / f"{slug}.yml"
+    if not gl.exists():
+        err(f"{slug}: missing glossary file _data/glossary/{slug}.yml")
+    else:
+        for t in yaml.safe_load(gl.read_text()) or []:
+            if not t.get("term") or not t.get("meaning"):
+                err(f"{slug}: glossary entry needs term and meaning: {t}")
 
     assignments = sorted(p for p in (folder / "assignments").glob("a*") if p.is_dir())
     if not 3 <= len(assignments) <= 5:

@@ -1,0 +1,7 @@
+- {term: lambda, meaning: "A small anonymous function written as lambda parameters: expression. It contains one expression and no statements."}
+- {term: key function, meaning: "A function given to sorted, min or max as key=. It turns each item into the value that is compared."}
+- {term: Closure, meaning: "An inner function together with the variables it uses from the enclosing function. Those variables stay alive after the outer function returns."}
+- {term: nonlocal, meaning: "A statement that lets an inner function assign to a variable of the enclosing function instead of creating a new local one."}
+- {term: Late binding, meaning: "Closures look up a captured variable when they are called, not when they are created. Lambdas made in a loop therefore all see the last value."}
+- {term: functools.partial, meaning: "Creates a new callable from a function with some arguments already filled in."}
+- {term: Function table, meaning: "A dictionary whose values are functions, used to choose what to call by name instead of using a long if/elif chain."}

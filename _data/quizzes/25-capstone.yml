@@ -1,0 +1,135 @@
+- q: |
+    In the expense tracker design, which layer should call `print`?
+  options:
+    - "The command-line layer only. The other layers return values."
+    - "The parsing layer, to show bad rows as soon as it finds them."
+    - "The storage layer, to confirm each insert."
+    - "Every layer, so that the user sees what happens."
+  answer: A
+  why: |
+    A function that prints is hard to reuse and hard to test. Parsing, storage and reporting return data (or a string). The CLI layer prints it.
+
+- q: |
+    What is the output?
+
+    ```python
+    from decimal import Decimal
+
+    print(0.1 + 0.1 + 0.1)
+    print(Decimal("0.10") * 3)
+    ```
+  options:
+    - "`0.3` and `0.3`"
+    - "`0.30000000000000004` and `0.30`"
+    - "`0.30000000000000004` and `0.30000000000000004`"
+    - "`0.3` and `0.30`"
+  answer: B
+  why: |
+    A float cannot store 0.1 exactly, so the sum is slightly off. `Decimal` built from the string `"0.10"` keeps the exact value and its two decimal places, so the product prints as `0.30`.
+
+- q: |
+    Which way of creating a `Decimal` is correct for money?
+  options:
+    - "`Decimal(0.1)`"
+    - "`Decimal(float(\"0.10\"))`"
+    - "`Decimal(10) / 100.0`"
+    - "`Decimal(\"0.10\")`"
+  answer: D
+  why: |
+    A float literal like `0.1` is already inexact, and `Decimal(0.1)` copies that error. A string gives the exact decimal value. Dividing by a float is not even allowed with a `Decimal`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import csv
+    import io
+
+    text = "a,b\n1,2\n\n3,4\n"
+    reader = csv.DictReader(io.StringIO(text))
+    for row in reader:
+        print(reader.line_num, row["a"])
+    ```
+  options:
+    - "`1 1` and `2 3`"
+    - "`2 1` and `3 3`"
+    - "`2 1` and `4 3`"
+    - "`1 1` and `3 3`"
+  answer: C
+  why: |
+    `line_num` counts lines of the file, and the header is line 1. The first data row is line 2. The blank line 3 is skipped, so the next row is on line 4. This is why error messages use `reader.line_num` and not a counter of your own.
+
+- q: |
+    A CSV row has the amount `abc`. What does `Decimal("abc")` raise?
+  options:
+    - "`ValueError`"
+    - "`TypeError`"
+    - "Nothing. It returns `Decimal('NaN')`."
+    - "`decimal.InvalidOperation`, which is not a `ValueError`"
+  answer: D
+  why: |
+    `InvalidOperation` is a subclass of `ArithmeticError`. An `except ValueError` clause does not catch it, so parsing code must catch `InvalidOperation` and raise its own `ValueError`.
+
+- q: |
+    Why does the repository store amounts as integer cents in SQLite?
+  options:
+    - "SQLite cannot store numbers with a decimal point."
+    - "Integers are exact, and `SUM` over integers has no rounding errors. SQLite has no exact decimal type."
+    - "Integers use less disk space than every other type."
+    - "`Decimal` objects cannot be converted to strings."
+  answer: B
+  why: |
+    SQLite can store floats, but float sums drift. Whole cents are exact. The first option is wrong because SQLite does store floats, and the other two are not the reason.
+
+- q: |
+    What is the output?
+
+    ```python
+    def main(argv=None):
+        if argv is None:
+            argv = ["default"]
+        return len(argv)
+
+    print(main(["a", "b", "c"]), main())
+    ```
+  options:
+    - "`3 0`"
+    - "`3 1`"
+    - "`1 1`"
+    - "`TypeError`"
+  answer: B
+  why: |
+    With three items `len` is `3`. With no argument, `argv` is replaced by `["default"]`, so the length is `1`. `argparse` uses the same idea: `parse_args(None)` reads `sys.argv`, and a list lets tests supply the arguments.
+
+- q: |
+    Why does `main(argv)` return an exit code instead of calling `sys.exit`?
+  options:
+    - "`sys.exit` is not allowed in Python 3."
+    - "The operating system ignores exit codes."
+    - "A returned code is a normal value, so a test can call `main` and check it. `sys.exit` raises `SystemExit` and stops the caller."
+    - "Return values are faster than exceptions."
+  answer: C
+  why: |
+    Only the `if __name__ == "__main__":` block needs `sys.exit(main())`. Everywhere else, returning the code keeps `main` an ordinary, testable function.
+
+- q: |
+    A user types the description `x'); DROP TABLE expenses; --`. Which code is safe?
+  options:
+    - "`conn.execute(\"INSERT INTO expenses (description) VALUES (?)\", (text,))`"
+    - "`conn.execute(f\"INSERT INTO expenses (description) VALUES ('{text}')\")`"
+    - "`conn.execute(\"INSERT INTO expenses (description) VALUES ('\" + text + \"')\")`"
+    - "`conn.execute(\"INSERT INTO expenses (description) VALUES (%s)\" % text)`"
+  answer: A
+  why: |
+    With a `?` placeholder, the driver sends the text as data, so it is stored as a harmless string. The other three put the text into the SQL itself, which lets it change the statement.
+
+- q: |
+    A bad row is found while parsing a file with 1000 rows. Which behaviour fits the design in this topic?
+  options:
+    - "Raise an exception and stop, so the user fixes the file first."
+    - "Skip the row silently."
+    - "Keep the good rows, record `line N: message` for the bad row, and continue."
+    - "Replace the bad value with 0 and keep the row."
+  answer: C
+  why: |
+    Collecting errors gives the user every problem at once and still uses the good data. Silent skipping hides problems, and replacing a value with 0 invents data.

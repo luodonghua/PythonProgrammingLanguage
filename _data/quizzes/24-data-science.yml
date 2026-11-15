@@ -1,0 +1,137 @@
+- q: |
+    A CSV file has a `units` column with whole numbers and one empty cell. After `pd.read_csv`, the other values show as `10.0`, `5.0` and so on. Why?
+  options:
+    - "`read_csv` always converts every number to a float when it reads the file."
+    - "The empty cell makes pandas store the whole column as text strings."
+    - "The empty cell becomes `NaN`, which is a float, so the whole column is stored as `float`."
+    - "The file is corrupt, so it must be repaired before pandas can read it."
+  answer: C
+  why: |
+    Integers have no way to represent "missing", but floats have `NaN`. pandas therefore stores a column with missing values as `float`. Without the empty cell the column stays `int`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import pandas as pd
+
+    s = pd.Series([4, 8, 6], index=["a", "b", "c"])
+    print(s["b"], s.mean())
+    ```
+  options:
+    - "`8 6.0`"
+    - "`6 6.0`"
+    - "`8 18`"
+    - "`KeyError`"
+  answer: A
+  why: |
+    `s["b"]` looks up by the label `"b"`, which holds `8`. The mean of 4, 8 and 6 is `18 / 3`, which is `6.0`.
+
+- q: |
+    What is the output?
+
+    ```python
+    import pandas as pd
+
+    df = pd.DataFrame({"x": [1, 2, 3, 4], "y": [10, 20, 30, 40]})
+    print(df[df["x"] > 2]["y"].sum())
+    ```
+  options:
+    - "`100`"
+    - "`50`"
+    - "`7`"
+    - "`70`"
+  answer: D
+  why: |
+    `df["x"] > 2` is `False, False, True, True`. Keeping those rows leaves `y` values 30 and 40, and their sum is `70`.
+
+- q: |
+    Which line keeps the rows where `region` is `"East"` and `price` is below 5?
+  options:
+    - "`df[df[\"region\"] == \"East\" and df[\"price\"] < 5]`"
+    - "`df[(df[\"region\"] == \"East\") & (df[\"price\"] < 5)]`"
+    - "`df[df[\"region\"] == \"East\" & df[\"price\"] < 5]`"
+    - "`df.filter(region == \"East\", price < 5)`"
+  answer: B
+  why: |
+    A mask combines with `&` (and `|`, `~`), and each comparison needs its own parentheses because `&` binds tighter than `==` and `<`. `and` raises a `ValueError` for a column of values, and without parentheses the third line compares the wrong things.
+
+- q: |
+    What is the output?
+
+    ```python
+    import pandas as pd
+
+    df = pd.DataFrame({"k": ["a", "b", "a"], "v": [1, 2, 3]})
+    print(df.groupby("k")["v"].sum().to_dict())
+    ```
+  options:
+    - "`{'a': 4, 'b': 2}`"
+    - "`{'a': 3, 'b': 2}`"
+    - "`{'a': [1, 3], 'b': [2]}`"
+    - "`{'k': 6}`"
+  answer: A
+  why: |
+    `groupby("k")` makes one group per distinct key. Group `a` holds rows with `v` equal to 1 and 3, which sum to 4. Group `b` holds 2.
+
+- q: |
+    What is the output?
+
+    ```python
+    import pandas as pd
+
+    s = pd.Series([1.0, None, 3.0])
+    print(s.mean(), s.fillna(0).mean())
+    ```
+  options:
+    - "`NaN 1.3333333333333333`"
+    - "`1.3333333333333333 2.0`"
+    - "`2.0 1.3333333333333333`"
+    - "`2.0 2.0`"
+  answer: C
+  why: |
+    `mean()` skips `NaN`, so it averages 1.0 and 3.0 and gives `2.0`. After `fillna(0)` the three values are 1.0, 0.0 and 3.0, and the mean is `4 / 3`. Filling with a number changes the result, so choose the fill value deliberately.
+
+- q: |
+    Two tables are joined like this: `a.merge(b, on="id", how="left")`. What does the result contain?
+  options:
+    - "Only the rows whose `id` appears in both of the two tables."
+    - "Every row of `b`, with the matching columns from `a` added to it."
+    - "The rows of `a` followed by the rows of `b`, stacked in one table."
+    - "Every row of `a`, with columns from `b` filled in where `id` matches and `NaN` where it does not."
+  answer: D
+  why: |
+    A left merge keeps all rows of the left table. The first option describes `how="inner"`, and the second describes `how="right"`. Stacking rows is done with `pd.concat`.
+
+- q: |
+    Why call `matplotlib.use("Agg")` before importing `pyplot` in a script or test?
+  options:
+    - "It makes charts load faster on every machine, with any backend."
+    - "It selects a backend that renders to image files, so no window or screen is needed."
+    - "It is required before `plt.subplots()` can be called at all."
+    - "It sets the file format to PNG for every later call."
+  answer: B
+  why: |
+    `Agg` draws into memory and writes files. That works on servers and in automated tests, where an interactive window cannot open. `savefig` chooses the format from the file name, and charts can be drawn with other backends too.
+
+- q: |
+    You want to set `b` to 0 for the rows where `a > 1`. Which statement does it correctly?
+  options:
+    - "`df[df[\"a\"] > 1][\"b\"] = 0`"
+    - "`df[\"b\"] = df[\"a\"] > 1`"
+    - "`df.loc[df[\"a\"] > 1, \"b\"] = 0`"
+    - "`df.where(df[\"a\"] > 1).b = 0`"
+  answer: C
+  why: |
+    `loc[mask, column]` assigns into `df` itself. The first form assigns into a temporary filtered copy, so `df` is not reliably changed. The second form stores `True` and `False` values, not zeros.
+
+- q: |
+    Which call tells you how many values are missing in each column of `df`?
+  options:
+    - "`df.isna().sum()`"
+    - "`df.dropna().shape`"
+    - "`df.describe()`"
+    - "`df.fillna(0)`"
+  answer: A
+  why: |
+    `isna()` gives a table of `True` and `False`, and `sum()` adds the `True` values per column. `dropna().shape` shows the row count after removing rows, and `describe()` counts only non-missing values. `fillna(0)` replaces them.

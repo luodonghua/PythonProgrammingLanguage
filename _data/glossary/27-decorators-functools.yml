@@ -1,0 +1,7 @@
+- {term: Decorator, meaning: "A function that takes a function and returns a replacement. The syntax @deco above a def means f = deco(f)."}
+- {term: Wrapper, meaning: "The inner function a decorator returns. It runs extra code before or after calling the original function."}
+- {term: functools.wraps, meaning: "A decorator for wrappers that copies the name, docstring and other metadata from the original function."}
+- {term: Decorator factory, meaning: "A function that takes arguments and returns a decorator, as in @retry(3). It needs three nested levels of def."}
+- {term: Registry, meaning: "A dict that decorators fill with functions, so code can look them up by name later."}
+- {term: Memoization, meaning: "Remembering the result of a call for given arguments so that repeated calls skip the work. functools.cache does this."}
+- {term: Dependency injection, meaning: "Passing a helper such as a clock or a sleep function in as a parameter, so tests can replace it."}

@@ -1,0 +1,135 @@
+- q: |
+    Which of these is a valid variable name?
+  options:
+    - "`2nd_place`"
+    - "`total_price`"
+    - "`for`"
+    - "`my-var`"
+  answer: B
+  why: |
+    Names use letters, digits and underscores, and cannot start with a digit. `for` is a keyword, and `my-var` would be read as `my` minus `var`.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(17 // 5, 17 % 5)
+    ```
+  options:
+    - "`3.4 2`"
+    - "`2 3`"
+    - "`3 3`"
+    - "`3 2`"
+  answer: D
+  why: |
+    `17 // 5` is the whole number of times 5 fits into 17, which is 3. `17 % 5` is the remainder, 2. `divmod(17, 5)` gives `(3, 2)`.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = [1, 2]
+    b = a
+    b.append(3)
+    print(a)
+    ```
+  options:
+    - "`[1, 2, 3]`"
+    - "`[1, 2]`"
+    - "`[3]`"
+    - "`[1, 2, [3]]`"
+  answer: A
+  why: |
+    `b = a` does not copy the list. Both names point to the same list object, so a change made through `b` shows up through `a`.
+
+- q: |
+    Why does `0.1 + 0.2 == 0.3` give `False`?
+  options:
+    - "Python has a bug in its `+` operator for decimals."
+    - "`==` only works on integers."
+    - "Floats store binary approximations, and `0.1 + 0.2` is `0.30000000000000004`."
+    - "`0.3` is converted to a string before the comparison."
+  answer: C
+  why: |
+    `0.1` and `0.2` have no exact binary form, so the sum is slightly above `0.3`. Compare floats with `math.isclose`, or use `Decimal` for exact decimal arithmetic.
+
+- q: |
+    Which line creates an exact decimal value for 0.10 dollars?
+  options:
+    - "`Decimal(0.10)`"
+    - "`Decimal(\"0.10\")`"
+    - "`float(\"0.10\")`"
+    - "`round(0.10)`"
+  answer: B
+  why: |
+    `Decimal(0.10)` first builds the float `0.10` and copies its small error. Building from the string `"0.10"` keeps the exact digits.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(int(7.9), round(2.5))
+    ```
+  options:
+    - "`8 3`"
+    - "`7 3`"
+    - "`8 2`"
+    - "`7 2`"
+  answer: D
+  why: |
+    `int()` cuts off the decimals, so `int(7.9)` is 7. `round()` rounds halves to the nearest even number, so `round(2.5)` is 2, not 3.
+
+- q: |
+    What type does `7 / 7` produce?
+  options:
+    - "`float`"
+    - "`int`, because both operands are `int`"
+    - "`bool`, because the two numbers are equal"
+    - "`Decimal`"
+  answer: A
+  why: |
+    The `/` operator always returns a `float`, so the result is `1.0`. Use `//` when you want a whole number.
+
+- q: |
+    What happens when this runs?
+
+    ```python
+    number = int("3.5")
+    ```
+  options:
+    - "`number` becomes `3`."
+    - "`number` becomes `4`."
+    - "Python raises `ValueError`."
+    - "`number` becomes `3.5`."
+  answer: C
+  why: |
+    `int()` accepts text that looks like a whole number only. Use `int(float("3.5"))` if you want to cut the decimals off.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = "ab"
+    b = a
+    b += "c"
+    print(a, b)
+    ```
+  options:
+    - "`abc abc`"
+    - "`ab ab`"
+    - "`ab abc`"
+    - "`abc ab`"
+  answer: C
+  why: |
+    Strings are immutable. `b += "c"` builds a new string and rebinds `b`. The name `a` still points to the original `"ab"`.
+
+- q: |
+    Which test is the recommended way to check for `None`?
+  options:
+    - "`if value is None:`"
+    - "`if value == None:`"
+    - "`if value = None:`"
+    - "`if type(value) == None:`"
+  answer: A
+  why: |
+    `None` is a single object, so identity (`is`) is the right test. A single `=` is assignment and is a `SyntaxError` in an `if`.

@@ -1,0 +1,6 @@
+- {term: String (str), meaning: "An immutable sequence of Unicode characters."}
+- {term: Slice, meaning: "A part of a sequence taken with s[start:stop:step]. The stop position is not included."}
+- {term: f-string, meaning: "A string with an f prefix. Expressions in braces are evaluated and formatted into the text."}
+- {term: Format spec, meaning: "The part after a colon in an f-string field, such as .2f or >8, that sets width, alignment and precision."}
+- {term: Raw string, meaning: "A string with an r prefix. Backslashes are kept as written, so r\"\\n\" has two characters."}
+- {term: Encoding, meaning: "The rule that turns text into bytes. UTF-8 is the common choice and uses one to four bytes per character."}

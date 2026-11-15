@@ -1,0 +1,6 @@
+- {term: Variable, meaning: "A name bound to a value. Assigning with = binds the name; it does not copy the value."}
+- {term: Type, meaning: "The kind of a value, such as int, float, str or bool. Check it with type() or isinstance()."}
+- {term: Float, meaning: "A number with a fractional part, stored in binary. Many decimals, such as 0.1, are only approximations."}
+- {term: Decimal, meaning: "A number type from the decimal module that stores decimal digits exactly. Use it for money."}
+- {term: Mutable, meaning: "A value that can change in place, such as a list. Strings, numbers and tuples are immutable."}
+- {term: Identity, meaning: "Whether two names point to the very same object. Tested with is. Equality (==) compares values."}

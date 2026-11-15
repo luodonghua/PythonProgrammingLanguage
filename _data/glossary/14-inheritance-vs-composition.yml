@@ -1,0 +1,7 @@
+- {term: Inheritance, meaning: "Defining a class that starts with the attributes and methods of a parent class (an is-a relationship)."}
+- {term: Composition, meaning: "Building a class that holds other objects and passes work to them (a has-a relationship)."}
+- {term: Override, meaning: "Defining a method in a subclass with the same name as one in the parent, so the subclass version runs."}
+- {term: Polymorphism, meaning: "Code that calls the same method on different objects, and each object supplies its own behaviour."}
+- {term: Abstract base class, meaning: "A class with abstract methods that cannot be instantiated. Subclasses must implement them."}
+- {term: Protocol, meaning: "A typing description of the methods an object needs. Any class with those methods matches, without inheriting."}
+- {term: MRO, meaning: "Method resolution order: the list of classes Python searches, in order, to find an attribute. See Class.__mro__."}

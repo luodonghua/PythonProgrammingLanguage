@@ -1,0 +1,21 @@
+assignments:
+  - dir: a1-stats
+    title: Statistics helpers
+    goal: Write `min_max`, `mean`, `median`, `stats` and `split_name`. Practises `return`, returning several values, empty-input edge cases and reusing your own functions.
+    solution_note: |
+      Each function returns a value and prints nothing. `min_max` returns a tuple. `median` sorts a **copy** with `sorted`, so the caller's list stays unchanged, and averages the two middle items for even lengths. `stats` calls the other helpers instead of repeating their code.
+  - dir: a2-flexible-arguments
+    title: Flexible arguments
+    goal: Build helpers that use keyword-only (`*`), positional-only (`/`), `*args` and `**kwargs` parameters, for example `join_path(*parts, sep="/")` and `make_tag`. Practises reading and writing function signatures.
+    solution_note: |
+      `*parts` collects the positional arguments in a tuple, and `sep` after it is keyword-only. `make_tag` receives the attributes as a dict in `**attributes` and builds the text with a generator expression. `call_with` forwards everything with `func(*args, **kwargs)`.
+  - dir: a3-recursion
+    title: Recursion
+    goal: Write `factorial`, `sum_digits`, a cached `fib`, a deep `flatten` and `power_set_size` recursively. Practises base cases, shrinking the problem and caching results in a dict.
+    solution_note: |
+      Every recursive function has a base case (`n == 0`, `n < 10`, an empty list) and a call on a smaller input. `fib` passes one `cache` dict down through the calls, so each value is computed once and `fib(80)` is instant. The default is `None`, not `{}`, to avoid the shared mutable default.
+  - dir: a4-defaults-and-functions
+    title: Defaults, closures and functions as values
+    goal: Fix the mutable default bug, apply a function n times, compose functions, build a counter with a closure and run a dict of functions. Practises `nonlocal`, inner functions and passing functions around.
+    solution_note: |
+      `add_item` uses `None` as the default and creates a fresh list inside. `compose` returns an inner function that remembers `funcs`. `make_counter` keeps `current` in the enclosing scope and rebinds it with `nonlocal`, so every counter has its own state.

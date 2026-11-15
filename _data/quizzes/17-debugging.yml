@@ -1,0 +1,155 @@
+- q: |
+    A program ends with this traceback. Which line tells you **what kind of error** happened?
+
+    ```text
+    Traceback (most recent call last):
+      File "app.py", line 9, in <module>
+        report(data)
+      File "app.py", line 5, in report
+        print(average(nums))
+      File "app.py", line 2, in average
+        return sum(numbers) / len(numbers)
+    ZeroDivisionError: division by zero
+    ```
+  options:
+    - "The first line, `Traceback (most recent call last):`"
+    - "The line `report(data)`"
+    - "The line `print(average(nums))`"
+    - "The last line, `ZeroDivisionError: division by zero`"
+  answer: D
+  why: |
+    The last line holds the exception type and message. The frames above it, ending with `average` on line 2, show where it happened and which calls led there.
+
+- q: |
+    What is the output?
+
+    ```python
+    def add_item(item, items=[]):
+        items.append(item)
+        return items
+
+    print(add_item(1), add_item(2))
+    ```
+  options:
+    - "`[1] [2]`"
+    - "`[1, 2] [1, 2]`"
+    - "`[1] [1, 2]`"
+    - "`[2] [2]`"
+  answer: B
+  why: |
+    The default list is created once, when `def` runs, and every call without `items` reuses it. Both calls return that same list, so `print` shows its final contents twice. Use `items=None` and create a list inside.
+
+- q: |
+    In pdb, what is the difference between `n` and `s`?
+  options:
+    - "`n` runs the current line without entering a function call. `s` steps into the call"
+    - "`n` prints a variable. `s` shows the source"
+    - "`n` continues to the end. `s` stops the program"
+    - "`n` steps into a function call. `s` skips over it"
+  answer: A
+  why: |
+    `n` (next) executes the line and stops at the next line of the same function. `s` (step) enters a function that the line calls. Use `n` for code you trust and `s` for code you want to inspect.
+
+- q: |
+    What is the output?
+
+    ```python
+    rows = [[0] * 2] * 2
+    rows[0][0] = 9
+    print(rows)
+    ```
+  options:
+    - "`[[0, 0], [0, 0]]`"
+    - "`[[9, 0], [0, 0]]`"
+    - "`[[9, 0], [9, 0]]`"
+    - "`[[9, 9], [9, 9]]`"
+  answer: C
+  why: |
+    `[[0] * 2] * 2` repeats a reference to the same inner list, so both rows are one object. Building rows with a list comprehension, `[[0] * 2 for _ in range(2)]`, creates separate lists.
+
+- q: |
+    What does this program print to the terminal (the default handler writes to stderr)?
+
+    ```python
+    import logging
+
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s:%(message)s")
+    log = logging.getLogger("app")
+    log.debug("start")
+    log.info("working")
+    log.warning("careful")
+    log.error("failed")
+    ```
+  options:
+    - "`DEBUG:start` `INFO:working` `WARNING:careful` `ERROR:failed`"
+    - "`WARNING:careful`"
+    - "`ERROR:failed`"
+    - "`WARNING:careful` `ERROR:failed`"
+  answer: D
+  why: |
+    The level `WARNING` lets through messages at `WARNING` or higher. `DEBUG` and `INFO` are dropped. `WARNING` and `ERROR` both pass.
+
+- q: |
+    When is `assert` the right tool?
+  options:
+    - "To check a password typed by a user"
+    - "To state a condition that can only be false because of a bug in the program"
+    - "To handle a file that might be missing"
+    - "To make a function return early"
+  answer: B
+  why: |
+    `assert` documents an assumption. It can be switched off with `python -O`, so never rely on it for input validation or error handling. Raise a normal exception for those.
+
+- q: |
+    A script crashes only with a 10,000-line input file. What is a good next step?
+  options:
+    - "Rewrite the function that crashed"
+    - "Cut the input in half, keep the half that still crashes, and repeat"
+    - "Wrap everything in `try: ... except Exception: pass`"
+    - "Add `print` statements after every line of the program"
+  answer: B
+  why: |
+    Reproduce and shrink the input first. Halving the data (bisecting) finds the troublesome part in about 14 steps for 10,000 lines, and the small case becomes your test. Guessing, or silencing the error, does not help.
+
+- q: |
+    A learner wants the sum 1 + 2 + 3 + 4 + 5. What is the output?
+
+    ```python
+    def count(n):
+        total = 0
+        for i in range(1, n):
+            total += i
+        return total
+
+    print(count(5))
+    ```
+  options:
+    - "`15`"
+    - "`5`"
+    - "`10`"
+    - "`6`"
+  answer: C
+  why: |
+    `range(1, 5)` stops before 5, so the loop adds 1 + 2 + 3 + 4 = 10. This is an off-by-one error. Use `range(1, n + 1)` to include `n`.
+
+- q: |
+    Inside an `except` block you want the log to include the full traceback. Which call does that?
+  options:
+    - "`log.info(\"failed\")`"
+    - "`log.error(\"failed\", traceback=True)`"
+    - "`print(\"failed\")`"
+    - "`log.exception(\"failed\")`"
+  answer: D
+  why: |
+    `log.exception` logs at `ERROR` level and appends the traceback of the exception being handled. It belongs inside an `except` block.
+
+- q: |
+    You named a variable `list` earlier in a script, and later `list("ab")` fails with `TypeError: 'list' object is not callable`. What happened?
+  options:
+    - "Python removed the `list` type from the standard library"
+    - "`list` cannot be called with a string"
+    - "The variable `list` hides the built-in `list` in that scope"
+    - "The built-in `list` only works with numbers"
+  answer: C
+  why: |
+    A name you assign shadows the built-in with the same name. Calling `list(...)` now calls your list object. Rename your variable (for example `items`) and the built-in works again.

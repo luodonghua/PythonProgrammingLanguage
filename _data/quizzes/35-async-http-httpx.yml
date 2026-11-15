@@ -1,0 +1,135 @@
+- q: |
+    Your program sends 200 requests during its run. What is the best way to use `httpx.AsyncClient`?
+  options:
+    - "Create a new `AsyncClient` for every request, so requests cannot affect each other."
+    - "Create one client, share it with `async with`, and reuse it for all requests."
+    - "Create one client and call `client.close()` after each request."
+    - "Use `asyncio.run` once per request, with a separate client in each call."
+  answer: B
+  why: |
+    A client keeps a pool of open connections. Reusing it avoids a new connection setup (and TLS handshake) for each request. A client per request throws that pool away every time.
+
+- q: |
+    A server answers with status 404. You call `await client.get(url)` and do nothing else. What happens?
+  options:
+    - "`httpx.HTTPStatusError` is raised at once."
+    - "`httpx.TransportError` is raised."
+    - "`client.get` returns `None`."
+    - "You get a normal `Response` object with `status_code == 404`. No exception is raised."
+  answer: D
+  why: |
+    httpx treats an error status as a valid answer. Call `response.raise_for_status()` to turn 4xx and 5xx into `HTTPStatusError`. `TransportError` is for requests that did not complete at all (network down, timeout).
+
+- q: |
+    Which failure should a retry loop normally retry?
+  options:
+    - "A `503 Service Unavailable` answer."
+    - "A `404 Not Found` answer."
+    - "A `401 Unauthorized` answer."
+    - "A `422` answer caused by an invalid JSON body."
+  answer: A
+  why: |
+    A 503 means the server is overloaded or restarting, so the same request may work later. 404, 401 and 422 describe a problem with the request itself. Sending the same request again gives the same answer.
+
+- q: |
+    A retry function waits `base_delay * 2 ** n` seconds before retry number `n + 1`, counting `n` from 0. What is the output?
+
+    ```python
+    print([0.5 * 2 ** n for n in range(4)])
+    ```
+  options:
+    - "`[0.5, 0.5, 0.5, 0.5]`"
+    - "`[0.5, 1.5, 2.5, 3.5]`"
+    - "`[0.5, 1.0, 2.0, 4.0]`"
+    - "`[1.0, 2.0, 4.0, 8.0]`"
+  answer: C
+  why: |
+    The exponent `n` is 0, 1, 2, 3, so the factor is 1, 2, 4, 8 and the waits are 0.5, 1.0, 2.0 and 4.0 seconds. The delay doubles each time, which is the point of exponential backoff.
+
+- q: |
+    What is the output?
+
+    ```python
+    import httpx
+
+    print(httpx.Timeout(10.0, connect=2.0))
+    ```
+  options:
+    - "`Timeout(connect=2.0, read=2.0, write=2.0, pool=2.0)`"
+    - "`Timeout(connect=2.0, read=10.0, write=10.0, pool=10.0)`"
+    - "`Timeout(connect=10.0, read=2.0, write=10.0, pool=10.0)`"
+    - "`TypeError`, because a timeout takes only one number."
+  answer: B
+  why: |
+    The first argument is the default for all four phases (connect, read, write, pool). The keyword `connect=2.0` overrides only the connect phase.
+
+- q: |
+    Why does the test of a retry function pass in a fake `sleep` instead of calling `asyncio.sleep`?
+  options:
+    - "The test finishes at once, and it can check the exact delays that were requested."
+    - "`asyncio.sleep` cannot be used inside a test."
+    - "A fake `sleep` makes the network faster."
+    - "Retries only work when `sleep` is replaced."
+  answer: A
+  why: |
+    Real waiting makes tests slow and timing-dependent. A fake records `[0.5, 1.0]` and returns immediately, so the test is fast and exact. `asyncio.sleep` itself works fine in tests, it is just slow.
+
+- q: |
+    A server replies `429` with the header `Retry-After: 7`. What should a polite client do?
+  options:
+    - "Retry immediately, because 429 is a temporary error."
+    - "Stop for good, because 429 means the account is blocked."
+    - "Retry after 1 second, as the header is only a hint and clients may ignore it."
+    - "Wait about 7 seconds (with a sensible upper cap), then try again."
+  answer: D
+  why: |
+    `Retry-After` tells you how long to wait. Ignoring it makes the rate limit worse. A cap protects you from a header that asks for a very long wait, and a default covers a missing or invalid header.
+
+- q: |
+    What is the output?
+
+    ```python
+    import asyncio
+
+
+    async def f(n):
+        await asyncio.sleep(0)
+        return n
+
+
+    async def main():
+        print(await asyncio.gather(f(2), f(1)))
+
+
+    asyncio.run(main())
+    ```
+  options:
+    - "`[1, 2]`, because the smaller value finishes first."
+    - "`[2, 1]` or `[1, 2]`, depending on timing."
+    - "`[2, 1]`, because `gather` returns results in the order the awaitables were passed."
+    - "`(2, 1)`, because `gather` returns a tuple."
+  answer: C
+  why: |
+    `asyncio.gather` returns a list in the same order as its arguments, no matter which coroutine finishes first.
+
+- q: |
+    What does `asyncio.Semaphore(3)` do when 10 tasks all run `async with sem:`?
+  options:
+    - "At most 3 tasks are inside the block at the same time. The others wait for a free slot."
+    - "It runs the tasks 3 times each."
+    - "It stops the first 3 tasks and lets the other 7 continue."
+    - "It makes each task wait 3 seconds before it starts."
+  answer: A
+  why: |
+    A semaphore holds a counter of free slots. Entering the block takes a slot and leaving it gives the slot back. A task that finds no free slot waits (without blocking the event loop) until another task leaves.
+
+- q: |
+    What is the main benefit of `httpx.MockTransport` in tests?
+  options:
+    - "It makes `httpx` faster in production."
+    - "It checks that the real server is online."
+    - "It hides all exceptions raised by the code under test."
+    - "The real client code runs against responses you define, so tests are offline, fast and repeatable. It can also simulate failures such as `ConnectError`."
+  answer: D
+  why: |
+    The transport is the layer that sends the request. Replacing only that layer keeps the code under test unchanged. You decide the response for every request, including slow or broken ones that are hard to produce with a real server.

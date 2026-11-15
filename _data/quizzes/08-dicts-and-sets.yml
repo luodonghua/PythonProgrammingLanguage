@@ -1,0 +1,131 @@
+- q: |
+    What does `x = {}` create?
+  options:
+    - "An empty set"
+    - "An empty list"
+    - "An empty dict"
+    - "A `SyntaxError`"
+  answer: C
+  why: |
+    Curly braces with no items make an empty **dict**. For an empty set, write `set()`.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = {"x": 1, "y": 2}
+    b = {"y": 5}
+    print(a | b)
+    ```
+  options:
+    - "`{'x': 1, 'y': 5}`"
+    - "`{'x': 1, 'y': 2}`"
+    - "`{'x': 1, 'y': 7}`"
+    - "`{'y': 5}`"
+  answer: A
+  why: |
+    `a | b` makes a new dict with the keys of both. For a key in both dicts, the value from the right-hand side wins, so `y` is `5`. Values are not added together.
+
+- q: |
+    Which of these can be used as a dict key?
+  options:
+    - "`[1, 2]`"
+    - "`{1, 2}`"
+    - "`{\"a\": 1}`"
+    - "`(1, 2)`"
+  answer: D
+  why: |
+    Keys must be hashable. A tuple of numbers never changes, so it is hashable. Lists, sets and dicts can change, so Python refuses them with `TypeError: unhashable type`.
+
+- q: |
+    `prices = {"tea": 3}`. What does `prices["coffee"]` do?
+  options:
+    - "Returns `None`"
+    - "Raises `KeyError`"
+    - "Adds `\"coffee\"` with the value `0`"
+    - "Returns `\"coffee\"`"
+  answer: B
+  why: |
+    Square brackets raise `KeyError` for a missing key. Use `prices.get("coffee")` to get `None`, or `prices.get("coffee", 0)` to choose a default.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(len({1, 2, 2, 3, 3, 3}))
+    ```
+  options:
+    - "`3`"
+    - "`6`"
+    - "`4`"
+    - "`TypeError`"
+  answer: A
+  why: |
+    A set keeps each value once, so the set is `{1, 2, 3}` and its length is 3.
+
+- q: |
+    What is the output?
+
+    ```python
+    from collections import Counter
+
+    print(Counter("banana").most_common(1))
+    ```
+  options:
+    - "`[('b', 1)]`"
+    - "`[('n', 2)]`"
+    - "`[('a', 3)]`"
+    - "`('a', 3)`"
+  answer: C
+  why: |
+    "banana" has three `a`, two `n` and one `b`. `most_common(1)` returns a **list** with the single most common `(item, count)` pair, so the result is `[('a', 3)]`.
+
+- q: |
+    You need to test `x in collection` many times on a collection with a million items. Which type is the best choice?
+  options:
+    - "A list, because it keeps the order"
+    - "A tuple, because it cannot change"
+    - "A string"
+    - "A set, because membership uses the hash and does not scan every item"
+  answer: D
+  why: |
+    A set (or a dict) finds an item by its hash in roughly constant time. A list or tuple compares items one by one, so the work grows with the length.
+
+- q: |
+    What is the output?
+
+    ```python
+    a = {1, 2, 3}
+    b = {2, 3, 4}
+    print(a ^ b)
+    ```
+  options:
+    - "`{2, 3}`"
+    - "`{1, 4}`"
+    - "`{1, 2, 3, 4}`"
+    - "`{1}`"
+  answer: B
+  why: |
+    `^` is the symmetric difference: items in exactly one of the two sets. `{2, 3}` is `a & b`, and `{1, 2, 3, 4}` is `a | b`.
+
+- q: |
+    How do you remove duplicates from a list `items` and keep the first-seen order?
+  options:
+    - "`list(dict.fromkeys(items))`"
+    - "`list(set(items))`"
+    - "`sorted(items)`"
+    - "`items.unique()`"
+  answer: A
+  why: |
+    `dict.fromkeys` keeps each key once and remembers insertion order. `set(items)` also removes duplicates but gives no guaranteed order. `sorted` keeps duplicates. Lists have no `unique` method.
+
+- q: |
+    `a` and `b` are dicts. Which expression builds a new dict and leaves both `a` and `b` unchanged?
+  options:
+    - "`a.update(b)`"
+    - "`a |= b`"
+    - "`a | b`"
+    - "`a.setdefault(b)`"
+  answer: C
+  why: |
+    `a | b` returns a new dict. `a.update(b)` and `a |= b` both change `a` in place.

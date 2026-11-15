@@ -1,0 +1,11 @@
+date,category,description,amount
+2024-03-01,Food,Groceries,45.50
+2024-03-03,Transport,Bus pass,30.00
+2024-03-05,food,Lunch,12.25
+2024-03-07,Fun,Cinema,15
+2024-02-30,Food,Bad date,10.00
+2024-03-09,,No category,8.00
+2024-03-10,Food,Negative,-5.00
+2024-03-11,Food,Too precise,3.999
+2024-03-12,Food,Not a number,abc
+2024-03-15,Rent,March rent,650.00

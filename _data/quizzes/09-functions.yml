@@ -1,0 +1,157 @@
+- q: |
+    What does a function return if it has no `return` statement?
+  options:
+    - "`0`"
+    - "`None`"
+    - "An empty string"
+    - "Nothing, so using the result is a `SyntaxError`"
+  answer: B
+  why: |
+    Every call gives back a value. Without `return`, that value is `None`. A common bug is writing `result = my_print_function()` and then using `result` as if it held data.
+
+- q: |
+    What is the output?
+
+    ```python
+    def f(a, b=2, *rest):
+        print(a, b, rest)
+
+    f(1, 2, 3, 4)
+    ```
+  options:
+    - "`1 2 3 4`"
+    - "`1 2 [3, 4]`"
+    - "`1 2 {3, 4}`"
+    - "`1 2 (3, 4)`"
+  answer: D
+  why: |
+    `a` gets 1 and `b` gets 2. `*rest` collects the remaining positional arguments in a **tuple**, so it prints as `(3, 4)`.
+
+- q: |
+    What is the output?
+
+    ```python
+    def add(x, items=[]):
+        items.append(x)
+        return items
+
+    add(1)
+    print(add(2))
+    ```
+  options:
+    - "`[1, 2]`"
+    - "`[2]`"
+    - "`[1]`"
+    - "`[]`"
+  answer: A
+  why: |
+    The default list is created once, when `def` runs, and every call without `items` reuses it. The first call put `1` in it, so the second call returns `[1, 2]`. The fix is `items=None` and `items = []` inside the function.
+
+- q: |
+    What is the output?
+
+    ```python
+    x = 1
+
+    def f():
+        x = 2
+
+    f()
+    print(x)
+    ```
+  options:
+    - "`2`"
+    - "`None`"
+    - "`1`"
+    - "`UnboundLocalError`"
+  answer: C
+  why: |
+    Assigning to `x` inside `f` creates a new **local** variable. The global `x` is not touched, so it is still `1`. Use `global x` inside `f` if you really want to rebind the global.
+
+- q: |
+    What does the `*` in `def f(a, *, b):` mean?
+  options:
+    - "`b` must be passed by keyword, as in `f(1, b=2)`"
+    - "`b` collects any number of extra arguments"
+    - "`b` is multiplied by `a`"
+    - "`a` must be passed by position"
+  answer: A
+  why: |
+    A bare `*` in the parameter list ends the positional parameters. Everything after it is **keyword-only**. `f(1, 2)` raises `TypeError`. A bare `/` is the marker for positional-only parameters.
+
+- q: |
+    Why do we write `def f(items=None)` and create the list inside, instead of `def f(items=[])`?
+  options:
+    - "Because `None` runs faster than `[]`"
+    - "Because Python does not allow lists as default values"
+    - "Because an empty list is always falsy"
+    - "Because the default is evaluated once, so every call would share the same list"
+  answer: D
+  why: |
+    Python allows a list default, but the same list object is reused by every call that omits the argument. Changes then leak from one call to the next. Speed is not the reason.
+
+- q: |
+    Which part of a recursive function stops the chain of calls?
+  options:
+    - "The `return` keyword"
+    - "The docstring"
+    - "The base case"
+    - "The `global` statement"
+  answer: C
+  why: |
+    A base case returns a result without calling the function again, for example `if n == 0: return 1`. Without one, calls continue until Python raises `RecursionError`.
+
+- q: |
+    `names` is a list of strings. Which call sorts it by length?
+  options:
+    - "`sorted(names, key=len())`"
+    - "`sorted(names, key=len)`"
+    - "`sorted(names, len)`"
+    - "`sorted(names, key=\"len\")`"
+  answer: B
+  why: |
+    `key` expects a function. `len` is the function itself, and Python calls it on each item. `len()` would call it right away with no argument and fail with `TypeError`.
+
+- q: |
+    What is the output?
+
+    ```python
+    def make():
+        n = 0
+        def step():
+            nonlocal n
+            n += 1
+            return n
+        return step
+
+    a = make()
+    b = make()
+    print(a(), a(), b())
+    ```
+  options:
+    - "`1 2 1`"
+    - "`1 2 3`"
+    - "`1 1 1`"
+    - "`0 1 0`"
+  answer: A
+  why: |
+    Each call to `make()` creates a separate variable `n` and a separate `step` function. `a` counts 1, 2. `b` has its own `n`, so its first call returns 1.
+
+- q: |
+    ```python
+    count = 0
+
+    def inc():
+        count += 1
+
+    inc()
+    ```
+    What happens when this runs?
+  options:
+    - "`count` becomes 1"
+    - "`SyntaxError`, because `+=` is not allowed in functions"
+    - "`UnboundLocalError`, because `count` is treated as a local variable"
+    - "`count` stays 0 and nothing is raised"
+  answer: C
+  why: |
+    Because `inc` assigns to `count`, Python makes it local to `inc`. Reading it before it has a value raises `UnboundLocalError`. Add `global count` to change the module-level variable.

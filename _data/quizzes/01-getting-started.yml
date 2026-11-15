@@ -17,10 +17,10 @@
     ```
   options:
     - "Prints `hello`"
-    - "Ignores the whole line, because it is a comment"
     - "Raises a `SyntaxError`"
+    - "Ignores the whole line, because it is a comment"
     - "Prints `# print(\"hello\")`"
-  answer: B
+  answer: C
   why: |
     Everything after `#` on a line is a comment. The interpreter skips it. Comments are for people who read the code.
 
@@ -43,10 +43,10 @@
     A script crashes with a long traceback. Where do you find the kind of error and its message?
   options:
     - "On the first line of the traceback"
-    - "On the last line of the traceback"
-    - "In the middle, at the line number"
     - "Python never prints the message"
-  answer: B
+    - "In the middle, at the line number"
+    - "On the last line of the traceback"
+  answer: D
   why: |
     A traceback lists the calls leading to the error, oldest first. The last line holds the error type and message, such as `NameError: name 'x' is not defined`. The lines above it show where it happened. Read from the bottom up.
 
@@ -58,21 +58,21 @@
     ```
   options:
     - "`5 5`"
-    - "`2 + 3 2 + 3`"
     - "`5 2 + 3`"
+    - "`2 + 3 2 + 3`"
     - "`23 2 + 3`"
-  answer: C
+  answer: B
   why: |
     The first argument is an expression, so Python computes it (`5`). The second is a string in quotes, so it prints as written. The two are separated by a space.
 
 - q: |
     You type `python` with no file name and press Enter. What happens?
   options:
-    - "An error: a file name is required"
     - "Python starts the interactive prompt (the REPL), where you can type code and see results at once"
+    - "An error: a file name is required"
     - "Python reinstalls itself"
     - "Python runs every `.py` file in the folder"
-  answer: B
+  answer: A
   why: |
     Without a script, `python` starts the REPL (read, evaluate, print, loop). It is a fast way to try small ideas. Leave it with `exit()`, or Ctrl-D on macOS and Linux, or Ctrl-Z then Enter on Windows.
 
@@ -80,10 +80,10 @@
     What does `python -c "print(1 + 1)"` do?
   options:
     - "Compiles `print(1 + 1)` into a file"
-    - "Runs the text after `-c` as a tiny program and prints `2`"
-    - "Checks the syntax and prints nothing"
     - "Opens the REPL and prints `2`"
-  answer: B
+    - "Checks the syntax and prints nothing"
+    - "Runs the text after `-c` as a tiny program and prints `2`"
+  answer: D
   why: |
     `-c` means "command". Python runs the given string as code. It is handy for one-line checks.
 
@@ -118,8 +118,8 @@
   options:
     - "`SyntaxError`, because `prnt` is spelled wrong"
     - "`TypeError`"
-    - "`NameError: name 'prnt' is not defined`"
     - "Nothing. Python fixes the spelling."
-  answer: C
+    - "`NameError: name 'prnt' is not defined`"
+  answer: D
   why: |
     The line is valid syntax: a name followed by a call. Python only fails when it runs the line and cannot find anything called `prnt`. A `SyntaxError` is for code that is not valid Python at all, such as `print("hi"` with a missing parenthesis.

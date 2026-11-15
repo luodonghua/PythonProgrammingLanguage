@@ -1,0 +1,6 @@
+- {term: List, meaning: "An ordered, mutable sequence written with square brackets, such as [1, 2, 3]."}
+- {term: Tuple, meaning: "An ordered, immutable sequence written with commas, usually in parentheses, such as (1, 2)."}
+- {term: Alias, meaning: "A second name for the same object. After b = a, a change made through b is visible through a."}
+- {term: Shallow copy, meaning: "A new outer list whose items are the same objects as in the original. Inner lists are shared."}
+- {term: List comprehension, meaning: "A one-line way to build a list: [expression for item in iterable if condition]."}
+- {term: Unpacking, meaning: "Assigning the items of a sequence to several names at once, such as x, y = point or first, *rest = items."}

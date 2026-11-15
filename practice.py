@@ -1,4 +1,4 @@
-"""Helper used by the assignment tests.
+"""Helpers used by the assignment tests.
 
 By default tests import ``starter.py`` (your code). CI sets
 ``PRACTICE_TARGET=solution`` to check that the published solutions pass.
@@ -19,3 +19,10 @@ def load(test_file: str) -> ModuleType:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def pg_dsn() -> str:
+    """Connection string for the practice PostgreSQL server (see compose.yaml)."""
+    return os.environ.get(
+        "PRACTICE_PG_DSN", "postgresql://postgres:postgres@localhost:5432/postgres"
+    )

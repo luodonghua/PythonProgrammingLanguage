@@ -1,0 +1,6 @@
+- {term: Iterable, meaning: "An object you can loop over with for, such as a list, string, range or dictionary."}
+- {term: range, meaning: "Built-in that produces integers from start up to, but not including, stop, with an optional step."}
+- {term: Accumulator, meaning: "A variable set before a loop and updated inside it to build a result, such as a sum or a list."}
+- {term: break and continue, meaning: "break leaves the loop at once. continue skips the rest of the current round and goes to the next one."}
+- {term: Loop else, meaning: "An else block after a loop. It runs only when the loop ended without break."}
+- {term: Off-by-one error, meaning: "A bug where a loop runs one time too many or too few, often because the stop value of range is excluded."}

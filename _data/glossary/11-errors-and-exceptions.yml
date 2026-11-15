@@ -1,0 +1,7 @@
+- {term: Exception, meaning: "An object that Python raises when something goes wrong. If nothing catches it, the program stops with a traceback."}
+- {term: Traceback, meaning: "The report Python prints for an uncaught exception. It lists the calls that led to the error, with the last line showing the exception type and message."}
+- {term: try / except, meaning: "A statement that runs code and handles chosen exception types. else runs when nothing was raised and finally always runs."}
+- {term: raise, meaning: "The statement that signals an error. A bare raise inside except re-raises the current exception."}
+- {term: Custom exception, meaning: "Your own error class, made by subclassing Exception or a more specific built-in such as ValueError."}
+- {term: Exception chaining, meaning: "Writing raise NewError() from original keeps the original error in the __cause__ attribute."}
+- {term: EAFP, meaning: "Easier to ask forgiveness than permission. Try the operation and handle the exception, instead of checking first (LBYL)."}

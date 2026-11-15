@@ -1,0 +1,25 @@
+intro: |
+  Four tasks on small functions: sorting with `key=`, closures with `nonlocal`, `functools.partial`, and function tables with pipelines. Each one is a few lines of code, but the ideas are used everywhere in Python programs.
+setup: |
+  No extra libraries are needed. You use `functools` and `operator` from the standard library.
+assignments:
+  - dir: a1-sorting
+    title: Sorting with key functions
+    goal: Rank students by score and name, pick the longest words, sort dictionaries by several fields, and find the cheapest and most expensive item. Practises lambdas, tuple keys, `itemgetter` and `min`/`max` with `key=`.
+    solution_note: |
+      A tuple key sorts by several values, and a minus sign on a number reverses that part (`-s["score"]`). `itemgetter(*fields)` builds the same kind of tuple key without a lambda. `key=prices.get` passes each dictionary key to `get`, so `min` compares the prices.
+  - dir: a2-closures
+    title: Closures and late binding
+    goal: Write a counter, a call limiter and a history recorder as closures, and fix a list of lambdas that all see the last loop value. Practises `nonlocal` and the late-binding fix.
+    solution_note: |
+      `counter` and `allow` rebind a variable, so they declare `nonlocal`. `record` only calls `.append`, which changes the list without rebinding the name, so it needs no `nonlocal`. The fix `lambda x, i=i: x + i` evaluates `i` when each lambda is created.
+  - dir: a3-partial
+    title: Pre-filled functions with partial
+    goal: Build loggers and number parsers with `functools.partial`, write your own `my_partial`, and make discount functions with keyword-only options. Practises `partial`, keyword arguments and closures.
+    solution_note: |
+      `partial(log, sink, "INFO", prefix)` fills the first three parameters, so the result takes only `message`. `my_partial` is a closure over the fixed arguments. Merging the dictionaries with `{**fixed_kwargs, **kwargs}` lets later keywords override earlier ones, as in the real `partial`.
+  - dir: a4-pipelines
+    title: Pipelines, function tables and callbacks
+    goal: Write `pipeline`, a calculator driven by a table of `operator` functions, a small event bus of callbacks, and a helper that applies many functions safely. Practises functions as values and closures that share state.
+    solution_note: |
+      `calculate` has no `if`/`elif` chain: the table maps each symbol to a function, and an unknown symbol is rejected before the lookup. `make_event_bus` returns two closures that share one dictionary of callback lists. `setdefault` creates the list on first use.

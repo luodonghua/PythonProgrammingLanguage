@@ -1,0 +1,26 @@
+assignments:
+  - dir: a1-log-calls
+    title: Count and log calls
+    goal: Write two decorators, one that counts calls and one (with an argument) that logs each call and its result. Practises wrappers, `functools.wraps` and decorator factories.
+    solution_note: |
+      `count_calls` stores the counter on the wrapper function itself. `log_calls(log)` is a function that returns the decorator, so it has three nested `def`s. The `except ... raise` pair logs the failure and lets the error continue.
+  - dir: a2-command-registry
+    title: Command registry
+    goal: Build an `@command` decorator that registers functions by name, with or without an argument, and a `run(line)` function that dispatches a text command. Practises registry decorators.
+    solution_note: |
+      `command` checks `callable(arg)`. If it got the function directly (`@command`), it registers it. Otherwise `arg` is the name and a decorator is returned. Both forms return the original function, so it stays callable.
+  - dir: a3-retry
+    title: Retry with backoff
+    goal: Write `retry(times, exceptions, delay, backoff, sleep)`. The `sleep` function is injected, so the tests never wait. Practises decorators with arguments and exception handling.
+    solution_note: |
+      The loop tries up to `times` times. `except exceptions:` catches only the listed types, so other errors propagate at once. The last attempt re-raises instead of sleeping. The wait grows by `backoff` after each failure.
+  - dir: a4-ttl-cache
+    title: Cache with expiry
+    goal: Write a cache decorator whose entries expire after a number of seconds, using an injected clock. Practises closures, state in a decorator and fake clocks.
+    solution_note: |
+      A dict maps the argument key to `(stored_at, result)`. Reading the clock once per call keeps the logic simple, and `now - stored_at < seconds` decides if the entry is fresh. Counters and `cache_clear` are attributes on the wrapper.
+  - dir: a5-dispatch-ordering
+    title: singledispatch and total_ordering
+    goal: Use `functools.singledispatch` to describe values by type, and `functools.total_ordering` to compare version numbers. Practises two more `functools` tools.
+    solution_note: |
+      Each `@describe.register` function is chosen by the type annotation of its first parameter. `Version` defines only `__eq__` and `__lt__`. `total_ordering` derives the rest. Comparing numbers as tuples makes `1.10` larger than `1.9`.

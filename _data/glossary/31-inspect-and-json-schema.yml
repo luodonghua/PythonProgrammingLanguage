@@ -1,0 +1,6 @@
+- {term: Signature, meaning: "The description of a function's parameters, returned by inspect.signature(). It holds each parameter's name, kind, default and annotation."}
+- {term: Parameter kind, meaning: "How a parameter may be passed: positional-only, positional-or-keyword, *args, keyword-only or **kwargs."}
+- {term: Annotation, meaning: "A type hint written after a parameter or return arrow. Python stores it but does not enforce it."}
+- {term: get_origin / get_args, meaning: "Functions in typing that take a hint apart. For list[int] they return list and (int,)."}
+- {term: JSON Schema, meaning: "A JSON document that describes the allowed shape of other JSON data, such as types, required keys and enums."}
+- {term: Validation, meaning: "Checking that data has the expected names and types before using it, usually at the edge of a program."}

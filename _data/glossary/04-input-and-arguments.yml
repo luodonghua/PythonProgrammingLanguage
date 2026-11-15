@@ -1,0 +1,6 @@
+- {term: input(), meaning: "Built-in function that shows a prompt, reads one line from the keyboard and returns it as a str."}
+- {term: sys.argv, meaning: "The list of command-line words. The first item is the script name, the rest are strings."}
+- {term: argparse, meaning: "Standard-library module that parses command-line arguments, converts types, and builds --help and error messages."}
+- {term: Flag, meaning: "An option without a value, such as --shout. It is True when given and False otherwise."}
+- {term: stdout and stderr, meaning: "Two output streams. stdout carries normal results. stderr carries error messages."}
+- {term: Exit code, meaning: "A number a program returns to the shell. 0 means success; anything else means failure."}

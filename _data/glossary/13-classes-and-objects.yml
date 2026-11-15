@@ -1,0 +1,6 @@
+- {term: Class, meaning: "A blueprint that defines the attributes and methods of a kind of object."}
+- {term: Instance, meaning: "One object built from a class, for example rex = Dog('Rex', 3)."}
+- {term: Attribute, meaning: "A name attached to an object or class, such as self.name. It can hold data or a method."}
+- {term: Method, meaning: "A function defined inside a class. Python passes the instance as the first argument (self)."}
+- {term: Property, meaning: "A method used like an attribute, made with @property. A setter can validate new values."}
+- {term: "Dunder method", meaning: "A special method with double underscores, such as __init__ or __eq__, that Python calls for built-in syntax and functions."}

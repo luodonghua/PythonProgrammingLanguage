@@ -1,0 +1,6 @@
+- {term: Async generator, meaning: "An async def function that contains yield. You read it with async for, and it can await between items."}
+- {term: async for, meaning: "A loop that awaits the next item of an async iterator on each step. Only allowed inside async def."}
+- {term: aclose, meaning: "The method that closes an async generator early. It raises GeneratorExit at the yield, so the finally block runs. contextlib.aclosing() calls it for you."}
+- {term: Async context manager, meaning: "An object used with async with that can await when it enters and exits. Build one with @asynccontextmanager."}
+- {term: Streaming, meaning: "Using data piece by piece as it arrives, instead of waiting for the full result."}
+- {term: Backpressure, meaning: "A slow consumer making a fast producer wait. A bounded asyncio.Queue does this: put() waits while the queue is full."}

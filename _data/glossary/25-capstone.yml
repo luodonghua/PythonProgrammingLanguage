@@ -1,0 +1,6 @@
+- {term: Layer, meaning: "A part of a program with one job, such as parsing, storage, reporting or the command line. Layers talk through simple data and functions."}
+- {term: Repository, meaning: "A class that hides the database. The rest of the program calls methods such as add and list_expenses and never sees SQL."}
+- {term: Exit code, meaning: "The number a program returns to the operating system. 0 means success, and any other number means a problem."}
+- {term: Decimal, meaning: "A Python number type from the decimal module that stores decimal fractions exactly. Build it from a string, for example Decimal(\"0.10\")."}
+- {term: Frozen dataclass, meaning: "A dataclass created with frozen=True. Its instances cannot be changed after creation."}
+- {term: Subcommand, meaning: "A command inside a command-line program, such as add or report in expenses add. argparse creates them with add_subparsers."}

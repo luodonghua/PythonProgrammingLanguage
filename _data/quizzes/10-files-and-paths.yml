@@ -1,0 +1,131 @@
+- q: |
+    A file `log.txt` already holds 100 lines. What happens when you run `open("log.txt", "w")`?
+  options:
+    - "Python adds new text after the 100 lines"
+    - "Python raises `FileExistsError`"
+    - "Python opens the file for reading only"
+    - "The file is emptied as soon as it is opened"
+  answer: D
+  why: |
+    Mode `"w"` truncates an existing file to zero length when it opens. To keep the old lines and add to the end, use mode `"a"`.
+
+- q: |
+    The file `f.txt` contains the three lines `x`, `y` and `z`, each ending with a newline. What is the output?
+
+    ```python
+    with open("f.txt", encoding="utf-8") as f:
+        print(f.readlines())
+    ```
+  options:
+    - "`['x\\n', 'y\\n', 'z\\n']`"
+    - "`['x', 'y', 'z']`"
+    - "`'x\\ny\\nz\\n'`"
+    - "`['x y z']`"
+  answer: A
+  why: |
+    `readlines()` returns a list of lines, and every line **keeps** its trailing `"\n"`. `read()` would return the single string `'x\ny\nz\n'`. Use `line.rstrip("\n")` or `splitlines()` to remove the newlines.
+
+- q: |
+    What is the output?
+
+    ```python
+    from pathlib import Path
+
+    p = Path("logs") / "app.2025.txt"
+    print(p.stem, p.suffix)
+    ```
+  options:
+    - "`app .2025.txt`"
+    - "`app.2025 txt`"
+    - "`app.2025 .txt`"
+    - "`logs/app.2025 .txt`"
+  answer: C
+  why: |
+    `suffix` is the part from the **last** dot, `.txt`. `stem` is the file name without that suffix, `app.2025`. The folder is not part of either, it belongs to `p.parent`.
+
+- q: |
+    What is the main benefit of `with open(...) as f:` over calling `open()` and `close()` yourself?
+  options:
+    - "It makes the file load faster"
+    - "The file is closed automatically, even if an error occurs inside the block"
+    - "It lets you read and write at the same time"
+    - "It creates missing folders"
+  answer: B
+  why: |
+    `with` calls the file's cleanup code when the block ends, whether it ends normally or with an exception. It does not change speed or the mode, and it never creates folders.
+
+- q: |
+    What is the output?
+
+    ```python
+    with open("f.txt", "w", encoding="utf-8") as f:
+        f.write("hi")
+    print(f.closed)
+    ```
+  options:
+    - "`True`"
+    - "`False`"
+    - "`None`"
+    - "`ValueError`"
+  answer: A
+  why: |
+    The file object still exists after the `with` block, but it has been closed. `f.closed` is `True`. Writing to it now would raise `ValueError: I/O operation on closed file`.
+
+- q: |
+    Which call creates `out/reports/2025`, including the missing parent folders, and does not fail if the folder already exists?
+  options:
+    - "`Path(\"out/reports/2025\").mkdir()`"
+    - "`Path(\"out/reports/2025\").touch()`"
+    - "`Path(\"out/reports/2025\").mkdir(parents=True, exist_ok=True)`"
+    - "`open(\"out/reports/2025\", \"w\")`"
+  answer: C
+  why: |
+    `parents=True` creates missing parents and `exist_ok=True` accepts an existing folder. A plain `mkdir()` fails if `out/reports` is missing or the folder exists. `touch()` and `open()` create a **file**, not a folder.
+
+- q: |
+    Why should you write `open(path, encoding="utf-8")` for text files?
+  options:
+    - "Without it, Python cannot read text files"
+    - "It makes the file smaller"
+    - "It lets you open binary files"
+    - "The default encoding depends on the system, so the same code can read characters differently on another machine"
+  answer: D
+  why: |
+    Python falls back to a platform-dependent default, so a script that works on one computer can fail or produce wrong characters on another. Naming UTF-8 makes the behaviour the same everywhere.
+
+- q: |
+    You must process a text log of 20 GB, one line at a time. Which approach works?
+  options:
+    - "`lines = f.readlines()` and then loop over `lines`"
+    - "`for line in f:` and handle each line"
+    - "`text = f.read()` and then `text.split(\"\\n\")`"
+    - "`Path(path).read_text()`"
+  answer: B
+  why: |
+    Looping over the file object reads one line at a time and keeps only that line in memory. `readlines()`, `read()` and `read_text()` load the entire file first.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(len("é"), len("é".encode("utf-8")))
+    ```
+  options:
+    - "`1 2`"
+    - "`1 1`"
+    - "`2 2`"
+    - "`2 1`"
+  answer: A
+  why: |
+    The string has one **character**. In UTF-8 that character needs two **bytes**. A text file's size on disk is counted in bytes, so it can be larger than the number of characters.
+
+- q: |
+    Which expression yields every `.py` file in the current folder **and all its subfolders**?
+  options:
+    - "`Path(\".\").glob(\"*.py\")`"
+    - "`Path(\".\").iterdir()`"
+    - "`Path(\".\").rglob(\"*.py\")`"
+    - "`Path(\".\").glob(\"py\")`"
+  answer: C
+  why: |
+    `rglob` searches recursively. `glob("*.py")` only looks inside the folder itself, and `iterdir()` lists everything in one folder, not only `.py` files.
