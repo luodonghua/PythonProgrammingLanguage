@@ -1,0 +1,125 @@
+- q: |
+    You installed Python with `uv`. Which command prints the Python version your project uses?
+  options:
+    - "`uv run python --version`"
+    - "`python --print-version-now`"
+    - "`uv version python`"
+    - "`print(python)`"
+  answer: A
+  why: |
+    `uv run` runs a command inside the project's environment, and `python --version` is the standard flag that prints the interpreter version. The other three are not real commands.
+
+- q: |
+    What does Python do with this line?
+
+    ```python
+    # print("hello")
+    ```
+  options:
+    - "Prints `hello`"
+    - "Ignores the whole line, because it is a comment"
+    - "Raises a `SyntaxError`"
+    - "Prints `# print(\"hello\")`"
+  answer: B
+  why: |
+    Everything after `#` on a line is a comment. The interpreter skips it. Comments are for people who read the code.
+
+- q: |
+    What is the output?
+
+    ```python
+    print("Hello", "World")
+    ```
+  options:
+    - "`HelloWorld`"
+    - "`Hello World`"
+    - "`('Hello', 'World')`"
+    - "`Hello, World`"
+  answer: B
+  why: |
+    `print()` writes its arguments separated by a single space (the `sep` argument, which defaults to `" "`) and ends with a newline.
+
+- q: |
+    A script crashes with a long traceback. Where do you find the kind of error and its message?
+  options:
+    - "On the first line of the traceback"
+    - "On the last line of the traceback"
+    - "In the middle, at the line number"
+    - "Python never prints the message"
+  answer: B
+  why: |
+    A traceback lists the calls leading to the error, oldest first. The last line holds the error type and message, such as `NameError: name 'x' is not defined`. The lines above it show where it happened. Read from the bottom up.
+
+- q: |
+    What is the output?
+
+    ```python
+    print(2 + 3, "2 + 3")
+    ```
+  options:
+    - "`5 5`"
+    - "`2 + 3 2 + 3`"
+    - "`5 2 + 3`"
+    - "`23 2 + 3`"
+  answer: C
+  why: |
+    The first argument is an expression, so Python computes it (`5`). The second is a string in quotes, so it prints as written. The two are separated by a space.
+
+- q: |
+    You type `python` with no file name and press Enter. What happens?
+  options:
+    - "An error: a file name is required"
+    - "Python starts the interactive prompt (the REPL), where you can type code and see results at once"
+    - "Python reinstalls itself"
+    - "Python runs every `.py` file in the folder"
+  answer: B
+  why: |
+    Without a script, `python` starts the REPL (read, evaluate, print, loop). It is a fast way to try small ideas. Leave it with `exit()`, or Ctrl-D on macOS and Linux, or Ctrl-Z then Enter on Windows.
+
+- q: |
+    What does `python -c "print(1 + 1)"` do?
+  options:
+    - "Compiles `print(1 + 1)` into a file"
+    - "Runs the text after `-c` as a tiny program and prints `2`"
+    - "Checks the syntax and prints nothing"
+    - "Opens the REPL and prints `2`"
+  answer: B
+  why: |
+    `-c` means "command". Python runs the given string as code. It is handy for one-line checks.
+
+- q: |
+    In a terminal, which command shows the folder you are currently in (macOS, Linux, and PowerShell on Windows)?
+  options:
+    - "`ls`"
+    - "`cd`"
+    - "`pwd`"
+    - "`mkdir`"
+  answer: C
+  why: |
+    `pwd` means "print working directory". `ls` lists the folder's contents, `cd` changes folder, and `mkdir` creates one.
+
+- q: |
+    You save a script as `random.py` and it contains `import random`. Later `random.randint(1, 6)` fails with `AttributeError`. Why?
+  options:
+    - "Python has no `random` module"
+    - "Your file shadows the standard-library `random` module, so Python imports your file instead"
+    - "`randint` was removed in Python 3.14"
+    - "You must install `random` with uv first"
+  answer: B
+  why: |
+    Python looks in the script's own folder before the standard library, so a file named `random.py` hides the real module. Avoid naming your files after standard-library modules such as `random`, `json`, `csv` or `test`.
+
+- q: |
+    What does this raise?
+
+    ```python
+    prnt("hi")
+    ```
+  options:
+    - "`SyntaxError`, because `prnt` is spelled wrong"
+    - "`TypeError`"
+    - "`NameError: name 'prnt' is not defined`"
+    - "Nothing. Python fixes the spelling."
+  answer: C
+  why: |
+    The line is valid syntax: a name followed by a call. Python only fails when it runs the line and cannot find anything called `prnt`. A `SyntaxError` is for code that is not valid Python at all, such as `print("hi"` with a missing parenthesis.

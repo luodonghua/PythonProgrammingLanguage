@@ -1,0 +1,29 @@
+{% assign letters = "A,B,C,D,E" | split: "," %}
+{% assign questions = site.data.quizzes[page.module] %}
+<div class="quiz" data-module="{{ page.module }}" data-total="{{ questions.size }}">
+  <div class="scorebar">
+    <span>Answered <strong id="answered">0</strong> / {{ questions.size }}</span>
+    <span>Correct <strong id="correct">0</strong></span>
+    <span>Best <strong id="best">-</strong></span>
+    <button type="button" id="reset" class="btn">Reset</button>
+  </div>
+  {% for q in questions %}
+  <section class="q" data-answer="{{ q.answer }}">
+    <h3>Question {{ forloop.index }}</h3>
+    <div class="q-text">{{ q.q | markdownify }}</div>
+    <div class="opts">
+      {% for opt in q.options %}
+      <button type="button" class="opt" data-letter="{{ letters[forloop.index0] }}">
+        <span class="letter">{{ letters[forloop.index0] }}</span>
+        <span class="opt-text">{{ opt | markdownify | remove: "<p>" | remove: "</p>" }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <div class="feedback" hidden>
+      <p class="verdict"></p>
+      {{ q.why | markdownify }}
+    </div>
+  </section>
+  {% endfor %}
+  <div id="summary" class="summary" hidden></div>
+</div>

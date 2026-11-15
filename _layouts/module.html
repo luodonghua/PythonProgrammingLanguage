@@ -1,0 +1,27 @@
+---
+layout: default
+---
+{% assign ready = site.data.modules | where: "status", "ready" %}
+{% for m in site.data.modules %}{% if m.slug == page.module %}{% assign current = m %}{% endif %}{% endfor %}
+{% for m in ready %}{% if m.slug == page.module %}
+  {% assign prev_i = forloop.index0 | minus: 1 %}
+  {% assign next_i = forloop.index0 | plus: 1 %}
+  {% if prev_i >= 0 %}{% assign prev = ready[prev_i] %}{% endif %}
+  {% assign next = ready[next_i] %}
+{% endif %}{% endfor %}
+
+<p class="eyebrow">Topic {{ page.module | slice: 0, 2 }} of {{ site.data.modules.size }}</p>
+<h1>{{ current.title }}</h1>
+
+<nav class="tabs" aria-label="Topic pages">
+  <a href="{{ '/modules/' | append: page.module | append: '/' | relative_url }}"{% if page.kind == "learn" %} class="active"{% endif %}>Learn</a>
+  <a href="{{ '/modules/' | append: page.module | append: '/quiz/' | relative_url }}"{% if page.kind == "quiz" %} class="active"{% endif %}>Test (10 questions)</a>
+  <a href="{{ '/modules/' | append: page.module | append: '/assignments/' | relative_url }}"{% if page.kind == "assignments" %} class="active"{% endif %}>Assignments</a>
+</nav>
+
+{{ content }}
+
+<nav class="pager">
+  {% if prev %}<a href="{{ '/modules/' | append: prev.slug | append: '/' | relative_url }}">&larr; {{ prev.title }}</a>{% else %}<span></span>{% endif %}
+  {% if next %}<a href="{{ '/modules/' | append: next.slug | append: '/' | relative_url }}">{{ next.title }} &rarr;</a>{% endif %}
+</nav>

@@ -1,0 +1,14 @@
+[project]
+name = "python-programming-language"
+version = "0.1.0"
+description = "Learn Python 3: topic pages, quizzes and practice assignments."
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8", "pyyaml>=6"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = "--import-mode=importlib"
+testpaths = ["modules"]

@@ -1,0 +1,101 @@
+# status: ready = pages exist, soon = planned
+- slug: 01-getting-started
+  title: "Getting started"
+  status: ready
+  summary: "Install Python with uv, use the terminal, run your first script and read an error."
+- slug: 02-variables-types-numbers
+  title: "Variables, types and numbers"
+  status: soon
+  summary: "Names, int, float, bool, None, and arithmetic."
+- slug: 03-strings
+  title: "Strings and formatting"
+  status: soon
+  summary: "Slicing, methods, f-strings and t-strings."
+- slug: 04-input-and-arguments
+  title: "Input and command-line arguments"
+  status: soon
+  summary: "input(), sys.argv and argparse."
+- slug: 05-conditions-and-match
+  title: "Conditions and match"
+  status: ready
+  summary: "if/elif/else, truthiness, boolean logic and structural pattern matching."
+- slug: 06-loops
+  title: "Loops"
+  status: soon
+  summary: "for, while, break, continue, range and enumerate."
+- slug: 07-lists-and-tuples
+  title: "Lists and tuples"
+  status: soon
+  summary: "Sequences, slicing, comprehensions and unpacking."
+- slug: 08-dicts-and-sets
+  title: "Dictionaries and sets"
+  status: soon
+  summary: "Key-value data, membership, counting and grouping."
+- slug: 09-functions
+  title: "Functions"
+  status: soon
+  summary: "Parameters, return values, scope and lambdas."
+- slug: 10-files-and-paths
+  title: "Files and paths"
+  status: soon
+  summary: "open(), pathlib and context managers."
+- slug: 11-errors-and-exceptions
+  title: "Errors and exceptions"
+  status: soon
+  summary: "try/except, raising errors and custom exceptions."
+- slug: 12-modules-and-packages
+  title: "Modules and packages"
+  status: soon
+  summary: "import, the standard library and your own packages."
+- slug: 13-classes-and-objects
+  title: "Classes and objects"
+  status: soon
+  summary: "Attributes, methods, dataclasses and special methods."
+- slug: 14-inheritance-vs-composition
+  title: "Inheritance vs composition"
+  status: soon
+  summary: "Is-a versus has-a and how to choose."
+- slug: 15-type-hints-and-docs
+  title: "Type hints and documentation"
+  status: soon
+  summary: "Annotations, docstrings and type checkers."
+- slug: 16-testing
+  title: "Testing with pytest"
+  status: soon
+  summary: "Writing tests, fixtures and parametrization."
+- slug: 17-debugging
+  title: "Debugging"
+  status: soon
+  summary: "Tracebacks, pdb, logging and a debugging routine."
+- slug: 18-text-data
+  title: "Text data: CSV, JSON, regex"
+  status: soon
+  summary: "Parsing and producing common text formats."
+- slug: 19-dates-and-times
+  title: "Dates and times"
+  status: soon
+  summary: "datetime, time zones and formatting."
+- slug: 20-concurrency
+  title: "Concurrency"
+  status: soon
+  summary: "Threads, processes and asyncio."
+- slug: 21-sqlite
+  title: "Persistence - SQLite"
+  status: soon
+  summary: "Storing data with the built-in sqlite3 module."
+- slug: 22-postgresql
+  title: "Persistence - PostgreSQL"
+  status: soon
+  summary: "Connecting to PostgreSQL with psycopg, queries and transactions."
+- slug: 23-http-and-web
+  title: "HTTP and the web"
+  status: soon
+  summary: "Requests, JSON APIs and a small web app."
+- slug: 24-data-science
+  title: "Data science basics"
+  status: soon
+  summary: "Tables with pandas and charts with matplotlib."
+- slug: 25-capstone
+  title: "Capstone project"
+  status: soon
+  summary: "Combine everything in one small application."

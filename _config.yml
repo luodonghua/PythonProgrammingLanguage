@@ -1,0 +1,19 @@
+title: Python Programming
+description: Learn Python 3 one topic at a time, with a quiz and hands-on assignments for each.
+lang: en
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+exclude:
+  - README.md
+  - CONTRIBUTING.md
+  - pyproject.toml
+  - uv.lock
+  - practice.py
+  - scripts
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
+  - .python-version

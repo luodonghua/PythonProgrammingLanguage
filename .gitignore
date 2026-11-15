@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.pytest_cache/
+_site/
+.jekyll-cache/
+.idea/
+.vscode/
+*.pyc
