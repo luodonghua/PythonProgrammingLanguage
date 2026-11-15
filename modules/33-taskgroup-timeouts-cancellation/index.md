@@ -258,9 +258,11 @@ async with asyncio.timeout(30):
 
 </div>
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books. See the Python docs: [Coroutines and Tasks](https://docs.python.org/3/library/asyncio-task.html) (TaskGroup, timeout, shield), [Queues](https://docs.python.org/3/library/asyncio-queue.html) and [Exception groups](https://docs.python.org/3/tutorial/errors.html#raising-and-handling-multiple-unrelated-exceptions). *Introducing Python*, chapter 21 gives the background on concurrency.
+- [Coroutines and Tasks](https://docs.python.org/3/library/asyncio-task.html)
+- [Queues](https://docs.python.org/3/library/asyncio-queue.html)
+- [Exception groups](https://docs.python.org/3/tutorial/errors.html#raising-and-handling-multiple-unrelated-exceptions)
 
 ## Done with this page?
 

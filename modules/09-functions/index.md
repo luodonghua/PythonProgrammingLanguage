@@ -208,9 +208,9 @@ Note that `apply(len, ...)` passes the function itself. `len(...)` would call it
 2. Write `describe(name, *hobbies, **details)` and call it with several hobbies and a few keyword details. Print what each parameter contains.
 3. Write a recursive `countdown(n)` that returns `[n, n-1, ..., 1]`. What happens with `countdown(5000)`?
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 10 (Functions). *Learn Python the Hard Way*, exercises 18 to 21 (functions, their arguments and return values).
+- [Python tutorial: defining functions](https://docs.python.org/3/tutorial/controlflow.html#defining-functions)
 
 ## Done with this page?
 

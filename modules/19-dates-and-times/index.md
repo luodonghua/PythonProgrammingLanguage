@@ -262,9 +262,11 @@ Give `today` a default only at the top level, for example `today = today or date
 2. Parse `"2025-07-04 15:00"` as a New York time and print it in Tokyo time (`Asia/Tokyo`).
 3. Find out what `datetime(2025, 1, 31) + timedelta(days=30)` gives, and write down why "one month later" has no single answer.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 19 (Dates and Times). *Learn Python the Hard Way* has no matching exercise. For more detail see the [datetime](https://docs.python.org/3/library/datetime.html), [zoneinfo](https://docs.python.org/3/library/zoneinfo.html) and [calendar](https://docs.python.org/3/library/calendar.html) docs.
+- [datetime](https://docs.python.org/3/library/datetime.html)
+- [zoneinfo](https://docs.python.org/3/library/zoneinfo.html)
+- [calendar](https://docs.python.org/3/library/calendar.html)
 
 ## Done with this page?
 

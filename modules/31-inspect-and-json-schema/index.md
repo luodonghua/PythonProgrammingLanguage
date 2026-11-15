@@ -225,9 +225,12 @@ tool = {"name": "repeat", "description": "Repeat text.", "parameters": tool_sche
 
 </div>
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books. *Introducing Python*, chapter 14 (Type Hints and Documentation) covers the hints themselves. For the tools in this topic see the Python docs for [`inspect`](https://docs.python.org/3/library/inspect.html), [`typing.get_type_hints`](https://docs.python.org/3/library/typing.html#typing.get_type_hints) and [`annotationlib`](https://docs.python.org/3/library/annotationlib.html), and the [JSON Schema](https://json-schema.org/) site.
+- [`inspect`](https://docs.python.org/3/library/inspect.html)
+- [`typing.get_type_hints`](https://docs.python.org/3/library/typing.html#typing.get_type_hints)
+- [`annotationlib`](https://docs.python.org/3/library/annotationlib.html)
+- [JSON Schema](https://json-schema.org/)
 
 ## Done with this page?
 

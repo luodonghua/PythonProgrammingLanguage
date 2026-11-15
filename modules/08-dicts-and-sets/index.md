@@ -154,9 +154,10 @@ A `frozenset` is an immutable set. It is hashable, so it can be a dict key or a 
 2. Given `{"a": 1, "b": 2}`, build `{1: "a", 2: "b"}` with a comprehension.
 3. Two lists of friends overlap. Print who is on both lists and who is on only one.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 9 (Dictionaries and Sets). *Learn Python the Hard Way*, exercise 39 (dictionaries).
+- [Python tutorial: dictionaries and sets](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)
+- [collections](https://docs.python.org/3/library/collections.html)
 
 ## Done with this page?
 

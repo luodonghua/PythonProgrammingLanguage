@@ -283,9 +283,9 @@ Topic 30 covers dataclasses in full.
 2. Add `__eq__` and `__lt__` (compare by area). Sort a list of rectangles.
 3. Add a `@classmethod square(cls, side)` that builds a square.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 11 (Objects). *Learn Python the Hard Way*, exercises 40 to 44 (modules, classes and objects, inheritance versus composition). Special methods are in the [Python data model](https://docs.python.org/3/reference/datamodel.html#special-method-names).
+- [Python data model](https://docs.python.org/3/reference/datamodel.html#special-method-names)
 
 ## Done with this page?
 

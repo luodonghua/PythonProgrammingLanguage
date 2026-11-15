@@ -222,9 +222,10 @@ async with httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=5.0)) as client
 2. Change the handler so that it returns `httpx.Response(200, text="a\nb\nc")`, then print each line with `client.stream` and `aiter_lines()`.
 3. Fetch ten URLs with `gather` and a `Semaphore(3)`. Count how many handlers run at the same moment and check that the peak is 3.
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books. *Introducing Python*, chapters 22 (Networks) and 24 (The Web) cover the basics of HTTP and `requests`, and chapter 21 covers `asyncio`. For this topic, read the [httpx documentation](https://www.python-httpx.org/async/) and the [asyncio documentation](https://docs.python.org/3/library/asyncio.html).
+- [httpx documentation](https://www.python-httpx.org/async/)
+- [asyncio documentation](https://docs.python.org/3/library/asyncio.html)
 
 ## Done with this page?
 

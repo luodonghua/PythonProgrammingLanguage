@@ -249,9 +249,11 @@ def chunks_of_text(text, size):
 2. Write a generator `fibonacci()` that never ends. Print the first ten values with `itertools.islice`.
 3. Use a generator expression to sum the lengths of all words in a sentence.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 10 (Functions), the sections on generators and iterators, and chapter 7 (For and While). *Learn Python the Hard Way*, exercises 32 and 33 (loops and lists) introduce `for`, but not generators, so this topic goes beyond that book. See the Python docs: [Iterator types](https://docs.python.org/3/library/stdtypes.html#iterator-types), [itertools](https://docs.python.org/3/library/itertools.html), and [Generators](https://docs.python.org/3/howto/functional.html#generators).
+- [Iterator types](https://docs.python.org/3/library/stdtypes.html#iterator-types)
+- [itertools](https://docs.python.org/3/library/itertools.html)
+- [Generators](https://docs.python.org/3/howto/functional.html#generators)
 
 ## Done with this page?
 

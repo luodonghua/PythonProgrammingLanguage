@@ -205,9 +205,9 @@ Tests are only worth trusting if they can fail. A useful check is to break the c
 2. Turn those tests into one `parametrize` test.
 3. Do TDD for `fizzbuzz(n)`: write the failing test for 3, make it pass, then add 5 and 15.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 15 (Testing). *Learn Python the Hard Way*, exercise 47 (automated testing). The [pytest documentation](https://docs.pytest.org/en/stable/getting-started.html) is the best reference.
+- [pytest documentation](https://docs.pytest.org/en/stable/getting-started.html)
 
 ## Done with this page?
 

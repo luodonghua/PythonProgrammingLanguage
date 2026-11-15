@@ -187,9 +187,10 @@ Beyond a toy server, Python web code usually runs under **WSGI** (a standard fun
 2. Start the server from section 4 in a thread, fetch `/hello` with `urlopen`, and print the decoded JSON. Then fetch `/missing` and print the status code from the `HTTPError`.
 3. Add a `do_POST` method to the handler that reads a JSON body and replies with the same JSON.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 22 (Data in Space: Networks) and chapter 24 (The Web). *Learn Python the Hard Way*, exercises 50 to 52 (web projects). For the standard library modules used here, see the Python docs for [`urllib`](https://docs.python.org/3/library/urllib.html) and [`http.server`](https://docs.python.org/3/library/http.server.html).
+- [`urllib`](https://docs.python.org/3/library/urllib.html)
+- [`http.server`](https://docs.python.org/3/library/http.server.html)
 
 ## Done with this page?
 

@@ -239,9 +239,11 @@ log.info("tool call", extra={"tool": "search", "trace_id": trace_id.get()})
 2. Make a logger that writes at `DEBUG` level to the console and at `WARNING` level to a file named `app.log`. (Hint: two handlers, each with its own level.)
 3. Write a filter that drops every record whose message contains the word `password`. What does `filter` return in that case?
 
-## Where this comes from
+## Further reading
 
-Mostly beyond the two reference books. *Introducing Python*, chapter 16 (Debugging) introduces logging. *Learn Python the Hard Way* has no matching exercise. Read the Python docs on [`os.environ`](https://docs.python.org/3/library/os.html#os.environ), the [`logging` module](https://docs.python.org/3/library/logging.html) and the [Logging HOWTO](https://docs.python.org/3/howto/logging.html).
+- [`os.environ`](https://docs.python.org/3/library/os.html#os.environ)
+- [`logging` module](https://docs.python.org/3/library/logging.html)
+- [Logging HOWTO](https://docs.python.org/3/howto/logging.html)
 
 ## Done with this page?
 

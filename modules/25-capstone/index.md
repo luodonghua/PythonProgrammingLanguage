@@ -195,9 +195,9 @@ uv run pytest modules/25-capstone
 2. Add a `--category` filter to `list`. Which layer does the filtering?
 3. Write a test that adds the same expense twice and checks that `report` shows a count of 2.
 
-## Where this comes from
+## Further reading
 
-This project combines ideas from earlier topics. *Introducing Python*, chapter 20 (Files), chapter 23 (Data in a Box: Persistent Storage), chapter 11 (Objects) and chapter 15 (Testing). *Learn Python the Hard Way*, exercise 46 (project skeleton), exercise 47 (automated testing) and exercises 40 to 44 (classes). For `dataclasses` see the [Python docs](https://docs.python.org/3/library/dataclasses.html).
+- [Python docs](https://docs.python.org/3/library/dataclasses.html)
 
 ## Done with this page?
 

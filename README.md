@@ -10,7 +10,7 @@ A free, self-paced Python 3 course published with GitHub Pages. It has 39 topics
 
 There are also two printable cheatsheets (basic and advanced) with PDF downloads.
 
-The course uses **Python 3.14 or later** and [uv](https://docs.astral.sh/uv/). The topic order follows *Introducing Python* (3rd ed.), and the practice style follows *Learn Python the Hard Way*.
+The course uses **Python 3.14 or later** and [uv](https://docs.astral.sh/uv/).
 
 ## Practise locally
 

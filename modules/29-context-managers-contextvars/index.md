@@ -268,9 +268,11 @@ with bind_trace_id("run-42"):
 2. Use `suppress(KeyError)` to delete a key from a dict that may not have it.
 3. Create a `ContextVar` named `user`. Write an async function that sets it, awaits `asyncio.sleep(0)`, and returns `user.get()`. Run three of them with `gather`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 20 (Files) covers `with` for files, and chapter 11 (Objects) covers special methods. *Learn Python the Hard Way*, exercises 15 to 17 use `open`, but not `with` or `contextvars`, so this topic goes beyond that book. See the Python docs: [contextlib](https://docs.python.org/3/library/contextlib.html), [contextvars](https://docs.python.org/3/library/contextvars.html) and [The with statement](https://docs.python.org/3/reference/compound_stmts.html#the-with-statement).
+- [contextlib](https://docs.python.org/3/library/contextlib.html)
+- [contextvars](https://docs.python.org/3/library/contextvars.html)
+- [The with statement](https://docs.python.org/3/reference/compound_stmts.html#the-with-statement)
 
 ## Done with this page?
 

@@ -179,9 +179,12 @@ model = FakeModel([tool_call_reply("add", {"a": 1, "b": 2}), text_reply("The sum
 2. Replace the `FakeClient` with `AsyncMock(side_effect=[...])` and write the same test. Which one reads better to you?
 3. Write a test that proves a function cancels its work on timeout: the work sets a flag in `finally`, and the test checks the flag.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 15 (Testing) and *Learn Python the Hard Way*, exercise 47 (automated testing) cover the basics of tests. Test doubles, `AsyncMock` and `pytest-asyncio` go beyond the two books. See the docs for [`unittest.mock`](https://docs.python.org/3/library/unittest.mock.html), [`asyncio` testing and timeouts](https://docs.python.org/3/library/asyncio-task.html#timeouts), [pytest monkeypatch](https://docs.pytest.org/en/stable/how-to/monkeypatch.html) and [pytest-asyncio](https://pytest-asyncio.readthedocs.io/).
+- [`unittest.mock`](https://docs.python.org/3/library/unittest.mock.html)
+- [`asyncio` testing and timeouts](https://docs.python.org/3/library/asyncio-task.html#timeouts)
+- [pytest monkeypatch](https://docs.pytest.org/en/stable/how-to/monkeypatch.html)
+- [pytest-asyncio](https://pytest-asyncio.readthedocs.io/)
 
 ## Done with this page?
 

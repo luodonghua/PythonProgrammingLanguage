@@ -144,9 +144,10 @@ A `SyntaxError` means the code is not valid Python (for example a missing `)`). 
 2. Add a line `print("Python version check")` and a comment above it that explains why.
 3. Break the program on purpose (misspell `print`) and read the traceback.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 1 (Introduction) and chapter 13 (Development environment). *Learn Python the Hard Way*, exercises 0 to 8 (setup, first program, comments, terminal).
+- [Python tutorial: using the interpreter](https://docs.python.org/3/tutorial/interpreter.html)
+- [uv documentation](https://docs.astral.sh/uv/)
 
 ## Done with this page?
 

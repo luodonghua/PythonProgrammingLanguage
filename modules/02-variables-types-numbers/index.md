@@ -205,9 +205,11 @@ Use `is` only for `None` (`if x is None:`). For everything else use `==`.
 2. Predict `type(10 / 2)`, then check. Why is it not `int`?
 3. Add `Decimal("19.99")` three times and compare with `19.99 + 19.99 + 19.99`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 2 (Types and Variables) and chapter 3 (Numbers). *Learn Python the Hard Way*, exercises 4 to 6 (variables and names, strings and text).
+- [Python tutorial: numbers](https://docs.python.org/3/tutorial/introduction.html#numbers)
+- [Floating-point arithmetic: issues and limitations](https://docs.python.org/3/tutorial/floatingpoint.html)
+- [decimal](https://docs.python.org/3/library/decimal.html)
 
 ## Done with this page?
 

@@ -186,9 +186,9 @@ Use `importlib.metadata.version("httpx")` to ask which version is installed. Use
 2. Use `itertools.batched` to print a list of 10 names in groups of 3.
 3. Create a folder `pets` with `__init__.py` and `dog.py`, then import `pets.dog` from a script next to the folder.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 12 (Modules and Packages). *Learn Python the Hard Way*, exercise 46 (a project skeleton). See also the Python tutorial on [modules](https://docs.python.org/3/tutorial/modules.html).
+- [modules](https://docs.python.org/3/tutorial/modules.html)
 
 ## Done with this page?
 

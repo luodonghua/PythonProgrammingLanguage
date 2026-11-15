@@ -216,9 +216,13 @@ This is a miniature of a real **multi-agent** system: an orchestrator splits a j
 2. Add a per-question timeout to `research` and a `FakeLLM` entry that hangs (an `Event` that is never set). What does the report say for that question?
 3. Write a second output format, `--format csv`, with the columns `task_id`, `answer`, `confidence`. Use the `csv` module (topic 18).
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books. It combines *Introducing Python*, chapters 10 (Functions), 11 (Objects), 14 (Type Hints), 15 (Testing), 20 (Files), 21 (Concurrency) and 24 (The Web), and *Learn Python the Hard Way*, exercises 40 to 47 (classes, project skeleton, automated testing). Docs: [`asyncio.TaskGroup`](https://docs.python.org/3/library/asyncio-task.html#task-groups), [`asyncio.Queue`](https://docs.python.org/3/library/asyncio-queue.html), [`contextvars`](https://docs.python.org/3/library/contextvars.html), [`argparse`](https://docs.python.org/3/library/argparse.html) and [pydantic models](https://docs.pydantic.dev/latest/concepts/models/).
+- [`asyncio.TaskGroup`](https://docs.python.org/3/library/asyncio-task.html#task-groups)
+- [`asyncio.Queue`](https://docs.python.org/3/library/asyncio-queue.html)
+- [`contextvars`](https://docs.python.org/3/library/contextvars.html)
+- [`argparse`](https://docs.python.org/3/library/argparse.html)
+- [pydantic models](https://docs.pydantic.dev/latest/concepts/models/)
 
 ## Done with this page?
 

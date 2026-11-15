@@ -169,9 +169,9 @@ A t-string does not produce a `str`. It produces a `Template` object (from `stri
 2. Format the number `1234.5` as `$1,234.50`, right-aligned in a field 12 characters wide.
 3. Split `"2025-06-30"` on `"-"` and join the parts back with `"/"`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 4 (Strings) and chapter 5 (Bytes and Bytearray). *Learn Python the Hard Way*, exercises 5 to 10 (more variables and printing, strings and text, formatting, `repr`, escapes). The t-string section is beyond the two reference books; see the [Python 3.14 release notes](https://docs.python.org/3/whatsnew/3.14.html).
+- [Python 3.14 release notes](https://docs.python.org/3/whatsnew/3.14.html)
 
 ## Done with this page?
 

@@ -221,9 +221,12 @@ print(asyncio.run(main()))
 2. Remove the lock from the counter example and run it with more threads and larger counts. Does the total change between runs on your Python version?
 3. Write a consumer thread that reads numbers from a `Queue` and prints their running total. Stop it with `None`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 21 (Data in Time: Concurrency). *Learn Python the Hard Way* has no matching exercise. See the [threading](https://docs.python.org/3/library/threading.html), [queue](https://docs.python.org/3/library/queue.html) and [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html) docs, and the [free-threading HOWTO](https://docs.python.org/3/howto/free-threading-python.html).
+- [threading](https://docs.python.org/3/library/threading.html)
+- [queue](https://docs.python.org/3/library/queue.html)
+- [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html)
+- [free-threading HOWTO](https://docs.python.org/3/howto/free-threading-python.html)
 
 ## Done with this page?
 

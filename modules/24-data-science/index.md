@@ -217,9 +217,10 @@ plt.close(fig)                   # free the memory
 2. Compute total `units` per `product` and print the product with the highest total.
 3. Make a bar chart of total `units` per `region`, give it a title, and save it as `units.png`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 25 (Data Science). *Learn Python the Hard Way* does not cover pandas, so this topic goes beyond that book; see the [pandas user guide](https://pandas.pydata.org/docs/user_guide/index.html) and the [matplotlib tutorials](https://matplotlib.org/stable/tutorials/index.html).
+- [pandas user guide](https://pandas.pydata.org/docs/user_guide/index.html)
+- [matplotlib tutorials](https://matplotlib.org/stable/tutorials/index.html)
 
 ## Done with this page?
 

@@ -6,7 +6,7 @@ title: Roadmap
 
 Each topic has three pages: **Learn** (key points and examples), **Test** (10 multiple-choice questions with instant feedback) and **Assignments** (3 to 5 coding tasks with starter code, tests and a hidden solution).
 
-The course targets **Python 3.14 or later**. The order follows [*Introducing Python*](https://www.oreilly.com/library/view/introducing-python-3rd/9781098174422/) and the practice style of *Learn Python the Hard Way*: read a little, type code yourself, and check it.
+The course targets **Python 3.14 or later**. The method is simple: read a little, type the code yourself, and check it with tests.
 
 ## Printable cheatsheets
 

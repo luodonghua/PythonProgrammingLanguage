@@ -240,9 +240,11 @@ From the shell, run `python -m doctest -v yourfile.py`. For an exception, doctes
 2. Write `last[T](items: list[T]) -> T | None` that returns `None` for an empty list. Add two doctest examples and run `python -m doctest -v`.
 3. Define a `TypedDict` for `{"name": str, "tags": list[str]}` and write a function that takes one.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 14 (Type Hints and Documentation). *Learn Python the Hard Way* has no matching exercise, but exercise 47 uses docstrings and tests. See also the Python docs for [`typing`](https://docs.python.org/3/library/typing.html), [`doctest`](https://docs.python.org/3/library/doctest.html) and the [type hints cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html).
+- [`typing`](https://docs.python.org/3/library/typing.html)
+- [`doctest`](https://docs.python.org/3/library/doctest.html)
+- [type hints cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
 
 ## Done with this page?
 

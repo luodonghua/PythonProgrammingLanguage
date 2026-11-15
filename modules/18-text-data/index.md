@@ -290,9 +290,12 @@ For a file, open it in binary mode: `tomllib.load(open("x.toml", "rb"))`.
 2. Turn a list of dicts into a JSON string with `indent=2`, then load it back and compare it with the original.
 3. Write a regex that finds every word starting with `#` in a sentence. Print the result of `re.findall`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 17 (Text Data). *Learn Python the Hard Way* exercises 15 to 17 (reading and writing files) cover the file-handling side. Regex, `csv`, `json` and `tomllib` go beyond the two books in detail; see the [re](https://docs.python.org/3/library/re.html), [csv](https://docs.python.org/3/library/csv.html), [json](https://docs.python.org/3/library/json.html) and [tomllib](https://docs.python.org/3/library/tomllib.html) docs.
+- [re](https://docs.python.org/3/library/re.html)
+- [csv](https://docs.python.org/3/library/csv.html)
+- [json](https://docs.python.org/3/library/json.html)
+- [tomllib](https://docs.python.org/3/library/tomllib.html)
 
 ## Done with this page?
 

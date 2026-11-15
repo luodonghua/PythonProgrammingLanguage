@@ -183,9 +183,9 @@ A test then calls `main(["Ada", "--shout"])` and checks the return value and the
 2. Write a script `add.py` that uses `argparse` to take two numbers and print their sum. Add a `--round` option with `type=int`.
 3. Make your script from exercise 2 print an error to stderr and exit with code 1 when a number is negative.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python* covers little of this directly. Chapter 7 (For and While) is the background for retry loops. *Learn Python the Hard Way*, exercises 11 to 14 (asking questions, prompting, command-line arguments, parameters and unpacking). `argparse` is beyond the two reference books; see the [argparse tutorial](https://docs.python.org/3/howto/argparse.html) in the Python docs.
+- [argparse tutorial](https://docs.python.org/3/howto/argparse.html)
 
 ## Done with this page?
 

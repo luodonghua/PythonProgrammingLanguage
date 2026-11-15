@@ -331,9 +331,10 @@ Topic 38 builds a full tool registry on this idea.
 2. Write `retry(times)` that calls the function again when it raises `ValueError`, and raises the last error after `times` attempts.
 3. Decorate a slow function with `functools.cache`. Call it twice and look at `cache_info()`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 10 (Functions), the section on decorators. *Learn Python the Hard Way* has no decorator exercise, so this topic goes beyond that book. See the Python docs: [functools](https://docs.python.org/3/library/functools.html) and [glossary: decorator](https://docs.python.org/3/glossary.html#term-decorator).
+- [functools](https://docs.python.org/3/library/functools.html)
+- [glossary: decorator](https://docs.python.org/3/glossary.html#term-decorator)
 
 ## Done with this page?
 

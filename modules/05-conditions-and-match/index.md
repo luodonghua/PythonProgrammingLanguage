@@ -190,9 +190,10 @@ A mapping pattern ignores extra keys. A class pattern checks the type first, the
 2. Rewrite your answer as a `match` statement. Which one reads better?
 3. Predict the output of `print(bool([0]), bool(""), "x" or "y")`, then run it.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 6 (If and Match). *Learn Python the Hard Way*, exercises 27 to 31 (logic, boolean practice, if, else and making decisions).
+- [Python tutorial: if statements and match](https://docs.python.org/3/tutorial/controlflow.html#if-statements)
+- [Structural pattern matching tutorial (PEP 636)](https://peps.python.org/pep-0636/)
 
 ## Done with this page?
 

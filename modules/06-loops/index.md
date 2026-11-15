@@ -200,9 +200,9 @@ Dictionaries get their own topic. For now remember that a plain `for` gives the 
 2. Use a loop and an accumulator to compute the average of `[3, 9, 4]`.
 3. Print a 5 x 5 grid of `*` characters with two nested loops.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 7 (For and While). *Learn Python the Hard Way*, exercises 32 and 33 (loops and lists, while loops).
+- [Python tutorial: for, range, break and continue](https://docs.python.org/3/tutorial/controlflow.html#for-statements)
 
 ## Done with this page?
 

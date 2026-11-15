@@ -145,9 +145,9 @@ with tempfile.TemporaryDirectory() as tmp:
 2. Use `Path.rglob("*.py")` to count the `.py` files below the current folder.
 3. Write a function that appends a line with the text of a message to `log.txt`. Call it three times and check the file.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 20 (Files). *Learn Python the Hard Way*, exercises 15 to 17 (reading files, reading and writing files, more files). For `pathlib`, see the [Python docs](https://docs.python.org/3/library/pathlib.html).
+- [Python docs](https://docs.python.org/3/library/pathlib.html)
 
 ## Done with this page?
 

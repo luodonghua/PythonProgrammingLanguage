@@ -214,9 +214,10 @@ answers = await asyncio.gather(*(call_tool(c) for c in tool_calls))
 
 </div>
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 21 (Data in Time: Concurrency) has a section on asyncio. *Learn Python the Hard Way* does not cover it. For details see the Python docs: [Coroutines and Tasks](https://docs.python.org/3/library/asyncio-task.html) and [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html).
+- [Coroutines and Tasks](https://docs.python.org/3/library/asyncio-task.html)
+- [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html)
 
 ## Done with this page?
 

@@ -228,9 +228,13 @@ This whole page is about agents, so here is the link to real products. A provide
 2. Write a `FakeModel` script in which the model asks for a tool that does not exist, then gives a final answer. What does the tool message say?
 3. Add a second tool and write one reply with two tool calls. Run them with a `TaskGroup` and check the order of the results.
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books, and a good review of *Introducing Python*, chapters 10 (Functions), 14 (Type Hints) and 21 (Concurrency). Related docs: [`asyncio.TaskGroup`](https://docs.python.org/3/library/asyncio-task.html#task-groups), [`contextvars`](https://docs.python.org/3/library/contextvars.html), [`inspect.signature`](https://docs.python.org/3/library/inspect.html#inspect.signature), [pydantic `validate_call`](https://docs.pydantic.dev/latest/concepts/validation_decorator/) and the [JSON Schema](https://json-schema.org/understanding-json-schema) guide.
+- [`asyncio.TaskGroup`](https://docs.python.org/3/library/asyncio-task.html#task-groups)
+- [`contextvars`](https://docs.python.org/3/library/contextvars.html)
+- [`inspect.signature`](https://docs.python.org/3/library/inspect.html#inspect.signature)
+- [pydantic `validate_call`](https://docs.pydantic.dev/latest/concepts/validation_decorator/)
+- [JSON Schema](https://json-schema.org/understanding-json-schema)
 
 ## Done with this page?
 

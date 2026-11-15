@@ -191,9 +191,10 @@ Callbacks that report progress or log events are usually closures over a list or
 2. Write `make_multiplier(n)` that returns a function multiplying its argument by `n`. Create `double` and `triple` and check that they stay independent.
 3. Use `partial(round, ndigits=2)` to make a function `round2`. Check `round2(3.14159)`, then look at `round2.func`, `round2.args` and `round2.keywords`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 10 (Functions), which covers lambdas, closures and functions as arguments. *Learn Python the Hard Way*, exercises 18 to 21 (functions). Closures, `partial` and `operator` go beyond the two books, so see the Python docs for [`functools.partial`](https://docs.python.org/3/library/functools.html#functools.partial) and the [`operator` module](https://docs.python.org/3/library/operator.html).
+- [`functools.partial`](https://docs.python.org/3/library/functools.html#functools.partial)
+- [`operator` module](https://docs.python.org/3/library/operator.html)
 
 ## Done with this page?
 

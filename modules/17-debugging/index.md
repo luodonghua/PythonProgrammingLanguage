@@ -259,9 +259,11 @@ Another family is the **off-by-one** error. `range(1, len(nums))` skips the firs
 2. Put `breakpoint()` inside a loop and use `n`, `p` and `c` to follow a counter.
 3. Configure `logging` so a function writes an INFO line at start and an ERROR with traceback when it fails.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 16 (Debugging). *Learn Python the Hard Way* has no dedicated exercise on debugging. Exercise 47 covers writing tests, which is the best defence. See the Python docs for [`pdb`](https://docs.python.org/3/library/pdb.html), [`logging`](https://docs.python.org/3/library/logging.html) and [`traceback`](https://docs.python.org/3/library/traceback.html).
+- [`pdb`](https://docs.python.org/3/library/pdb.html)
+- [`logging`](https://docs.python.org/3/library/logging.html)
+- [`traceback`](https://docs.python.org/3/library/traceback.html)
 
 ## Done with this page?
 

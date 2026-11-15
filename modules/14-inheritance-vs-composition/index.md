@@ -308,9 +308,10 @@ A rule of thumb: use inheritance for a real *is-a* with a shared interface (shap
 2. Write `Report` that receives a `formatter` object with a `format(data)` method. Pass in two different formatter classes.
 3. Print `__mro__` for a class with two parents. Change the order of the parents and see what changes.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 11 (Objects: inheritance, `super()`, mixins, composition). *Learn Python the Hard Way*, exercises 42 to 44 (Is-A, Has-A, objects and classes; inheritance versus composition). Protocols and abstract classes are described in the Python docs: [`abc`](https://docs.python.org/3/library/abc.html) and [`typing.Protocol`](https://docs.python.org/3/library/typing.html#typing.Protocol).
+- [`abc`](https://docs.python.org/3/library/abc.html)
+- [`typing.Protocol`](https://docs.python.org/3/library/typing.html#typing.Protocol)
 
 ## Done with this page?
 

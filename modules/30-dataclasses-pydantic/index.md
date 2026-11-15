@@ -274,9 +274,10 @@ args = SearchArgs.model_validate_json(model_output)   # raises ValidationError
 2. Write a Pydantic model `Product` with `name` (not empty) and `price` (greater than 0). Try `Product(name="x", price="2.5")` and `Product(name="", price=0)`.
 3. Parse the JSON text `'{"name": "tea", "price": 3}'` into your `Product` and print `model_dump()`.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 11 (Objects) covers classes, and chapter 14 (Type Hints and Documentation) covers annotations. *Learn Python the Hard Way*, exercises 40 to 44 cover classes, but not dataclasses or Pydantic. Those parts go beyond both books. See the Python docs: [dataclasses](https://docs.python.org/3/library/dataclasses.html), and the [Pydantic documentation](https://docs.pydantic.dev/latest/).
+- [dataclasses](https://docs.python.org/3/library/dataclasses.html)
+- [Pydantic documentation](https://docs.pydantic.dev/latest/)
 
 ## Done with this page?
 

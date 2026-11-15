@@ -171,9 +171,10 @@ print([x for row in m for x in row])   # [1, 2, 3, 4, 5, 6]   (flatten)
 2. Given `scores = [70, 95, 82, 60]`, print the three highest in order (use `sorted` and a slice).
 3. Swap the first and last items of a list with tuple unpacking in one line.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 8 (Tuples and Lists). *Learn Python the Hard Way*, exercises 34 and 38 (accessing elements of lists, doing things to lists).
+- [Python tutorial: more on lists](https://docs.python.org/3/tutorial/datastructures.html#more-on-lists)
+- [Tuples and sequences](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences)
 
 ## Done with this page?
 

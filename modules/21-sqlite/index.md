@@ -232,9 +232,10 @@ conn.execute(
 2. Write a function `add_todo(conn, title)` that returns the new id. Call it inside `with conn:`.
 3. Try the injection example on your own table. Then fix it with a placeholder.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 23 (Data in a Box: Persistent Storage), which covers relational databases and SQLite. *Learn Python the Hard Way* has no exercise on databases. See the [sqlite3 docs](https://docs.python.org/3/library/sqlite3.html) and the [SQLite site](https://www.sqlite.org/docs.html).
+- [sqlite3 docs](https://docs.python.org/3/library/sqlite3.html)
+- [SQLite site](https://www.sqlite.org/docs.html)
 
 ## Done with this page?
 

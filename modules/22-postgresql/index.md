@@ -267,9 +267,10 @@ Opening a connection takes time (a network round trip, authentication). Web serv
 2. Create a `notes` table with an identity `id`, a `TEXT` body and a `TIMESTAMPTZ` column with default `now()`. Insert two notes and print them with `RETURNING`.
 3. Write a function `transfer(conn, from_id, to_id, amount)` that moves money between two rows of an `accounts` table inside `with conn.transaction():`. Make it raise an error halfway and check that nothing changed.
 
-## Where this comes from
+## Further reading
 
-*Introducing Python*, chapter 23 (Data in a Box: Persistent Storage) covers relational databases and SQL. *Learn Python the Hard Way* has no exercise on databases. This page goes beyond the two books. See the [psycopg 3 docs](https://www.psycopg.org/psycopg3/docs/) and the [PostgreSQL manual](https://www.postgresql.org/docs/17/index.html).
+- [psycopg 3 docs](https://www.psycopg.org/psycopg3/docs/)
+- [PostgreSQL manual](https://www.postgresql.org/docs/17/index.html)
 
 ## Done with this page?
 

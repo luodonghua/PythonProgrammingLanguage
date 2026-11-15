@@ -224,9 +224,12 @@ async for chunk in model.stream(prompt):
 
 </div>
 
-## Where this comes from
+## Further reading
 
-Beyond the two reference books. See the Python docs: [asynchronous iterators and generators](https://docs.python.org/3/reference/expressions.html#asynchronous-generator-functions), [`async for`](https://docs.python.org/3/reference/compound_stmts.html#the-async-for-statement), [`contextlib.aclosing` and `asynccontextmanager`](https://docs.python.org/3/library/contextlib.html) and [asyncio queues](https://docs.python.org/3/library/asyncio-queue.html). *Introducing Python*, chapter 21 covers the concurrency background.
+- [asynchronous iterators and generators](https://docs.python.org/3/reference/expressions.html#asynchronous-generator-functions)
+- [`async for`](https://docs.python.org/3/reference/compound_stmts.html#the-async-for-statement)
+- [`contextlib.aclosing` and `asynccontextmanager`](https://docs.python.org/3/library/contextlib.html)
+- [asyncio queues](https://docs.python.org/3/library/asyncio-queue.html)
 
 ## Done with this page?
 

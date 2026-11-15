@@ -159,9 +159,10 @@ Several errors at once, for example from many concurrent tasks, are grouped in a
 2. Write `read_first_line(path)` that returns `None` if the file does not exist, and lets other errors through.
 3. Define `class TooYoung(ValueError)` and raise it from a function when `age < 18`. Catch it with `except ValueError`. Does that work? Why?
 
-## Where this comes from
+## Further reading
 
-This topic goes beyond the chapter list of the two reference books, so see the Python docs: the [tutorial on errors and exceptions](https://docs.python.org/3/tutorial/errors.html) and the [built-in exceptions](https://docs.python.org/3/library/exceptions.html).
+- [tutorial on errors and exceptions](https://docs.python.org/3/tutorial/errors.html)
+- [built-in exceptions](https://docs.python.org/3/library/exceptions.html)
 
 ## Done with this page?
 
