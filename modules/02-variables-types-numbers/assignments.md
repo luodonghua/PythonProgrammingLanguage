@@ -2,7 +2,7 @@
 layout: module
 module: 02-variables-types-numbers
 kind: assignments
-title: Variables, types and numbers - assignments
+title: "Variables, types and numbers - assignments"
 permalink: /modules/02-variables-types-numbers/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

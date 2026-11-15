@@ -2,7 +2,7 @@
 layout: module
 module: 08-dicts-and-sets
 kind: assignments
-title: Dictionaries and sets - assignments
+title: "Dictionaries and sets - assignments"
 permalink: /modules/08-dicts-and-sets/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

@@ -7,6 +7,7 @@ Writes modules/<slug>/quiz.md and modules/<slug>/assignments.md.
 Every assignment folder listed in meta.yml must exist.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -18,7 +19,7 @@ QUIZ = """---
 layout: module
 module: {slug}
 kind: quiz
-title: {title} - test
+title: {title_q}
 permalink: /modules/{slug}/quiz/
 ---
 Pick an answer for each question. You see at once whether it is right and why. No submit button is needed, and you can press **Reset** to try again.
@@ -30,7 +31,7 @@ HEAD = """---
 layout: module
 module: {slug}
 kind: assignments
-title: {title} - assignments
+title: {title_a}
 permalink: /modules/{slug}/assignments/
 ---
 {intro}
@@ -93,7 +94,7 @@ def gen(slug: str) -> None:
         "and open the solution only after you have tried."
     )
     setup = ("\n" + meta["setup"].strip() + "\n") if meta.get("setup") else ""
-    out = HEAD.format(slug=slug, title=title, intro=intro.strip(), setup=setup)
+    out = HEAD.format(slug=slug, title_a=json.dumps(f"{title} - assignments"), intro=intro.strip(), setup=setup)
     for n, a in enumerate(items, 1):
         d = a["dir"]
         adir = folder / "assignments" / d
@@ -113,7 +114,7 @@ def gen(slug: str) -> None:
         )
     out += TAIL.format(slug=slug)
     (folder / "assignments.md").write_text(out)
-    (folder / "quiz.md").write_text(QUIZ.format(slug=slug, title=title))
+    (folder / "quiz.md").write_text(QUIZ.format(slug=slug, title_q=json.dumps(f"{title} - test")))
     print(f"{slug}: wrote quiz.md and assignments.md ({len(items)} assignments)")
 
 

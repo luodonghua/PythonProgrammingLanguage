@@ -2,7 +2,7 @@
 layout: module
 module: 38-tool-calling-agent
 kind: assignments
-title: Applying it: a tool-calling agent - assignments
+title: "Applying it: a tool-calling agent - assignments"
 permalink: /modules/38-tool-calling-agent/assignments/
 ---
 Build the core of a tool-calling agent from scratch, one stage at a time: a tool registry that describes its tools, a safe dispatcher, the agent loop, parallel tool calls and a stream of events. There is no vendor library and no network. A scripted `FakeModel` plays the part of the language model. The message format is simplified, and real APIs differ in detail.

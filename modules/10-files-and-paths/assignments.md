@@ -2,7 +2,7 @@
 layout: module
 module: 10-files-and-paths
 kind: assignments
-title: Files and paths - assignments
+title: "Files and paths - assignments"
 permalink: /modules/10-files-and-paths/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

@@ -2,7 +2,7 @@
 layout: module
 module: 21-sqlite
 kind: assignments
-title: Persistence: SQLite - assignments
+title: "Persistence: SQLite - assignments"
 permalink: /modules/21-sqlite/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

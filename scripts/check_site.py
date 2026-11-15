@@ -71,6 +71,20 @@ for m in modules:
             if f"assignments/{a.name}/{name}" not in page_text:
                 err(f"{slug}/assignments.md does not include {a.name}/{name}")
 
+# Every page needs valid YAML front matter, or Jekyll silently skips it.
+for md in ROOT.rglob("*.md"):
+    if any(part.startswith(".") or part in ("_site", "vendor") for part in md.relative_to(ROOT).parts):
+        continue
+    text = md.read_text()
+    if text.startswith("---"):
+        try:
+            fm = yaml.safe_load(text.split("---", 2)[1])
+        except yaml.YAMLError as exc:
+            err(f"{md.relative_to(ROOT)}: invalid front matter: {str(exc).splitlines()[0]}")
+            continue
+        if md.name != "README.md" and md.parent != ROOT / "cheatsheets" and md != ROOT / "index.md" and not (fm or {}).get("permalink"):
+            err(f"{md.relative_to(ROOT)}: missing permalink")
+
 # Jekyll renders included files with Liquid, so these sequences would break the page.
 for py in (ROOT / "modules").rglob("*.py"):
     text = py.read_text()

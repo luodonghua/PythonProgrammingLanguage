@@ -2,7 +2,7 @@
 layout: module
 module: 37-testing-async-fakes
 kind: assignments
-title: Testing async code with fakes - assignments
+title: "Testing async code with fakes - assignments"
 permalink: /modules/37-testing-async-fakes/assignments/
 ---
 Four tasks about building the tools that make async tests fast and exact: a fake clock, a scripted fake client, a retrying class that takes its dependencies as arguments, and an async worker with a timeout helper. Some tests use `AsyncMock`, so you also see how a library mock is used.

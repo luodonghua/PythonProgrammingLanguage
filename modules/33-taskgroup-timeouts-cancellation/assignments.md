@@ -2,7 +2,7 @@
 layout: module
 module: 33-taskgroup-timeouts-cancellation
 kind: assignments
-title: TaskGroup, timeouts and cancellation - assignments
+title: "TaskGroup, timeouts and cancellation - assignments"
 permalink: /modules/33-taskgroup-timeouts-cancellation/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

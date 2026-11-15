@@ -2,7 +2,7 @@
 layout: module
 module: 18-text-data
 kind: assignments
-title: Text data: CSV, JSON and regex - assignments
+title: "Text data: CSV, JSON and regex - assignments"
 permalink: /modules/18-text-data/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

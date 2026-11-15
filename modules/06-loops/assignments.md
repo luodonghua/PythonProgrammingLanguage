@@ -2,7 +2,7 @@
 layout: module
 module: 06-loops
 kind: assignments
-title: Loops - assignments
+title: "Loops - assignments"
 permalink: /modules/06-loops/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

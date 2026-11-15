@@ -2,7 +2,7 @@
 layout: module
 module: 30-dataclasses-pydantic
 kind: assignments
-title: Dataclasses and Pydantic - assignments
+title: "Dataclasses and Pydantic - assignments"
 permalink: /modules/30-dataclasses-pydantic/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

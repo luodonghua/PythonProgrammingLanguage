@@ -2,7 +2,7 @@
 layout: module
 module: 14-inheritance-vs-composition
 kind: assignments
-title: Inheritance vs composition - assignments
+title: "Inheritance vs composition - assignments"
 permalink: /modules/14-inheritance-vs-composition/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

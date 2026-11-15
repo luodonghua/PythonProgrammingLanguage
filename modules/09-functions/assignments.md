@@ -2,7 +2,7 @@
 layout: module
 module: 09-functions
 kind: assignments
-title: Functions - assignments
+title: "Functions - assignments"
 permalink: /modules/09-functions/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

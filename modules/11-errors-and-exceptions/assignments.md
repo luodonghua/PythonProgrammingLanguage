@@ -2,7 +2,7 @@
 layout: module
 module: 11-errors-and-exceptions
 kind: assignments
-title: Errors and exceptions - assignments
+title: "Errors and exceptions - assignments"
 permalink: /modules/11-errors-and-exceptions/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

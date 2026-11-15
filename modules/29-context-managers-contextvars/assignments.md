@@ -2,7 +2,7 @@
 layout: module
 module: 29-context-managers-contextvars
 kind: assignments
-title: Context managers and contextvars - assignments
+title: "Context managers and contextvars - assignments"
 permalink: /modules/29-context-managers-contextvars/assignments/
 ---
 Five tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

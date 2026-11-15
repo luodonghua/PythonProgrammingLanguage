@@ -2,7 +2,7 @@
 layout: module
 module: 12-modules-and-packages
 kind: assignments
-title: Modules and packages - assignments
+title: "Modules and packages - assignments"
 permalink: /modules/12-modules-and-packages/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

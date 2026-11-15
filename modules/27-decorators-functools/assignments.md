@@ -2,7 +2,7 @@
 layout: module
 module: 27-decorators-functools
 kind: assignments
-title: Decorators and functools - assignments
+title: "Decorators and functools - assignments"
 permalink: /modules/27-decorators-functools/assignments/
 ---
 Five tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

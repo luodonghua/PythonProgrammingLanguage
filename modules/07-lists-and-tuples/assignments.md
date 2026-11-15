@@ -2,7 +2,7 @@
 layout: module
 module: 07-lists-and-tuples
 kind: assignments
-title: Lists and tuples - assignments
+title: "Lists and tuples - assignments"
 permalink: /modules/07-lists-and-tuples/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

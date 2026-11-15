@@ -2,7 +2,7 @@
 layout: module
 module: 39-advanced-capstone
 kind: assignments
-title: Advanced capstone: multi-agent research runner - assignments
+title: "Advanced capstone: multi-agent research runner - assignments"
 permalink: /modules/39-advanced-capstone/assignments/
 ---
 Five stages of one project: a multi-agent research runner. Stage by stage you build validated data models and a scripted fake model, a worker with retry and timeout, a fan-out orchestrator that survives partial failures, a stream of progress events with trace ids, and finally the report and the command line. Everything runs offline and the tests are deterministic.

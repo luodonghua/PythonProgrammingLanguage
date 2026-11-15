@@ -2,7 +2,7 @@
 layout: module
 module: 04-input-and-arguments
 kind: assignments
-title: Input and command-line arguments - assignments
+title: "Input and command-line arguments - assignments"
 permalink: /modules/04-input-and-arguments/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

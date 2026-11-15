@@ -2,7 +2,7 @@
 layout: module
 module: 32-asyncio-basics
 kind: assignments
-title: asyncio basics - assignments
+title: "asyncio basics - assignments"
 permalink: /modules/32-asyncio-basics/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

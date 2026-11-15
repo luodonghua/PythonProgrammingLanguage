@@ -2,7 +2,7 @@
 layout: module
 module: 26-lambda-closures-partial
 kind: assignments
-title: Lambda, closures and partial - assignments
+title: "Lambda, closures and partial - assignments"
 permalink: /modules/26-lambda-closures-partial/assignments/
 ---
 Four tasks on small functions: sorting with `key=`, closures with `nonlocal`, `functools.partial`, and function tables with pipelines. Each one is a few lines of code, but the ideas are used everywhere in Python programs.

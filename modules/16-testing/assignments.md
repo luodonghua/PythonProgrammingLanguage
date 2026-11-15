@@ -2,7 +2,7 @@
 layout: module
 module: 16-testing
 kind: assignments
-title: Testing with pytest - assignments
+title: "Testing with pytest - assignments"
 permalink: /modules/16-testing/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

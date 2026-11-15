@@ -2,7 +2,7 @@
 layout: module
 module: 19-dates-and-times
 kind: assignments
-title: Dates and times - assignments
+title: "Dates and times - assignments"
 permalink: /modules/19-dates-and-times/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

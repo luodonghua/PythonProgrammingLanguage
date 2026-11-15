@@ -2,7 +2,7 @@
 layout: module
 module: 35-async-http-httpx
 kind: assignments
-title: Async HTTP with httpx - assignments
+title: "Async HTTP with httpx - assignments"
 permalink: /modules/35-async-http-httpx/assignments/
 ---
 Four tasks on a small, polite HTTP client: retries with backoff, bounded concurrency, a streamed response and rate limits. Every test uses `httpx.MockTransport`, so nothing touches the network and nothing really waits.

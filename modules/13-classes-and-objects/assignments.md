@@ -2,7 +2,7 @@
 layout: module
 module: 13-classes-and-objects
 kind: assignments
-title: Classes and objects - assignments
+title: "Classes and objects - assignments"
 permalink: /modules/13-classes-and-objects/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

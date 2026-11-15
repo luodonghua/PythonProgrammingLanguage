@@ -2,7 +2,7 @@
 layout: module
 module: 03-strings
 kind: assignments
-title: Strings and formatting - assignments
+title: "Strings and formatting - assignments"
 permalink: /modules/03-strings/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

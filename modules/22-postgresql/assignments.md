@@ -2,7 +2,7 @@
 layout: module
 module: 22-postgresql
 kind: assignments
-title: Persistence: PostgreSQL - assignments
+title: "Persistence: PostgreSQL - assignments"
 permalink: /modules/22-postgresql/assignments/
 ---
 Five tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

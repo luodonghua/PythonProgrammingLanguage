@@ -2,7 +2,7 @@
 layout: module
 module: 36-config-secrets-logging
 kind: assignments
-title: Config, secrets and logging - assignments
+title: "Config, secrets and logging - assignments"
 permalink: /modules/36-config-secrets-logging/assignments/
 ---
 Four tasks on the plumbing every real program needs: read settings, keep secrets safe, and write logs that people and tools can use. Everything runs offline, and nothing reads your real environment or files.

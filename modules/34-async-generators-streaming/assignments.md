@@ -2,7 +2,7 @@
 layout: module
 module: 34-async-generators-streaming
 kind: assignments
-title: Async generators and streaming - assignments
+title: "Async generators and streaming - assignments"
 permalink: /modules/34-async-generators-streaming/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

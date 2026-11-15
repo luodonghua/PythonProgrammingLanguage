@@ -2,7 +2,7 @@
 layout: module
 module: 24-data-science
 kind: assignments
-title: Data science basics - assignments
+title: "Data science basics - assignments"
 permalink: /modules/24-data-science/assignments/
 ---
 Four tasks with small CSV files. You load, filter, summarise, clean and plot data with pandas and matplotlib. The tests check exact values, so read each docstring for the rules (rounding, sort order, index).

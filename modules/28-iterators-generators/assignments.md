@@ -2,7 +2,7 @@
 layout: module
 module: 28-iterators-generators
 kind: assignments
-title: Iterators and generators - assignments
+title: "Iterators and generators - assignments"
 permalink: /modules/28-iterators-generators/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

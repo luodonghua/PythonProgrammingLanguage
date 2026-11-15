@@ -2,7 +2,7 @@
 layout: module
 module: 20-concurrency
 kind: assignments
-title: Concurrency: threads and processes - assignments
+title: "Concurrency: threads and processes - assignments"
 permalink: /modules/20-concurrency/assignments/
 ---
 Five tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

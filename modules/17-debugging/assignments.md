@@ -2,7 +2,7 @@
 layout: module
 module: 17-debugging
 kind: assignments
-title: Debugging - assignments
+title: "Debugging - assignments"
 permalink: /modules/17-debugging/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

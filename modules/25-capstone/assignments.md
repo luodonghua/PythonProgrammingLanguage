@@ -2,7 +2,7 @@
 layout: module
 module: 25-capstone
 kind: assignments
-title: Basic capstone: expense tracker - assignments
+title: "Basic capstone: expense tracker - assignments"
 permalink: /modules/25-capstone/assignments/
 ---
 Five stages of one project: an expense tracker. Each stage lives in its own folder with its own tests and repeats the few pieces it needs (such as the `Expense` dataclass), so you can do the stages in any order. Doing them 1 to 5 shows how the layers fit together. Stage 5 is a stretch task.

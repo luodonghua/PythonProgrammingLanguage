@@ -2,7 +2,7 @@
 layout: module
 module: 15-type-hints-and-docs
 kind: assignments
-title: Type hints and documentation - assignments
+title: "Type hints and documentation - assignments"
 permalink: /modules/15-type-hints-and-docs/assignments/
 ---
 Four tasks. Write the code yourself first, run the tests, and open the solution only after you have tried.

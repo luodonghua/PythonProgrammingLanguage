@@ -2,7 +2,7 @@
 layout: module
 module: 23-http-and-web
 kind: assignments
-title: HTTP and the web - assignments
+title: "HTTP and the web - assignments"
 permalink: /modules/23-http-and-web/assignments/
 ---
 Four tasks on URLs, routing, fetching JSON and serving JSON. None of them needs the internet. Tasks 3 and 4 start a small server on your own computer (127.0.0.1, port chosen by the operating system), so you may see a firewall prompt on some systems. Allow it or ignore it. The tests talk only to your own machine.
